@@ -11,7 +11,7 @@
 	var editorDirective = function () {
 		return {
 			restrict: 'E',
-			templateUrl: './bootstrapEditor.html'
+			templateUrl: 'bootstrapEditor.html'
 		};
 	};
 
