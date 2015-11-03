@@ -5,6 +5,9 @@
   "main": "gulpfile.js",
   "dependencies": {},
   "devDependencies": {
+    "del": "^2.0.2",
+    "event-stream": "^3.3.2",
+    "gulp": "^3.9.0",
     "gulp-angular-templatecache": "^1.8.0",
     "gulp-batch": "^1.0.5",
     "gulp-minify-css": "^1.2.1",
