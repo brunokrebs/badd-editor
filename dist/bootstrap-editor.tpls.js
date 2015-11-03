@@ -1,1 +1,1 @@
-angular.module("bootstrapEditor").run(["$templateCache", function($templateCache) {$templateCache.put("bootstrap-editor.html","<textarea cols=\"20\" rows=\"10\"></textarea>");}]);
+angular.module("bootstrapEditor").run(["$templateCache", function($templateCache) {$templateCache.put("bootstrap-editor.html","<textarea cols=\"100\" rows=\"10\"></textarea>\n");}]);
