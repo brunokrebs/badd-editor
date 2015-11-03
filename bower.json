@@ -1,0 +1,28 @@
+{
+	"name": "bootstrap-editor",
+	"homepage": "https://github.com/brunokrebs/bootstrap-editor",
+	"authors": [
+		"Bruno Krebs <me@brunokrebs.com>"
+	],
+	"description": "A bootstrap visual editor built with angular",
+	"main": [
+		"./dist/bootstrapEditor.js",
+		"./dist/bootstrapEditor.html"
+	],
+	"moduleType": [],
+	"keywords": [
+		"bootstrap",
+		"visual",
+		"drag",
+		"drop",
+		"editor"
+	],
+	"license": "MIT",
+	"ignore": [
+		"**/.*",
+		"node_modules",
+		"bower_components",
+		"test",
+		"tests"
+	]
+}

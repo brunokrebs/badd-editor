@@ -1,0 +1,1 @@
+!function(){var t=angular.module("bootstrapEditor",[]),r=function(){return{restrict:"E",templateUrl:"bootstrapEditor.html"}};t.directive("bootstrapEditor",r)}();
