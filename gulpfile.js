@@ -6,6 +6,7 @@ var webserver = require('gulp-webserver');
 gulp.task('generate-templates', function () {
 	return gulp.src('src/**/*.html')
 		.pipe(templateCache({
+			filename: 'bootstrap-editor.tpls.js',
 			module: 'bootstrapEditor'
 		}))
 		.pipe(gulp.dest('dist'));
