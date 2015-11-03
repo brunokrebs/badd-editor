@@ -1,1 +1,1 @@
-!function(){var t=angular.module("bootstrapEditor",[]),r=function(){return{restrict:"E",templateUrl:"bootstrap-editor.html"}};t.directive("bootstrapEditor",r)}();
+!function(){var t=angular.module("bootstrapEditor",[]),r=function(){return{restrict:"E",templateUrl:"bootstrap-editor.html",scope:{title:"@"}}};t.directive("bootstrapEditor",r)}();

@@ -11,7 +11,10 @@
 	var editorDirective = function () {
 		return {
 			restrict: 'E',
-			templateUrl: 'bootstrap-editor.html'
+			templateUrl: 'bootstrap-editor.html',
+			scope: {
+				title: '@'
+			}
 		};
 	};
 

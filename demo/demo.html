@@ -20,13 +20,20 @@
 
 </head>
 <body>
-<bootstrap-editor></bootstrap-editor>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.4/ui-bootstrap-tpls.min.js"></script>
-<script src="bootstrap-editor.js"></script>
-<script src="bootstrap-editor.tpls.js"></script>
-<script>
-	angular.module('bootstrapEditorDemo', ['bootstrapEditor']);
-</script>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-12">
+				<bootstrap-editor title="A demonstration of bootstrap-editor">
+				</bootstrap-editor>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.4/ui-bootstrap-tpls.min.js"></script>
+	<script src="bootstrap-editor.js"></script>
+	<script src="bootstrap-editor.tpls.js"></script>
+	<script>
+		angular.module('bootstrapEditorDemo', ['bootstrapEditor']);
+	</script>
 </body>
 </html>
