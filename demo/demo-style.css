@@ -1,0 +1,6 @@
+html, body,
+.main-container,
+.main-container > .row ,
+.main-container > .row > .col-xs-12 {
+	height: 100%;
+}
