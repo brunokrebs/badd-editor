@@ -8,7 +8,7 @@
 	"main": [
 		"./dist/badd-editor.min.css",
 		"./dist/badd-editor.min.js",
-		"./dist/badd-editor.tpls.min.js"
+		"./dist/btn.png"
 	],
 	"moduleType": [],
 	"keywords": [

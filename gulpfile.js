@@ -4,7 +4,7 @@ var uglify = require('gulp-uglify');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var del = require('del');
-var es = require('event-stream');
+var concat = require('gulp-concat');
 var webserver = require('gulp-webserver');
 var watch = require('gulp-watch');
 var batch = require('gulp-batch');
@@ -12,7 +12,7 @@ var batch = require('gulp-batch');
 gulp.task('generate-templates', function () {
 	return gulp.src('src/**/*.html')
 		.pipe(templateCache({
-			filename: 'badd-editor.tpls.js',
+			filename: 'badd-template.js',
 			module: 'baddEditor'
 		}))
 		.pipe(gulp.dest('build'));
@@ -22,6 +22,14 @@ gulp.task('uglify-js', function() {
 	return gulp.src('src/**/*.js')
 		.pipe(uglify())
 		.pipe(gulp.dest('build'));
+});
+
+gulp.task('concat-js', ['uglify-js'], function() {
+	return gulp.src([
+			'./build/badd-editor.js',
+			'./build/**/!(badd-editor)*.js'
+		]).pipe(concat('badd-editor.js'))
+		  .pipe(gulp.dest('./build/'));
 });
 
 gulp.task('minify-css', function() {
@@ -37,11 +45,11 @@ gulp.task('copy-images', function() {
 
 gulp.task('generate-dist', [
 	'generate-templates',
-	'uglify-js',
+	'concat-js',
 	'minify-css',
 	'copy-images'
 ], function() {
-	return gulp.src(["./build/**/*.js", "./build/**/*.css"])
+	return gulp.src(["./build/badd-editor.js", "./build/**/*.css"])
 		.pipe(rename(function (path) {
 			path.basename += ".min";
 			return path;
