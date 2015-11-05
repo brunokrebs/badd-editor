@@ -12,8 +12,8 @@ var batch = require('gulp-batch');
 gulp.task('generate-templates', function () {
 	return gulp.src('src/**/*.html')
 		.pipe(templateCache({
-			filename: 'bootstrap-editor.tpls.js',
-			module: 'bootstrapEditor'
+			filename: 'badd-editor.tpls.js',
+			module: 'baddEditor'
 		}))
 		.pipe(gulp.dest('build'));
 });

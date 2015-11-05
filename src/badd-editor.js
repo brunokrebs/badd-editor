@@ -6,7 +6,7 @@
  * @license MIT License <http://opensource.org/licenses/mit-license.php>
  */
 (function() {
-	var editorModule = angular.module('bootstrapEditor', []);
+	var editorModule = angular.module('baddEditor', []);
 
 	var editorController = function($scope, $window) {
 		// if attr are not set, use default values
@@ -24,7 +24,7 @@
 	var editorDirective = function () {
 		return {
 			restrict: 'E',
-			templateUrl: 'bootstrap-editor.html',
+			templateUrl: 'badd-editor.html',
 			scope: {
 				title: '@',
 				componentsTitle: '@',
@@ -34,5 +34,5 @@
 		};
 	};
 
-	editorModule.directive('bootstrapEditor', editorDirective);
+	editorModule.directive('baddEditor', editorDirective);
 }());

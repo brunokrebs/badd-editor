@@ -1,18 +1,19 @@
 {
-	"name": "bootstrap-editor",
-	"homepage": "https://github.com/brunokrebs/bootstrap-editor",
+	"name": "badd-editor",
+	"homepage": "https://github.com/brunokrebs/badd-editor",
 	"authors": [
 		"Bruno Krebs <me@brunokrebs.com>"
 	],
-	"description": "A bootstrap visual editor built with angular",
+	"description": "baddEditor - Bootstrap Angular Drag & Drop Editor.",
 	"main": [
-		"./dist/bootstrapEditor.js",
-		"./dist/bootstrapEditor.html"
+		"./dist/badd-editor.min.css",
+		"./dist/badd-editor.min.js",
+		"./dist/badd-editor.tpls.min.js"
 	],
 	"moduleType": [],
 	"keywords": [
 		"bootstrap",
-		"visual",
+		"angular",
 		"drag",
 		"drop",
 		"editor"
