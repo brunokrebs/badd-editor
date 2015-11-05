@@ -1,33 +1,33 @@
-table.bootstrap-editor {
+table.badd-editor {
 	height: 100%;
 	width: 100%;
 }
 
 /* editor's header style */
 
-td.bootstrap-editor-header {
+td.badd-editor-header {
 	background-color: #343434;
 	height: 50px;
 	border-bottom: 1px solid #000;
 }
 
-td.bootstrap-editor-header p.title {
+td.badd-editor-header p.title {
 	color: white;
 	line-height: 50px;
 }
 
 /* editor's components and properties style */
 
-td.bootstrap-editor-components,
-td.bootstrap-editor-properties {
+td.badd-editor-components,
+td.badd-editor-properties {
 	background-color: #343434;
 	padding: 0;
 	width: 15%;
 	vertical-align: top;
 }
 
-td.bootstrap-editor-components p.title,
-td.bootstrap-editor-properties p.title {
+td.badd-editor-components p.title,
+td.badd-editor-properties p.title {
 	color: white;
 	line-height: 50px;
 	background-color: #343434;
@@ -37,8 +37,8 @@ td.bootstrap-editor-properties p.title {
 	padding: 0 15px 0 15px;
 }
 
-td.bootstrap-editor-components div.components,
-td.bootstrap-editor-properties div.properties {
+td.badd-editor-components div.components,
+td.badd-editor-properties div.properties {
 	border-top: 1px solid #888888;
 	background-color: #cccccc;
 	height: 100%;
@@ -46,12 +46,12 @@ td.bootstrap-editor-properties div.properties {
 
 /* editor's browser style */
 
-td.bootstrap-editor-browser {
+td.badd-editor-browser {
 	height: 100%;
 	vertical-align: top;
 }
 
-td.bootstrap-editor-browser div.header {
+td.badd-editor-browser div.header {
 	background-color: #cccccc;
 	height: 30px;
 	line-height: 30px;

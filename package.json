@@ -1,7 +1,7 @@
 {
-  "name": "bootstrap-editor",
+  "name": "badd-editor",
   "version": "1.0.0",
-  "description": "A bootstrap visual editor built with angular",
+  "description": "baddEditor - Bootstrap Angular Drag & Drop Editor",
   "main": "gulpfile.js",
   "dependencies": {},
   "devDependencies": {
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brunokrebs/bootstrap-editor.git"
+    "url": "git+https://github.com/brunokrebs/badd-editor.git"
   },
   "keywords": [
     "bootstrap",
@@ -33,7 +33,7 @@
   "author": "Bruno Krebs <me@brunokrebs.com> (http://www.brunokrebs.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/brunokrebs/bootstrap-editor/issues"
+    "url": "https://github.com/brunokrebs/badd-editor/issues"
   },
-  "homepage": "https://github.com/brunokrebs/bootstrap-editor#readme"
+  "homepage": "https://github.com/brunokrebs/badd-editor#readme"
 }

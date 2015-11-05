@@ -4,7 +4,7 @@
 	"authors": [
 		"Bruno Krebs <me@brunokrebs.com>"
 	],
-	"description": "baddEditor - Bootstrap Angular Drag & Drop Editor.",
+	"description": "baddEditor - Bootstrap Angular Drag & Drop Editor",
 	"main": [
 		"./dist/badd-editor.min.css",
 		"./dist/badd-editor.min.js",

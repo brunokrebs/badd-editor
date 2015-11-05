@@ -2,7 +2,7 @@
  * bootstrap
  *
  * @author Bruno Krebs
- * @url https://github.com/brunokrebs/bootstrap-editor
+ * @url https://github.com/brunokrebs/badd-editor
  * @license MIT License <http://opensource.org/licenses/mit-license.php>
  */
 (function() {
