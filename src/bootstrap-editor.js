@@ -8,13 +8,18 @@
 (function() {
 	var editorModule = angular.module('bootstrapEditor', []);
 
-	var editorController = function($scope) {
+	var editorController = function($scope, $window) {
 		// if attr are not set, use default values
 		$scope.title = angular.isDefined($scope.title) ? $scope.title : 'Bootstrap visual editor';
 		$scope.componentsTitle = angular.isDefined($scope.componentsTitle) ? $scope.componentsTitle : 'Components';
 		$scope.propertiesTitle = angular.isDefined($scope.propertiesTitle) ? $scope.propertiesTitle : 'Properties';
+
+
+		$window.addEventListener('message', function() {
+			alert('received something');
+		});
 	};
-	editorController.$inject = ['$scope'];
+	editorController.$inject = ['$scope', '$window'];
 
 	var editorDirective = function () {
 		return {
