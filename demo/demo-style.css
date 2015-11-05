@@ -4,3 +4,7 @@ html, body,
 .main-container > .row > .col-xs-12 {
 	height: 100%;
 }
+
+.main-container > .row > .col-xs-12 {
+	padding: 0;
+}

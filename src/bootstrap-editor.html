@@ -1,22 +1,26 @@
-<div class="row bootstrap-editor">
-	<div class="col-xs-12 bootstrap-editor-header">
-		<p class="title">{{title}}</p>
-	</div>
-	<div class="bootstrap-editor-tool">
-		<div class="col-xs-2 bootstrap-editor-components">
-			<p class="title">{{componentsTitle}}</p>
+<table class="bootstrap-editor">
+	<tr>
+		<td class="bootstrap-editor-header" colspan="3">
+			<div class="col-xs-12">
+				<p class="title">{{title}}</p>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="bootstrap-editor-components">
 			<div class="components">
+				<p class="title">{{componentsTitle}}</p>
 				hi
 			</div>
-		</div>
-		<div class="col-xs-8">
-			<h2>Playground</h2>
-		</div>
-		<div class="col-xs-2 bootstrap-editor-properties">
-			<p class="title">{{propertiesTitle}}</p>
+		</td>
+		<td class="bootstrap-editor-browser">
+			<iframe class="browser" src="edit-page.html"></iframe>
+		</td>
+		<td class="bootstrap-editor-properties">
 			<div class="properties">
+				<p class="title">{{propertiesTitle}}</p>
 				hi
 			</div>
-		</div>
-	</div>
-</div>
+		</td>
+	</tr>
+</table>
