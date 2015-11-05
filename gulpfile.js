@@ -30,10 +30,16 @@ gulp.task('minify-css', function() {
 		.pipe(gulp.dest('build'));
 });
 
+gulp.task('copy-images', function() {
+	return gulp.src('src/**/*.png')
+		.pipe(gulp.dest('dist'));
+});
+
 gulp.task('generate-dist', [
 	'generate-templates',
 	'uglify-js',
-	'minify-css'
+	'minify-css',
+	'copy-images'
 ], function() {
 	return gulp.src(["./build/**/*.js", "./build/**/*.css"])
 		.pipe(rename(function (path) {

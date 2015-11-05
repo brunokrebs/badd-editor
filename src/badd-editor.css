@@ -63,3 +63,34 @@ iframe.browser {
 	height: 100%;
 	border: none;
 }
+
+/* draggable components style */
+
+td.badd-editor-components ul {
+	margin-top: 10px;
+	padding: 0 10px 0 10px;
+	list-style-type: none;
+}
+
+td.badd-editor-components ul li {
+	cursor: pointer;
+	border: 1px solid transparent;
+	padding: 5px;
+}
+
+td.badd-editor-components ul li:hover {
+	background: #eee;
+	border: 1px dashed #999;
+}
+
+td.badd-editor-components ul li i {
+	display: none;
+	float: right;
+	font-size: 15px;
+	line-height: 30px;
+	color: #999;
+}
+
+td.badd-editor-components ul li:hover i {
+	display: block;
+}
