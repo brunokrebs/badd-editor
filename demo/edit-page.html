@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="bootstrapEditorDemo">
+<html lang="en" ng-app="editablePageApp">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,14 +20,31 @@
 
 </head>
 <body>
-<div class="container-fluid main-container">
+<div class="container-fluid main-container" ng-controller="editablePageController as ctrl">
 	<div class="row">
 		<div class="col-xs-12">
-			<h1>This is my content</h1>
+			<h1>This is my message = {{ctrl.message}}</h1>
+			<button class="btn btn-success" ng-click="ctrl.sendMessage()">Send message</button>
 		</div>
 	</div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.4/ui-bootstrap-tpls.min.js"></script>
+<script src="bootstrap-editor.min.js"></script>
+<script src="bootstrap-editor.tpls.min.js"></script>
+<script>
+	var editablePageController = function($window) {
+		var ctrl = this;
+
+		ctrl.message = 'Hello darling';
+
+		ctrl.sendMessage = function() {
+			$window.parent.postMessage(ctrl.message, '*');
+		};
+	};
+	editablePageController.$inject = ['$window'];
+	var editablePageApp = angular.module('editablePageApp', []);
+	editablePageApp.controller('editablePageController', editablePageController);
+</script>
 </body>
 </html>
