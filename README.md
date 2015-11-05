@@ -1,11 +1,11 @@
-# bootstrap-editor
-A bootstrap visual editor built with angular
+# baddEditor
+Bootstrap Angular Drag & Drop Editor
 
 ## installation
 
 with bower:
 ```
-bower install brunokrebs/bootstrap-editor
+bower install brunokrebs/badd-editor
 ```
 
 ## demo
