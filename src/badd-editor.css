@@ -94,3 +94,7 @@ td.badd-editor-components ul li i {
 td.badd-editor-components ul li:hover i {
 	display: block;
 }
+
+.drag-active {
+	background: red !important;
+}

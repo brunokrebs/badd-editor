@@ -1,7 +1,7 @@
-(function() {
+(function () {
 	var editorModule = angular.module('baddEditor');
 
-	var baddDraggableDirective = function() {
+	var baddDraggableDirective = function () {
 		return {
 			restrict: 'A',
 			link: function (scope, element) {
@@ -16,7 +16,6 @@
 					stop: function (event, ui) {
 						$(this).removeClass("drag-active").closest(element).removeClass("drag-active");
 						var droppedEl = angular.element(ui.droppable);
-						//console.log(droppedEl);
 					}
 				});
 			}
