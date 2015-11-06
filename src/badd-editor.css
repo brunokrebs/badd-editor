@@ -78,6 +78,8 @@ td.badd-editor-components ul li {
 	padding: 5px;
 }
 
+td.badd-editor-components ul li.drag-active,
+td.badd-editor-components ul li.ui-draggable-dragging,
 td.badd-editor-components ul li:hover {
 	background: #eee;
 	border: 1px dashed #999;
@@ -89,12 +91,11 @@ td.badd-editor-components ul li i {
 	font-size: 15px;
 	line-height: 30px;
 	color: #999;
+	padding-left: 15px;
 }
 
+td.badd-editor-components ul li.drag-active i,
+td.badd-editor-components ul li.ui-draggable-dragging i,
 td.badd-editor-components ul li:hover i {
 	display: block;
-}
-
-.drag-active {
-	background: red !important;
 }

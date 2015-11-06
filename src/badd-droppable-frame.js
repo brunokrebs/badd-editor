@@ -20,6 +20,10 @@
 					var pageHtml = element.contents().find('html');
 					pageHtml.attr('ng-app', 'baddEditor');
 
+					// give editable style to editable page
+					var pageHead = pageHtml.find('head');
+					pageHead.append('<link rel="stylesheet" href="badd-editor-frame.min.css" type="text/css" />');
+
 					// enable controller on body
 					var pageBody = pageHtml.find('body');
 					pageBody.attr('badd-droppable', '');
