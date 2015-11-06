@@ -13,11 +13,17 @@
 			body.append('<div class="badd-highlighter" style="position: fixed; top: ' + position.top +
 				'px ; left: ' + position.left +
 				'px ; width: ' + width + 'px; height: ' + height + 'px; border: 2px dashed lightskyblue;" />');
+
+			dir.objectPreview = $(object.draggable.data('raw'));
+			$(this).append(dir.objectPreview);
 		};
 
 		dir.objectLeaving = function(event) {
 			var body = $(event.target).parents('body');
 			body.find('.badd-highlighter').remove();
+			if (dir.objectPreview) {
+				dir.objectPreview.remove();
+			}
 		};
 
 		dir.objectDropped = function(scope) {
