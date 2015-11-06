@@ -8,7 +8,7 @@
 				template: '@'
 			},
 			replace: true,
-			template: '<iframe class="browser"></iframe>',
+			template: '<iframe class="badd-editor-browser"></iframe>',
 			link: function (scope, element, attrs) {
 				if (element.prop('tagName') !== 'IFRAME') {
 					return;

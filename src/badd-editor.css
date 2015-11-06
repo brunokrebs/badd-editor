@@ -58,7 +58,7 @@ td.badd-editor-browser div.header {
 	border: 1px solid #000;
 }
 
-iframe.browser {
+iframe.badd-editor-browser {
 	width: 100%;
 	height: 100%;
 	border: none;
