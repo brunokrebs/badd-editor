@@ -12,7 +12,7 @@
 				<p class="title">{{componentsTitle}}</p>
 				<ul>
 					<li>
-						<div badd-draggable data-raw="<div class='well'></div>">
+						<div badd-draggable data-raw="<button class='btn btn-primary' badd-draggable>New Button</button>">
 							<img src="btn.png" /> <span>Button</span><i class="fa fa-arrows-alt"></i>
 						</div>
 					</li>
@@ -20,7 +20,7 @@
 			</div>
 		</td>
 		<td class="badd-editor-browser">
-			<iframe class="browser" src="edit-page.html" badd-droppable-frame></iframe>
+			<badd-droppable-frame template="{{template}}"></badd-droppable-frame>
 		</td>
 		<td class="badd-editor-properties">
 			<div class="properties">

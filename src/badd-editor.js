@@ -28,7 +28,8 @@
 			scope: {
 				title: '@',
 				componentsTitle: '@',
-				propertiesTitle: '@'
+				propertiesTitle: '@',
+				template: '@'
 			},
 			controller: editorController
 		};

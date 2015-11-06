@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="editablePageApp">
+<html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,31 +18,27 @@
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
+	<style>
+		html {
+			height: 100%;
+		}
+		body {
+			min-height: 100%;
+		}
+	</style>
+
 </head>
 <body>
-<div class="container-fluid main-container" ng-controller="editablePageController as ctrl">
+<div class="container-fluid main-container">
 	<div class="row">
 		<div class="col-xs-12">
-			<h1>This is my message = {{ctrl.message}}</h1>
-			<button class="btn btn-success" ng-click="ctrl.sendMessage()">Send message</button>
+			<h1>This is my message</h1>
+			<button class="btn btn-success">Send message</button>
+		</div>
+		<div class="col-xs-12 badd-droppable" style="margin-top: 20px; padding: 20px; background-color: #51b62b">
+			<div class="jumbotron badd-droppable" style="height: 300px;"></div>
 		</div>
 	</div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.13.4/ui-bootstrap-tpls.min.js"></script>
-<script>
-	var editablePageController = function($window) {
-		var ctrl = this;
-
-		ctrl.message = 'Hello darling';
-
-		ctrl.sendMessage = function() {
-			$window.parent.postMessage(ctrl.message, '*');
-		};
-	};
-	editablePageController.$inject = ['$window'];
-	var editablePageApp = angular.module('editablePageApp', []);
-	editablePageApp.controller('editablePageController', editablePageController);
-</script>
 </body>
 </html>
