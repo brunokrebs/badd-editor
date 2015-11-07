@@ -9,6 +9,8 @@ var webserver = require('gulp-webserver');
 var watch = require('gulp-watch');
 var batch = require('gulp-batch');
 
+var development = false;
+
 gulp.task('generate-templates', function () {
 	return gulp.src('src/**/*.html')
 		.pipe(templateCache({
@@ -19,9 +21,11 @@ gulp.task('generate-templates', function () {
 });
 
 gulp.task('uglify-js', function() {
-	return gulp.src('src/**/*.js')
-		.pipe(uglify())
-		.pipe(gulp.dest('build'));
+	var js = gulp.src('src/**/*.js');
+	if (development == false) {
+		js = js.pipe(uglify());
+	}
+	return js.pipe(gulp.dest('build'));
 });
 
 gulp.task('concat-js', ['uglify-js'], function() {
@@ -67,6 +71,7 @@ gulp.task('default', ['generate-dist'], function() {
 
 gulp.task('watch', function () {
 	watch('./src/**/*', batch(function (events, done) {
+		development = true;
 		gulp.start('default', done);
 	}));
 });
