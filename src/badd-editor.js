@@ -36,4 +36,20 @@
 	};
 
 	editorModule.directive('baddEditor', editorDirective);
+
+	var editorService = function() {
+		var service = this;
+
+		service.uniqueCounter = 0;
+
+		service.getNextUniqueClass = function() {
+			service.uniqueCounter = service.uniqueCounter + 1;
+			return 'badd-editor-unique-' + service.uniqueCounter;
+		};
+
+		service.getLastUniqueClass = function() {
+			return 'badd-editor-unique-' + service.uniqueCounter;
+		};
+	};
+	editorModule.service('editorService', editorService);
 }());
