@@ -5,6 +5,11 @@
 		var dir = this;
 
 		dir.objectEntering = function(event, object) {
+			// add preview
+			dir.objectPreview = $(object.draggable.data('raw'));
+			$(this).append(dir.objectPreview);
+
+			// draw highlight border
 			var position = $(this).offset();
 			var width = $(this).outerWidth();
 			var height = $(this).outerHeight();
@@ -13,9 +18,6 @@
 			body.append('<div class="badd-highlighter" style="position: fixed; top: ' + position.top +
 				'px ; left: ' + position.left +
 				'px ; width: ' + width + 'px; height: ' + height + 'px; border: 2px dashed lightskyblue;" />');
-
-			dir.objectPreview = $(object.draggable.data('raw'));
-			$(this).append(dir.objectPreview);
 		};
 
 		dir.objectLeaving = function(event) {
