@@ -78,6 +78,11 @@ td.badd-editor-components ul li {
 	padding: 5px;
 }
 
+td.badd-editor-components ul li.ui-draggable-dragging {
+	margin-left: 338px;
+	margin-top: 38px;
+}
+
 td.badd-editor-components ul li.drag-active,
 td.badd-editor-components ul li.ui-draggable-dragging,
 td.badd-editor-components ul li:hover {
