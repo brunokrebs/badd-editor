@@ -44,14 +44,10 @@
 
 		return {
 			restrict: 'A',
-			link: function (scope, element, attrs) {
-				var greedy = attrs.greedy;
-				if (greedy == undefined) {
-					greedy = true;
-				}
+			link: function (scope, element) {
 				element.droppable({
 					activeClass: 'drop-active',
-					greedy: greedy,
+					greedy: true,
 					hoverClass: 'drop-hover',
 					iframeFix: true,
 					tolerance: 'intersect',
