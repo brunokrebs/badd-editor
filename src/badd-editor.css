@@ -11,7 +11,7 @@ td.badd-editor-header {
 	border-bottom: 1px solid #000;
 }
 
-td.badd-editor-header p.title {
+td.badd-editor-header p.badd-editor-title {
 	color: white;
 	line-height: 50px;
 }
@@ -26,8 +26,8 @@ td.badd-editor-properties {
 	vertical-align: top;
 }
 
-td.badd-editor-components p.title,
-td.badd-editor-properties p.title {
+td.badd-editor-components p.badd-editor-title,
+td.badd-editor-properties p.badd-editor-title {
 	color: white;
 	line-height: 50px;
 	background-color: #343434;
@@ -37,8 +37,8 @@ td.badd-editor-properties p.title {
 	padding: 0 15px 0 15px;
 }
 
-td.badd-editor-components div.components,
-td.badd-editor-properties div.properties {
+td.badd-editor-components div.badd-editor-components,
+td.badd-editor-properties div.badd-editor-properties {
 	border-top: 1px solid #888888;
 	background-color: #cccccc;
 	height: 100%;
@@ -107,7 +107,7 @@ td.badd-editor-components ul li:hover i {
 	display: block;
 }
 
-td.badd-editor-components ul li span.label {
+td.badd-editor-components ul li span.badd-editor-label {
 	display: inline-block;
 	height: 25px;
 	line-height: 20px;
@@ -115,7 +115,7 @@ td.badd-editor-components ul li span.label {
 	float: left;
 }
 
-td.badd-editor-components ul li span.title {
+td.badd-editor-components ul li span.badd-editor-title {
 	display: inline-block;
 	margin-top: 2px;
 	margin-left: 5px;
