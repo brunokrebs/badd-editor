@@ -11,10 +11,8 @@
 			<div class="components">
 				<p class="title">{{componentsTitle}}</p>
 				<ul>
-					<li badd-draggable data-raw="<button class='btn btn-primary' style='float: right' badd-draggable>New Button</button>">
-						<div>
-							<img src="btn.png" /> <span>Button</span><i class="fa fa-arrows-alt"></i>
-						</div>
+					<li ng-repeat="component in components" data-raw="{{component.element}}" badd-draggable>
+						<span class="label label-default">{{component.label}}</span> <span class="title">{{component.title}}</span><i class="fa fa-arrows-alt"></i>
 					</li>
 				</ul>
 			</div>
