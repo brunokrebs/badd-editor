@@ -61,9 +61,11 @@
 			}
 
 			var updatedClosestTarget = null;
+			var closestY = 10000000;
 			dir.droppableTarget.children().each(function() {
-				if (y <= $(this).offset().top) {
+				if (y <= $(this).offset().top && $(this).offset().top < closestY) {
 					updatedClosestTarget = $(this);
+					closestY = $(this).offset().top;
 				}
 			});
 
@@ -111,20 +113,14 @@
 		}
 
 		dir.objectDropped = function(scope) {
-			return function (event, ui) {
-				var rawHtml = angular.element(ui.draggable).data('raw');
-				var draggedEl = angular.element(ui.draggable);
-				var droppedEl = angular.element(this);
-				removePreview(droppedEl);
-				if (rawHtml == undefined) {
-					rawHtml = $(draggedEl)[0].outerHTML;
-				}
-				$compile(rawHtml)(scope).appendTo(droppedEl);
+			return function (event) {
+				$compile(objectPreview)(scope);
 
-				dir.objectLeaving(event);
-
+				dir.objectPreview = null;
 				dir.droppableObject = null;
 				dir.droppableTarget = null;
+
+				dir.objectLeaving(event);
 			}
 		};
 
