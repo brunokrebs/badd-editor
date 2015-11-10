@@ -1,7 +1,7 @@
 (function () {
 	var editorModule = angular.module('baddEditor');
 
-	var baddDraggableDirective = function () {
+	var baddDraggableDirective = function (editorService) {
 		return {
 			restrict: 'A',
 			link: function (scope, element) {
@@ -21,11 +21,13 @@
 					},
 					stop: function (event, ui) {
 						$(this).removeClass("drag-active").closest(element).removeClass("drag-active");
+						editorService.objectPreview = null;
 					}
 				});
 			}
 		}
 	};
+	baddDraggableDirective.$inject = ['editorService'];
 
 	editorModule.directive('baddDraggable', baddDraggableDirective);
 }());

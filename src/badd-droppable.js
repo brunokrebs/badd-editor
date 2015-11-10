@@ -53,8 +53,8 @@
 
 			var body = target.parents('body');
 			body.find('.badd-highlighter').remove();
-			if (dir.objectPreview) {
-				dir.objectPreview.remove();
+			if (editorService.objectPreview) {
+				editorService.objectPreview.remove();
 			}
 		}
 
@@ -71,7 +71,7 @@
 					updatedClosestTarget = $(this);
 					closestY = $(this).offset().top;
 				}
-				if (y > $(this).offset().top && !$(this).is(dir.objectPreview)) {
+				if (y > $(this).offset().top && !$(this).is(editorService.objectPreview)) {
 					newVerticalOrdering++;
 				}
 			});
@@ -81,13 +81,13 @@
 			}
 
 			// add preview
-			if (! dir.objectPreview) {
-				dir.objectPreview = $(dir.droppableObject.draggable.data('raw'));
+			if (! editorService.objectPreview) {
+				editorService.objectPreview = $(dir.droppableObject.draggable.data('raw'));
 			}
 			if (updatedClosestTarget) {
-				dir.objectPreview.insertBefore(updatedClosestTarget);
+				editorService.objectPreview.insertBefore(updatedClosestTarget);
 			} else {
-				dir.objectPreview.appendTo(dir.droppableTarget);
+				editorService.objectPreview.appendTo(dir.droppableTarget);
 			}
 			dir.verticalOrdering = newVerticalOrdering;
 		}
@@ -132,9 +132,9 @@
 				body.find(dir.entered).removeClass(dir.entered);
 				dir.entered = null;
 
-				$compile(dir.objectPreview)(scope);
+				$compile(editorService.objectPreview)(scope);
 
-				dir.objectPreview = null;
+				editorService.objectPreview = null;
 				dir.droppableObject = null;
 				dir.droppableTarget = null;
 			}

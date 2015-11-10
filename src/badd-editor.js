@@ -49,6 +49,7 @@
 		var service = this;
 
 		service.uniqueCounter = 0;
+		service.objectPreview = null;
 
 		service.getNextUniqueClass = function() {
 			service.uniqueCounter = service.uniqueCounter + 1;
