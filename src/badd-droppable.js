@@ -51,9 +51,9 @@
 			target.removeClass(dir.entered);
 			dir.entered = null;
 
-			editorService.hideHighlightBorder();
 			if (editorService.objectPreview) {
 				editorService.objectPreview.remove();
+				editorService.hideHighlightBorder();
 			}
 		}
 

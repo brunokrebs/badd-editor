@@ -22,6 +22,7 @@
 					stop: function (event, ui) {
 						$(this).removeClass("drag-active").closest(element).removeClass("drag-active");
 						editorService.objectPreview = null;
+						editorService.hideHighlightBorder();
 					}
 				});
 			}
