@@ -13,6 +13,7 @@
 					revert: false,
 					helper: 'clone',
 					iframeFix: true,
+					refreshPositions: true,
 					cursorAt: iframeOffset,
 					drag: function () {
 						$(this).addClass("drag-active");

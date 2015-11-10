@@ -9,6 +9,7 @@
 		dir.iframeOffsetY = null;
 		dir.droppableObject = null;
 		dir.droppableTarget = null;
+		dir.verticalOrdering = 0;
 
 		dir.objectEntering = function(event, object) {
 			registerMouseListener();
@@ -31,6 +32,7 @@
 			}
 
 			dir.droppableTarget = null;
+			dir.verticalOrdering = null;
 			removePreview($(this));
 		};
 
@@ -62,12 +64,20 @@
 
 			var updatedClosestTarget = null;
 			var closestY = 10000000;
-			dir.droppableTarget.children().each(function() {
+			var newVerticalOrdering = 0;
+			dir.droppableTarget.children().each(function () {
 				if (y <= $(this).offset().top && $(this).offset().top < closestY) {
 					updatedClosestTarget = $(this);
 					closestY = $(this).offset().top;
 				}
+				if (y > $(this).offset().top && !$(this).is(dir.objectPreview)) {
+					newVerticalOrdering++;
+				}
 			});
+
+			if (dir.verticalOrdering === newVerticalOrdering) {
+				return;
+			}
 
 			removePreview(dir.droppableTarget);
 
@@ -78,7 +88,7 @@
 			} else {
 				dir.droppableTarget.append(dir.objectPreview);
 			}
-			dir.updatePreview = false;
+			dir.verticalOrdering = newVerticalOrdering;
 		}
 
 		function registerMouseListener() {
