@@ -48,9 +48,12 @@
 	var editorService = function() {
 		var service = this;
 
-		service.uniqueCounter = 0;
-		service.objectPreview = null;
-		service.highlightBorder = null;
+		function init() {
+			service.uniqueCounter = 0;
+			service.objectPreview = null;
+			service.highlightBorder = null;
+			service.iframeOffsetY = 0;
+		}
 
 		service.getNextUniqueClass = function() {
 			service.uniqueCounter = service.uniqueCounter + 1;
@@ -86,7 +89,14 @@
 				width: 0,
 				height: 0
 			});
-		}
+		};
+
+		service.updateIframeOffset = function() {
+			var iframe = $('html').find('iframe.badd-editor-browser');
+			service.iframeOffsetY = iframe.offset().top;
+		};
+
+		init();
 	};
 	editorModule.service('editorService', editorService);
 }());

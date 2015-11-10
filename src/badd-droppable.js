@@ -6,10 +6,10 @@
 
 		dir.entered = null;
 		dir.mouseListenerRegistered = false;
-		dir.iframeOffsetY = null;
 		dir.droppableObject = null;
 		dir.droppableTarget = null;
 		dir.verticalOrdering = 0;
+		editorService.updateIframeOffset();
 
 		dir.objectEntering = function(event, object) {
 			registerMouseListener();
@@ -98,21 +98,14 @@
 				return;
 			}
 
-			updateIframeOffset();
-
 			$('html').mousemove(function(event) {
 				if (!dir.droppableTarget || !dir.droppableObject) {
 					return;
 				}
 
-				updatePreview(event.pageY - dir.iframeOffsetY);
+				updatePreview(event.pageY - editorService.iframeOffsetY);
 			});
 			dir.mouseListenerRegistered = true;
-		}
-
-		function updateIframeOffset() {
-			var iframe = $('html').find('iframe.badd-editor-browser');
-			dir.iframeOffsetY = iframe.offset().top;
 		}
 
 		dir.objectDropped = function(scope) {
