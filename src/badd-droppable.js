@@ -24,6 +24,7 @@
 
 			dir.droppableObject = object;
 			dir.droppableTarget = $(this);
+			dir.verticalOrdering = null;
 		};
 
 		dir.objectLeaving = function() {
@@ -102,6 +103,7 @@
 				if (!dir.droppableTarget || !dir.droppableObject) {
 					return;
 				}
+
 				updatePreview(event.pageY - dir.iframeOffsetY);
 
 				// draw highlight border
