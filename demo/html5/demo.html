@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<style>
+		iframe {
+			margin-left: 200px;
+			margin-top: 200px;
+		}
+	</style>
+	<script>
+		function drag(ev) {
+			ev.dataTransfer.setData("text", ev.target.getAttribute('data-object'));
+		}
+	</script>
+</head>
+<body>
+
+<p>
+	Drag the W3Schools image into the rectangle:
+	<img id="drag1" src="http://www.w3schools.com/html/img_logo.gif"
+		 draggable="true" ondragstart="drag(event)" width="336" height="69"
+			data-object="<button>New Button</button>">
+</p>
+<!--<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>-->
+<iframe src="edit.html" style="border: 1px solid; width: 500px; height: 300px;"></iframe>
+<br>
+
+
+</body>
+</html>
