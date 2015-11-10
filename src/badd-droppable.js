@@ -58,8 +58,6 @@
 		}
 
 		function updatePreview(y) {
-			editorService.showHighlightBorder(dir.droppableTarget);
-
 			if (y < 0) {
 				return;
 			}
@@ -91,6 +89,8 @@
 				editorService.objectPreview.appendTo(dir.droppableTarget);
 			}
 			dir.verticalOrdering = newVerticalOrdering;
+
+			editorService.showHighlightBorder(dir.droppableTarget);
 		}
 
 		function registerMouseListener() {
