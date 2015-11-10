@@ -20,11 +20,11 @@
 		});
 
 		$scope.components = [
-			{ title: 'Header 1', label:'h1', element: '<h1>New Header 1</h1>' },
-			{ title: 'Header 2', label:'h2', element: '<h2>New Header 2</h2>' },
-			{ title: 'Header 3', label:'h3', element: '<h3>New Header 3</h3>' },
-			{ title: 'Header 4', label:'h4', element: '<h4>New Header 4</h4>' },
-			{ title: 'Button', label:'btn', element: '<button class="btn btn-primary" badd-draggable>New Button</button>' }
+			{ titleLg: 'Header 1', title: 'H1', label:'h1', element: '<h1>New Header 1</h1>' },
+			{ titleLg: 'Header 2', title: 'H2', label:'h2', element: '<h2>New Header 2</h2>' },
+			{ titleLg: 'Header 3', title: 'H3', label:'h3', element: '<h3>New Header 3</h3>' },
+			{ titleLg: 'Header 4', title: 'H4', label:'h4', element: '<h4>New Header 4</h4>' },
+			{ titleLg: 'Button', title: 'BTN', label:'btn', element: '<button class="btn btn-primary" badd-draggable>New Button</button>' }
 		];
 	};
 	editorController.$inject = ['$scope', '$window'];
