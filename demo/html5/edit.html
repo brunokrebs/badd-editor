@@ -23,18 +23,59 @@
 			ev.preventDefault();
 		}
 
-		function drop(ev) {
-			ev.preventDefault();
-			var newObject = ev.dataTransfer.getData("text");
-			ev.target.innerHTML = newObject;
+		function drop(event) {
+			event.preventDefault();
+			var newObject = event.dataTransfer.getData("text");
+			var children = _.toArray(event.target.childNodes);
+			children.forEach(function(child) {
+				console.log(child.offsetTop);
+			});
+
+			event.target.innerHTML = newObject;
 		}
 	</script>
 
 	<style>
-		#div1 {width:350px;height:70px;padding:10px;border:1px solid #aaaaaa;}
+		.div1 {min-width:350px;min-height:70px;padding:10px; margin: 20px; border:1px solid #aaaaaa;}
+		.div2 {min-width:250px;min-height:70px;padding:10px; margin: 10px; border:1px solid green;}
 	</style>
 </head>
 <body>
-<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+<div class="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+	<button id="btn1">1</button>
+	<button id="btn2">2</button>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
+	<button id="btn1">1</button>
+	<button id="btn2">2</button>
+</div>
+<script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" ></script>
 </body>
 </html>
