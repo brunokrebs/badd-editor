@@ -51,14 +51,15 @@
 			target.removeClass(dir.entered);
 			dir.entered = null;
 
-			var body = target.parents('body');
-			body.find('.badd-highlighter').remove();
+			editorService.hideHighlightBorder();
 			if (editorService.objectPreview) {
 				editorService.objectPreview.remove();
 			}
 		}
 
 		function updatePreview(y) {
+			editorService.showHighlightBorder(dir.droppableTarget);
+
 			if (y < 0) {
 				return;
 			}
@@ -105,16 +106,6 @@
 				}
 
 				updatePreview(event.pageY - dir.iframeOffsetY);
-
-				// draw highlight border
-				var position = dir.droppableTarget.offset();
-				var width = dir.droppableTarget.outerWidth();
-				var height = dir.droppableTarget.outerHeight();
-
-				var body = dir.droppableTarget.parents('body');
-				body.append('<div class="badd-highlighter" style="position: fixed; top: ' + position.top +
-					'px ; left: ' + position.left +
-					'px ; width: ' + width + 'px; height: ' + height + 'px; border: 2px dashed lightskyblue;" />');
 			});
 			dir.mouseListenerRegistered = true;
 		}
@@ -128,7 +119,7 @@
 			return function () {
 				var body = dir.droppableTarget.parents('body');
 
-				body.find('.badd-highlighter').remove();
+				editorService.hideHighlightBorder();
 				body.find(dir.entered).removeClass(dir.entered);
 				dir.entered = null;
 

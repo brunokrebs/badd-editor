@@ -5,3 +5,8 @@ html {
 body {
 	min-height: 100%;
 }
+
+.badd-highlighter {
+	position: fixed;
+	border: 2px dashed lightskyblue;
+}

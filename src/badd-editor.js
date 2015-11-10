@@ -50,6 +50,7 @@
 
 		service.uniqueCounter = 0;
 		service.objectPreview = null;
+		service.highlightBorder = null;
 
 		service.getNextUniqueClass = function() {
 			service.uniqueCounter = service.uniqueCounter + 1;
@@ -59,6 +60,33 @@
 		service.getLastUniqueClass = function() {
 			return 'badd-editor-unique-' + service.uniqueCounter;
 		};
+
+		service.showHighlightBorder = function(target) {
+			if ( ! service.highlightBorder) {
+				service.highlightBorder = $('<div class="badd-highlighter" />');
+
+				var body = target.parents('html').find('body');
+				body.append(service.highlightBorder);
+			}
+
+			service.highlightBorder.css({
+				top: target.offset().top,
+				left: target.offset().left,
+				width: target.outerWidth(),
+				height: target.outerHeight(),
+				display: 'block'
+			});
+		};
+
+		service.hideHighlightBorder = function() {
+			service.highlightBorder.css({
+				display: 'none',
+				top: 0,
+				left: 0,
+				width: 0,
+				height: 0
+			});
+		}
 	};
 	editorModule.service('editorService', editorService);
 }());
