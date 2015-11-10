@@ -79,14 +79,14 @@
 				return;
 			}
 
-			removePreview(dir.droppableTarget);
-
 			// add preview
-			dir.objectPreview = $(dir.droppableObject.draggable.data('raw'));
+			if (! dir.objectPreview) {
+				dir.objectPreview = $(dir.droppableObject.draggable.data('raw'));
+			}
 			if (updatedClosestTarget) {
 				dir.objectPreview.insertBefore(updatedClosestTarget);
 			} else {
-				dir.droppableTarget.append(dir.objectPreview);
+				dir.objectPreview.appendTo(dir.droppableTarget);
 			}
 			dir.verticalOrdering = newVerticalOrdering;
 		}
@@ -123,14 +123,18 @@
 		}
 
 		dir.objectDropped = function(scope) {
-			return function (event) {
-				$compile(objectPreview)(scope);
+			return function () {
+				var body = dir.droppableTarget.parents('body');
+
+				body.find('.badd-highlighter').remove();
+				body.find(dir.entered).removeClass(dir.entered);
+				dir.entered = null;
+
+				$compile(dir.objectPreview)(scope);
 
 				dir.objectPreview = null;
 				dir.droppableObject = null;
 				dir.droppableTarget = null;
-
-				dir.objectLeaving(event);
 			}
 		};
 
