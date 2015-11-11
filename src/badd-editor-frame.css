@@ -8,5 +8,9 @@ body {
 
 .badd-highlighter {
 	position: fixed;
-	border: 2px dashed lightskyblue;
+	border: 3px dashed lightskyblue;
+}
+
+.badd-transfer-area {
+	display: none;
 }
