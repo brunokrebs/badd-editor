@@ -18,22 +18,7 @@
 	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 
-	<script>
-		function allowDrop(ev) {
-			ev.preventDefault();
-		}
 
-		function drop(event) {
-			event.preventDefault();
-			var newObject = event.dataTransfer.getData("text");
-			var children = _.toArray(event.target.childNodes);
-			children.forEach(function(child) {
-				console.log(child.offsetTop);
-			});
-
-			event.target.innerHTML = newObject;
-		}
-	</script>
 
 	<style>
 		.div1 {min-width:350px;min-height:70px;padding:10px; margin: 20px; border:1px solid #aaaaaa;}
@@ -41,41 +26,114 @@
 	</style>
 </head>
 <body>
-<div class="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
-	<button id="btn1">1</button>
-	<button id="btn2">2</button>
-</div>
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<div class="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
-	<button id="btn1">1</button>
-	<button id="btn2">2</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>Bootstrap Editor demo</title>
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	<style>
+		.badd-highlight {
+			position: fixed;
+			height: 300px;
+			width: 960px;
+			top: 143px;
+			left: 20px;
+			border: 3px dashed skyblue;
+		}
+
+		.badd-transfer-area {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+<div class="container-fluid main-container">
+	<div class="row" >
+		<div class="col-xs-12">
+			<h1>This is my message</h1>
+			<button class="btn btn-success">Send message</button>
+		</div>
+		<div class="col-xs-12 badd-droppable" style="margin-top: 20px; padding: 20px; background-color: #51b62b">
+			<div class="jumbotron badd-droppable" style="height: 300px;">
+				<div class="badd-highlight"></div>
+			</div>
+		</div>
+	</div>
 </div>
 <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js" ></script>
+<script>
+	(function() {
+		var transferArea;
+		var previewElement;
+
+		function init() {
+			initTransferArea();
+			initDroppables();
+		}
+
+		function initDroppables() {
+			var divs = _.toArray(document.querySelectorAll('div'));
+			divs.forEach(function(div) {
+				if (div.className !== 'badd-highlight') {
+					div.addEventListener('dragenter', preparePreviewElement, false);
+					div.addEventListener('dragover', showPreviewElement, false);
+					div.addEventListener('drop', drop, false);
+
+//					div.addEventListener('dragleave', handler('dragleave', div.className), false);
+//					div.addEventListener('dragend', handler('dragend', div.className), false);
+				}
+			});
+		}
+
+		function initTransferArea() {
+			transferArea = document.createElement("div");
+			transferArea.className = 'badd-transfer-area';
+			document.body.appendChild(transferArea);
+		}
+
+		function preparePreviewElement(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			if (previewElement) {
+				return;
+			}
+
+			transferArea.innerHTML = event.dataTransfer.getData("object");
+			previewElement = transferArea.childNodes[0];
+		}
+
+		function showPreviewElement(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			event.target.appendChild(previewElement);
+		}
+
+		function drop(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			previewElement = null;
+			transferArea.innerHTML = '';
+		}
+
+		init();
+	}());
+</script>
 </body>
 </html>
