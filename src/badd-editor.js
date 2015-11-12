@@ -25,7 +25,7 @@
 			{ titleLg: 'Header 2', title: 'H2', label:'h2', element: '<h2>New Header 2</h2>' },
 			{ titleLg: 'Header 3', title: 'H3', label:'h3', element: '<h3>New Header 3</h3>' },
 			{ titleLg: 'Header 4', title: 'H4', label:'h4', element: '<h4>New Header 4</h4>' },
-			{ titleLg: 'Button', title: 'BTN', label:'btn', element: '<button class="btn btn-primary" badd-draggable>New Button</button>' }
+			{ titleLg: 'Button', title: 'BTN', label:'btn', element: '<button class="btn btn-primary">New Button</button>' }
 		];
 	};
 	editorController.$inject = ['$scope', '$window'];
@@ -54,6 +54,7 @@
 				service.document = $document[0];
 
 				// set service properties with raw dom html5 element
+				service.iframe = frame[0];
 				service.frame = frame.contents()[0];
 				service.frameHtml = service.frame.querySelector('html');
 				service.frameHead = service.frame.querySelector('head');
@@ -104,9 +105,8 @@
 		};
 
 		service.stopDragging = function(event) {
-			console.log(event.target.className);
 			service.transferArea.innerHTML = '';
-			if (service.previewElement) {
+			if (service.previewElement && service.previewElement.parentNode) {
 				service.previewElement.parentNode.removeChild(service.previewElement);
 				service.previewElement = null;
 			}
@@ -114,6 +114,7 @@
 		};
 
 		service.elementEntering = function(event) {
+			service.previewElement.classList.remove('badd-hidden-preview-element');
 			if (event.target.getAttribute
 				&& event.target !== service.previewElement
 				&& event.target.getAttribute('badd-droppable') === '') {
@@ -125,6 +126,18 @@
 
 			event.stopPropagation();
 			event.preventDefault();
+		};
+
+		service.elementLeaving = function (event) {
+			var iframePosition = service.iframe.getBoundingClientRect();
+			var elementBeingHovered = service.document.elementFromPoint(event.clientX + iframePosition.left,
+																		event.clientY + iframePosition.top);
+			if (elementBeingHovered == null || elementBeingHovered.tagName !== 'IFRAME' ||
+				! _.contains(elementBeingHovered.classList, 'badd-editor-browser')) {
+
+				service.previewElement.classList.add('badd-hidden-preview-element');
+				service.hideHighlightBorder();
+			}
 		};
 
 		service.elementHovering = function(event) {

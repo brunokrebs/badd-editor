@@ -18,3 +18,7 @@ body {
 .badd-transfer-area {
 	display: none;
 }
+
+.badd-hidden-preview-element {
+	display: none;
+}
