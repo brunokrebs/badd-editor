@@ -7,8 +7,12 @@ body {
 }
 
 .badd-highlighter {
+	background-color: transparent;
 	position: fixed;
+	pointer-events: none;
 	border: 3px dashed lightskyblue;
+	z-index: 16777271;
+	display: none;
 }
 
 .badd-transfer-area {

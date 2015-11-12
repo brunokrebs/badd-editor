@@ -65,10 +65,9 @@
 				service.frameBody.appendChild(service.transferArea);
 
 				// create droppable area highlighter
-				service.highlightBorder = service.document.createElement('div');
-				service.highlightBorder.className = 'badd-highlighter';
+				service.transferArea.innerHTML = '<svg class="badd-highlighter"></svg>';
+				service.highlightBorder = service.transferArea.childNodes[0];
 				service.frameBody.appendChild(service.highlightBorder);
-				service.hideHighlightBorder();
 
 				// start baddEditor module
 				service.frameHtml.setAttribute('ng-app', 'baddEditor');
@@ -105,8 +104,12 @@
 		};
 
 		service.stopDragging = function(event) {
+			console.log(event.target.className);
 			service.transferArea.innerHTML = '';
-			service.previewElement = null;
+			if (service.previewElement) {
+				service.previewElement.parentNode.removeChild(service.previewElement);
+				service.previewElement = null;
+			}
 			service.hideHighlightBorder();
 		};
 
@@ -116,7 +119,10 @@
 				&& event.target.getAttribute('badd-droppable') === '') {
 
 				event.target.appendChild(service.previewElement);
+
+				service.showHighlightBorder(event.target);
 			}
+
 			event.stopPropagation();
 			event.preventDefault();
 		};
@@ -132,15 +138,16 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-
+			service.previewElement = null;
 		};
 
 		service.showHighlightBorder = function(target) {
-			service.highlightBorder.style.top = target.offset().top;
-			service.highlightBorder.style.left = target.offset().left;
-			service.highlightBorder.style.width = target.outerWidth();
-			service.highlightBorder.style.height = target.outerHeight();
-			service.highlightBorder.style.isplay = 'block';
+			var targetPosition = target.getBoundingClientRect();
+			service.highlightBorder.style.top = targetPosition.top + 'px';
+			service.highlightBorder.style.left = targetPosition.left + 'px';
+			service.highlightBorder.style.width = target.offsetWidth + 'px';
+			service.highlightBorder.style.height = target.offsetHeight + 'px';
+			service.highlightBorder.style.display = 'block';
 		};
 
 		service.hideHighlightBorder = function() {
