@@ -214,6 +214,10 @@
 			event.stopPropagation();
 			event.preventDefault();
 
+			if (service.previewElement.getAttribute('badd-draggable') !== '') {
+				service.previewElement.setAttribute('badd-draggable', '');
+				service.previewElement.setAttribute('badd-configurable', '');
+			}
 			service.previewElement = null;
 		};
 
