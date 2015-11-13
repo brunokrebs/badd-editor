@@ -44,15 +44,19 @@
 
 	editorModule.directive('baddEditor', editorDirective);
 
-	var editorService = function($compile, $document) {
+	var editorService = function($compile, $document, $window) {
 		var service = this;
 
 		service.initializeFrame = function(frame, scope) {
 			return function () {
 				service.document = $document[0];
 
+				$window.addEventListener("click", service.hideConfigurationModal);
+				service.configurationModal = service.document.querySelector('.badd-configuration-modal');
+
 				// set service properties with raw dom html5 element
 				service.iframe = frame[0];
+				service.iframePosition = service.iframe.getBoundingClientRect();
 				service.frame = frame.contents()[0];
 				service.frame.addEventListener("scroll", service.updateHighlightBorderPosition);
 				service.frameHtml = service.frame.querySelector('html');
@@ -86,6 +90,9 @@
 				// make everything draggable and configurable, divs are also droppable
 				var elements = _.toArray(service.frameBody.querySelectorAll('*'));
 				elements.forEach(configureDirectivesOnElementAndChildren);
+
+				// hide configuration modal
+				service.showConfigurationModal = false;
 
 				service.scope = scope;
 				$compile(service.frameHtml)(scope);
@@ -136,9 +143,8 @@
 		};
 
 		service.elementLeaving = function (event) {
-			var iframePosition = service.iframe.getBoundingClientRect();
-			var elementBeingHovered = service.document.elementFromPoint(event.clientX + iframePosition.left,
-																		event.clientY + iframePosition.top);
+			var elementBeingHovered = service.document.elementFromPoint(event.clientX + service.iframePosition.left,
+																		event.clientY + service.iframePosition.top);
 			if (elementBeingHovered == null || elementBeingHovered.tagName !== 'IFRAME' ||
 				! _.contains(elementBeingHovered.classList, 'badd-editor-browser')) {
 
@@ -258,7 +264,21 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			console.log('mouseClick - ' + event.target.className);
+			service.configurationModal.style.left = (service.iframePosition.left + event.clientX) + 'px';
+			service.configurationModal.style.top = (service.iframePosition.top + event.clientY) + 'px';
+
+			service.scope.$apply(function () {
+				service.showConfigurationModal = true;
+			});
+		};
+
+		service.hideConfigurationModal = function(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			service.scope.$apply(function () {
+				service.showConfigurationModal = false;
+			});
 		};
 
 		service.mouseLeaving = function(event) {
@@ -268,6 +288,6 @@
 			service.hideHighlightBorder();
 		};
 	};
-	editorService.$inject = ['$compile', '$document'];
+	editorService.$inject = ['$compile', '$document', '$window'];
 	editorModule.service('editorService', editorService);
 }());

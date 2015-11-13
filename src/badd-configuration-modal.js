@@ -1,12 +1,12 @@
 (function() {
 	var editorModule = angular.module('baddEditor');
 
-	var baddConfigurationController = function(editorService) {
+	var baddConfigurationController = function($scope, editorService) {
 		var ctrl = this;
 
-		ctrl.allowTextEdition = true;
+		ctrl.editorService = editorService;
 	};
-	baddConfigurationController.$inject = ['editorService'];
+	baddConfigurationController.$inject = ['$scope', 'editorService'];
 
 	var baddConfigurationModalDirective = function() {
 		return {

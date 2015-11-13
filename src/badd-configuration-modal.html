@@ -1,8 +1,9 @@
-<div class="panel panel-default badd-configuration-modal">
+<div class="panel panel-default badd-configuration-modal" ng-show="ctrl.editorService.showConfigurationModal">
 	<div class="panel-heading">
 		<h4>Configuration options</h4>
 	</div>
 	<div class="panel-body">
-		<input type="text" placeholder="Element text" ng-visible="{{ctrl.allowTextEdition}}" ng-model="ctrl.text" />
+		<input type="text" placeholder="Element text" ng-model="ctrl.text" />
+		<button ng-click="ctrl.showModal()" class="btn btn-success">Go Horse</button>
 	</div>
 </div>
