@@ -6,6 +6,11 @@ body {
 	min-height: 100%;
 }
 
+body > .container,
+body > .container-fluid {
+	padding-bottom: 50px;
+}
+
 .badd-highlighter {
 	background-color: transparent;
 	position: fixed;

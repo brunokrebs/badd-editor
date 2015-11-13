@@ -1,1 +1,1 @@
-html{height:100%}body{min-height:100%}.badd-highlighter{background-color:transparent;position:fixed;pointer-events:none;border:3px dashed #87cefa;z-index:16777271;display:none}.badd-hidden-preview-element,.badd-transfer-area{display:none}
+html{height:100%}body{min-height:100%}body>.container,body>.container-fluid{padding-bottom:50px}.badd-highlighter{background-color:transparent;position:fixed;pointer-events:none;border:3px dashed #87cefa;z-index:16777271;display:none}.badd-hidden-preview-element,.badd-transfer-area{display:none}

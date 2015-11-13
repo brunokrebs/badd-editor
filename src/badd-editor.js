@@ -21,11 +21,18 @@
 
 		// default draggable components
 		$scope.components = [
-			{ titleLg: 'Header 1', title: 'H1', label:'h1', element: '<h1>New Header 1</h1>' },
-			{ titleLg: 'Header 2', title: 'H2', label:'h2', element: '<h2>New Header 2</h2>' },
-			{ titleLg: 'Header 3', title: 'H3', label:'h3', element: '<h3>New Header 3</h3>' },
-			{ titleLg: 'Header 4', title: 'H4', label:'h4', element: '<h4>New Header 4</h4>' },
-			{ titleLg: 'Button', title: 'BTN', label:'btn', element: '<button class="btn btn-primary">New Button</button>' }
+			{ titleLg: 'Row', title: 'ROW', label:'row', element: '<div class="row"><div class="col-xs-12"><p>A simple row with a single column</p></div></div>' },
+			{ titleLg: 'Column', title: 'COL', label:'col', element: '<div class="col-xs-12"><p>You can make me a smaller column</p></div>' },
+			{ titleLg: 'Header 1', title: 'H1', label:'h1', element: '<h1>An important title</h1>' },
+			{ titleLg: 'Header 2', title: 'H2', label:'h2', element: '<h2>A secondary title</h2>' },
+			{ titleLg: 'Header 3', title: 'H3', label:'h3', element: '<h3>A third level title</h3>' },
+			{ titleLg: 'Header 4', title: 'H4', label:'h4', element: '<h4>A fourth level title</h4>' },
+			{ titleLg: 'Paragraph', title: 'P', label:'p', element: '<p>Write something useful here</p>' },
+			{ titleLg: 'Button', title: 'BTN', label:'btn', element: '<button class="btn btn-primary">My brand new button</button>' },
+			{ titleLg: 'Jumbotron', title: 'JMB', label:'jmb', element: '<div class="jumbotron"><h1>Hello, world!</h1><p>My name is Jumbotron</p></div>' },
+			{ titleLg: 'Panel', title: 'PNL', label:'pnl', element: '<div class="panel panel-primary"><div class="panel-heading"><h3 class="panel-title">Panel title</h3></div><div class="panel-body">Panel content</div></div>' },
+			{ titleLg: 'Well', title: 'WLL', label:'wll', element: '<div class="well">Look, I\'m in a well.</div>' },
+			{ titleLg: 'Image', title: 'IMG', label:'img', element: '<img src="http://www.avjobs.com/images/v_png_v5/v_collection_png/256x256/shadow/airplane2.png" alt="airplane">' }
 		];
 	};
 	editorController.$inject = ['$scope', '$window'];
