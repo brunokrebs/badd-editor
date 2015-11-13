@@ -11,10 +11,10 @@
 			<div class="badd-editor-components">
 				<p class="badd-editor-title">{{componentsTitle}}</p>
 				<ul>
-					<li ng-repeat="component in components" data-element="{{component.element}}" badd-draggable>
-						<span class="label label-default badd-editor-label">{{component.label}}</span>
-						<span class="badd-editor-title visible-lg-inline">{{component.titleLg}}</span>
-						<span class="badd-editor-title visible-md-inline">{{component.title}}</span>
+					<li ng-repeat="draggable in draggables" data-element="{{draggable.element}}" badd-draggable>
+						<span class="label label-default badd-editor-label">{{draggable.label}}</span>
+						<span class="badd-editor-title visible-lg-inline">{{draggable.titleLg}}</span>
+						<span class="badd-editor-title visible-md-inline">{{draggable.title}}</span>
 						<span class="badd-editor-title"> </span>
 						<i class="fa fa-arrows-alt"></i>
 					</li>

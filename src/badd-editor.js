@@ -1,10 +1,3 @@
-/**
- * badd editor
- *
- * @author Bruno Krebs
- * @url https://github.com/brunokrebs/badd-editor
- * @license MIT License <http://opensource.org/licenses/mit-license.php>
- */
 (function() {
 	var editorModule = angular.module('baddEditor', []);
 
@@ -20,7 +13,7 @@
 		});
 
 		// default draggable components
-		$scope.components = [
+		$scope.draggables = [
 			{ titleLg: 'Row', title: 'ROW', label:'row', element: '<div class="row"><div class="col-xs-12"><p>A simple row with a single column</p></div></div>' },
 			{ titleLg: 'Column', title: 'COL', label:'col', element: '<div class="col-xs-12"><p>You can make me a smaller column</p></div>' },
 			{ titleLg: 'Header 1', title: 'H1', label:'h1', element: '<h1>An important title</h1>' },
