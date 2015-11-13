@@ -21,14 +21,4 @@
 	};
 	baddDroppableFrameDirective.$inject = ['$compile', 'editorService'];
 	editorModule.directive('baddDroppableFrame', baddDroppableFrameDirective);
-
-	var baddDroppableFrameController = function($window) {
-		var ctrl = this;
-
-		ctrl.sendMessage = function() {
-			$window.postMessage(ctrl.message, '*');
-		};
-	};
-	baddDroppableFrameController.$inject = ['$window'];
-	editorModule.controller('baddDroppableFrameController', baddDroppableFrameController);
 }());

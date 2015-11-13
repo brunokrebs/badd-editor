@@ -27,3 +27,7 @@ body > .container-fluid {
 .badd-hidden-preview-element {
 	display: none;
 }
+
+* {
+	cursor: default !important;
+}

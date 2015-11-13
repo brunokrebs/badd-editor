@@ -82,14 +82,14 @@
 
 				// enable controller on body
 				service.frameBody.setAttribute('badd-droppable', '');
-				service.frameBody.setAttribute('ng-controller', 'baddDroppableFrameController as ctrl');
+				service.frameBody.setAttribute('badd-configurable', '');
 
 				// make divs droppable and configurable
 				var divs = _.toArray(service.frameBody.querySelectorAll('div'));
 				divs.forEach(function(div) {
 					if (div.className !== 'badd-highlight' && div.className !== 'badd-transfer-area') {
 						div.setAttribute('badd-droppable', '');
-						div.setAttribute('ng-click', 'ctrl.sendMessage()');
+						div.setAttribute('badd-configurable', '');
 					}
 				});
 
@@ -221,6 +221,27 @@
 			service.highlightBorder.style.width = 0;
 			service.highlightBorder.style.height = 0;
 		};
+
+		service.mouseHovering = function(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			service.showHighlightBorder(event.target);
+		};
+
+		service.mouseClick = function(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			alert('mouseClick - ' + event.target.className);
+		};
+
+		service.mouseLeaving = function(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			service.hideHighlightBorder();
+		}
 	};
 	editorService.$inject = ['$compile', '$document'];
 	editorModule.service('editorService', editorService);
