@@ -117,3 +117,14 @@ td.badd-editor-components ul li span.badd-editor-title {
 	margin-top: 2px;
 	margin-left: 5px;
 }
+
+/* configuration modal */
+
+
+.badd-configuration-modal {
+	position: fixed;
+	top: 200px;
+	left: 200px;
+	border: 1px solid gray;
+	border-radius: 2px;
+}
