@@ -54,6 +54,7 @@
 				// set service properties with raw dom html5 element
 				service.iframe = frame[0];
 				service.frame = frame.contents()[0];
+				service.frame.addEventListener("scroll", service.updateHighlightBorderPosition);
 				service.frameHtml = service.frame.querySelector('html');
 				service.frameHead = service.frame.querySelector('head');
 				service.frameBody = service.frame.querySelector('body');
@@ -219,6 +220,12 @@
 			service.previewElement = null;
 		};
 
+		service.updateHighlightBorderPosition = function() {
+			if (service.highlightBorder.style.display === 'block' && service.lastHoveredTarget) {
+				service.showHighlightBorder(service.lastHoveredTarget);
+			}
+		};
+
 		service.showHighlightBorder = function(target) {
 			var targetPosition = target.getBoundingClientRect();
 			service.highlightBorder.style.top = targetPosition.top + 'px';
@@ -226,6 +233,7 @@
 			service.highlightBorder.style.width = target.offsetWidth + 'px';
 			service.highlightBorder.style.height = target.offsetHeight + 'px';
 			service.highlightBorder.style.display = 'block';
+			service.lastHoveredTarget = target;
 		};
 
 		service.hideHighlightBorder = function() {
@@ -255,7 +263,7 @@
 			event.preventDefault();
 
 			service.hideHighlightBorder();
-		}
+		};
 	};
 	editorService.$inject = ['$compile', '$document'];
 	editorModule.service('editorService', editorService);
