@@ -16,18 +16,16 @@ td.badd-editor-header p.badd-editor-title {
 	line-height: 50px;
 }
 
-/* editor's components and properties style */
+/* editor's components style */
 
-td.badd-editor-components,
-td.badd-editor-properties {
+td.badd-editor-components {
 	background-color: #343434;
 	padding: 0;
 	width: 15%;
 	vertical-align: top;
 }
 
-td.badd-editor-components p.badd-editor-title,
-td.badd-editor-properties p.badd-editor-title {
+td.badd-editor-components p.badd-editor-title {
 	color: white;
 	line-height: 50px;
 	background-color: #343434;
@@ -37,8 +35,7 @@ td.badd-editor-properties p.badd-editor-title {
 	padding: 0 15px 0 15px;
 }
 
-td.badd-editor-components div.badd-editor-components,
-td.badd-editor-properties div.badd-editor-properties {
+td.badd-editor-components div.badd-editor-components {
 	border-top: 1px solid #888888;
 	background-color: #cccccc;
 	height: 100%;
