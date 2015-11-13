@@ -83,26 +83,30 @@
 				service.frameBody.setAttribute('badd-droppable', '');
 				service.frameBody.setAttribute('badd-configurable', '');
 
-				// make divs droppable
-				var divs = _.toArray(service.frameBody.querySelectorAll('div'));
-				divs.forEach(function(div) {
-					if (div.className !== 'badd-highlight' && div.className !== 'badd-transfer-area') {
-						div.setAttribute('badd-droppable', '');
-					}
-				});
-
-				// make everything else draggable and configurable
+				// make everything draggable and configurable, divs are also droppable
 				var elements = _.toArray(service.frameBody.querySelectorAll('*'));
-				elements.forEach(function(element) {
-					if (element.className !== 'badd-highlight' && element.className !== 'badd-transfer-area') {
-						element.setAttribute('badd-draggable', '');
-						element.setAttribute('badd-configurable', '');
-					}
-				});
+				elements.forEach(configureDirectivesOnElementAndChildren);
 
+				service.scope = scope;
 				$compile(service.frameHtml)(scope);
 			};
 		};
+
+		function configureDirectivesOnElementAndChildren(element) {
+			if (element.className !== 'badd-highlight' && element.className !== 'badd-transfer-area') {
+				if (element.tagName === 'DIV' && element.getAttribute('badd-droppable') !== '') {
+					element.setAttribute('badd-droppable', '');
+				}
+
+				if (element.getAttribute('badd-draggable') !== '') {
+					element.setAttribute('badd-draggable', '');
+					element.setAttribute('badd-configurable', '');
+				}
+
+				var elements = _.toArray(element.querySelectorAll('*'));
+				elements.forEach(configureDirectivesOnElementAndChildren);
+			}
+		}
 
 		service.startDragging = function (event) {
 			event.dataTransfer.setData('text', 'firefox needs data');
@@ -213,10 +217,9 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			if (service.previewElement.getAttribute('badd-draggable') !== '') {
-				service.previewElement.setAttribute('badd-draggable', '');
-				service.previewElement.setAttribute('badd-configurable', '');
-			}
+			configureDirectivesOnElementAndChildren(service.previewElement);
+			$compile(service.previewElement)(service.scope);
+
 			service.previewElement = null;
 		};
 
