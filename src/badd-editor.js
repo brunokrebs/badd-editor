@@ -20,7 +20,7 @@
 			{ titleLg: 'Header 3', title: 'H3', label:'h3', element: '<h3>A third level title</h3>' },
 			{ titleLg: 'Header 4', title: 'H4', label:'h4', element: '<h4>A fourth level title</h4>' },
 			{ titleLg: 'Paragraph', title: 'P', label:'p', element: '<p>Write something useful here</p>' },
-			{ titleLg: 'Button', title: 'BTN', label:'btn', element: '<button class="btn btn-primary">My brand new button</button>' },
+			{ titleLg: 'Button', title: 'BTN', label:'btn', element: '<btn class="btn btn-primary">My brand new button</btn>' },
 			{ titleLg: 'Jumbotron', title: 'JMB', label:'jmb', element: '<div class="jumbotron"><h1>Hello, world!</h1><p>My name is Jumbotron</p></div>' },
 			{ titleLg: 'Panel', title: 'PNL', label:'pnl', element: '<div class="panel panel-primary"><div class="panel-heading"><h3 class="panel-title">Panel title</h3></div><div class="panel-body">Panel content</div></div>' },
 			{ titleLg: 'Well', title: 'WLL', label:'wll', element: '<div class="well">Look, I\'m in a well.</div>' },
