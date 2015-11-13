@@ -84,12 +84,20 @@
 				service.frameBody.setAttribute('badd-droppable', '');
 				service.frameBody.setAttribute('badd-configurable', '');
 
-				// make divs droppable and configurable
+				// make divs droppable
 				var divs = _.toArray(service.frameBody.querySelectorAll('div'));
 				divs.forEach(function(div) {
 					if (div.className !== 'badd-highlight' && div.className !== 'badd-transfer-area') {
 						div.setAttribute('badd-droppable', '');
-						div.setAttribute('badd-configurable', '');
+					}
+				});
+
+				// make everything else draggable and configurable
+				var elements = _.toArray(service.frameBody.querySelectorAll('*'));
+				elements.forEach(function(element) {
+					if (element.className !== 'badd-highlight' && element.className !== 'badd-transfer-area') {
+						element.setAttribute('badd-draggable', '');
+						element.setAttribute('badd-configurable', '');
 					}
 				});
 
@@ -100,8 +108,12 @@
 		service.startDragging = function (event) {
 			event.dataTransfer.setData('text', 'firefox needs data');
 
-			service.transferArea.innerHTML = event.target.getAttribute('data-element');
-			service.previewElement = service.transferArea.querySelector('*');
+			if (event.target.getAttribute('badd-configurable') === '') {
+				service.previewElement = event.target;
+			} else {
+				service.transferArea.innerHTML = event.target.getAttribute('data-element');
+				service.previewElement = service.transferArea.querySelector('*');
+			}
 		};
 
 		service.stopDragging = function(event) {
@@ -233,7 +245,7 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			alert('mouseClick - ' + event.target.className);
+			console.log('mouseClick - ' + event.target.className);
 		};
 
 		service.mouseLeaving = function(event) {
