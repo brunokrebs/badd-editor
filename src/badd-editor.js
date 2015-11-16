@@ -50,7 +50,7 @@
 				fixLayout();
 
 				// helper listener
-				$window.addEventListener("click", service.hideConfigurationModal);
+				$window.addEventListener("click", windowClickListener);
 				service.configurationModal = service.document.querySelector('.badd-configuration-modal');
 
 				// set service properties with raw dom html5 element
@@ -141,6 +141,7 @@
 
 		service.startDragging = function (event) {
 			event.dataTransfer.setData('text', 'firefox needs data');
+			service.hideConfigurationModal();
 
 			if (event.target.getAttribute('badd-configurable') === '') {
 				service.previewElement = event.target;
@@ -296,14 +297,18 @@
 			});
 		};
 
-		service.hideConfigurationModal = function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-
+		service.hideConfigurationModal = function() {
 			service.scope.$apply(function () {
 				service.showConfigurationModal = false;
 			});
 		};
+
+		function windowClickListener(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			service.hideConfigurationModal();
+		}
 
 		service.mouseLeaving = function(event) {
 			event.stopPropagation();
