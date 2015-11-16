@@ -1,0 +1,23 @@
+<div class="badd-editor-browser-frame">
+	<div class="badd-editor-browser-header">
+		<div class="badd-editor-browser-header-close"></div>
+		<div class="badd-editor-browser-header-min"></div>
+		<div class="badd-editor-browser-header-max"></div>
+	</div>
+	<div class="badd-editor-browser-address">
+		<div class="badd-editor-browser-address-undo-redo">
+			<div class="badd-editor-browser-address-return">
+				<i class="fa fa-arrow-left"></i>
+			</div>
+			<div class="badd-editor-browser-address-redo">
+				<i class="fa fa-arrow-right"></i>
+			</div>
+		</div>
+		<div class="badd-editor-browser-address-page-title">
+			<input type="text" class="form-control" placeholder="Page title"
+				   ng-model="pageTitle" ng-change="pageTitleChanged()">
+		</div>
+	</div>
+	<iframe class="badd-editor-browser"></iframe>
+	<div class="badd-editor-browser-footer"></div>
+</div>

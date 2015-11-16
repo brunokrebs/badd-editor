@@ -1,6 +1,13 @@
 (function() {
 	var editorModule = angular.module('baddEditor');
 
+	var baddDroppableFrameController = function($scope, editorService) {
+		$scope.pageTitleChanged = function() {
+			editorService.changePageTitle($scope.pageTitle);
+		};
+	};
+	baddDroppableFrameController.$inject = ['$scope', 'editorService'];
+
 	var baddDroppableFrameDirective = function($compile, editorService) {
 		return {
 			restrict: 'E',
@@ -8,14 +15,13 @@
 				template: '@'
 			},
 			replace: true,
-			template: '<iframe class="badd-editor-browser"></iframe>',
+			templateUrl: 'badd-droppable-frame.html',
+			controller: baddDroppableFrameController,
 			link: function (scope, element, attrs) {
-				if (element.prop('tagName') !== 'IFRAME') {
-					return;
-				}
+				var iframe = element.find('iframe');
 
-				element.attr('src', attrs.template);
-				element.on('load', editorService.initializeFrame(element, scope));
+				iframe.attr('src', attrs.template);
+				iframe.on('load', editorService.initializeFrame(iframe, scope));
 			}
 		}
 	};

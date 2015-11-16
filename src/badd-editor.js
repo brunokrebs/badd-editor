@@ -50,18 +50,31 @@
 		service.initializeFrame = function(frame, scope) {
 			return function () {
 				service.document = $document[0];
+				service.iframe = frame[0];
 
+				fixLayout();
+
+				// helper listener
 				$window.addEventListener("click", service.hideConfigurationModal);
 				service.configurationModal = service.document.querySelector('.badd-configuration-modal');
 
 				// set service properties with raw dom html5 element
-				service.iframe = frame[0];
 				service.iframePosition = service.iframe.getBoundingClientRect();
 				service.frame = frame.contents()[0];
 				service.frame.addEventListener("scroll", service.updateHighlightBorderPosition);
 				service.frameHtml = service.frame.querySelector('html');
 				service.frameHead = service.frame.querySelector('head');
 				service.frameBody = service.frame.querySelector('body');
+
+				// page title
+				service.pageTitle = service.frame.querySelector('title');
+				if (!service.pageTitle) {
+					service.pageTitle = service.document.createElement('title');
+				} else {
+					scope.$apply(function () {
+						scope.pageTitle = service.pageTitle.textContent;
+					});
+				}
 
 				// create transfer area
 				service.transferArea = service.document.createElement('div');
@@ -99,6 +112,10 @@
 			};
 		};
 
+		service.changePageTitle = function(newTitle) {
+			service.pageTitle.textContent = newTitle;
+		};
+
 		function configureDirectivesOnElementAndChildren(element) {
 			if (element.className !== 'badd-highlight' && element.className !== 'badd-transfer-area') {
 				if (element.tagName === 'DIV' && element.getAttribute('badd-droppable') !== '') {
@@ -113,6 +130,18 @@
 				var elements = _.toArray(element.querySelectorAll('*'));
 				elements.forEach(configureDirectivesOnElementAndChildren);
 			}
+		}
+
+		function fixLayout() {
+			// fulfill height
+			var browserColumn = service.document.querySelector('td.badd-editor-components');
+			var browserDiv = service.document.querySelector('div.badd-editor-browser-frame');
+			browserDiv.style.height = (browserColumn.getBoundingClientRect().height - 1) + 'px';
+			service.iframe.style.height = (browserColumn.getBoundingClientRect().height - 101) + 'px';
+
+			var addressDiv = service.document.querySelector('div.badd-editor-browser-address');
+			var addressPageTitleDiv = addressDiv.querySelector('div.badd-editor-browser-address-page-title');
+			addressPageTitleDiv.style.width = (addressDiv.getBoundingClientRect().width - 75) + 'px';
 		}
 
 		service.startDragging = function (event) {
