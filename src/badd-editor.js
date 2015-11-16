@@ -51,7 +51,6 @@
 
 				// helper listener
 				$window.addEventListener("click", windowClickListener);
-				service.configurationModal = service.document.querySelector('.badd-configuration-modal');
 
 				// set service properties with raw dom html5 element
 				service.iframePosition = service.iframe.getBoundingClientRect();
@@ -75,6 +74,10 @@
 				service.transferArea = service.document.createElement('div');
 				service.transferArea.className = 'badd-transfer-area';
 				service.frameBody.appendChild(service.transferArea);
+
+				// adding configuration modal
+				service.configurationModal = service.document.createElement('badd-configuration-modal');
+				service.frameBody.appendChild(service.configurationModal);
 
 				// create droppable area highlighter
 				service.transferArea.innerHTML = '<svg class="badd-highlighter"></svg>';
@@ -100,7 +103,7 @@
 				elements.forEach(configureDirectivesOnElementAndChildren);
 
 				// hide configuration modal
-				service.showConfigurationModal = false;
+				service.configurationModal.style.display = 'none';
 
 				service.scope = scope;
 				$compile(service.frameHtml)(scope);
@@ -112,7 +115,10 @@
 		};
 
 		function configureDirectivesOnElementAndChildren(element) {
-			if (element.className !== 'badd-highlight' && element.className !== 'badd-transfer-area') {
+			if (element.className !== 'badd-highlight'
+				&& element.className !== 'badd-transfer-area'
+				&& element.className !== 'badd-configuration-modal') {
+
 				if (element.tagName === 'DIV' && element.getAttribute('badd-droppable') !== '') {
 					element.setAttribute('badd-droppable', '');
 				}
@@ -261,6 +267,9 @@
 		};
 
 		service.showHighlightBorder = function(target) {
+			if (target.className.indexOf('badd-configuration-modal') >= 0) {
+				return;
+			}
 			var targetPosition = target.getBoundingClientRect();
 			service.highlightBorder.style.top = targetPosition.top + 'px';
 			service.highlightBorder.style.left = targetPosition.left + 'px';
@@ -286,21 +295,31 @@
 		};
 
 		service.mouseClick = function(event) {
+			if (event.target.className.indexOf('badd-configuration-modal') >= 0) {
+				return;
+			}
+
 			event.stopPropagation();
 			event.preventDefault();
 
-			service.configurationModal.style.left = (service.iframePosition.left + event.clientX) + 'px';
-			service.configurationModal.style.top = (service.iframePosition.top + event.clientY) + 'px';
+			service.configurationModal.style.display = 'block';
+			var configModelDimensions = service.configurationModal.childNodes[0].getBoundingClientRect();
+			var bodyDimensions = service.frameBody.getBoundingClientRect();
 
-			service.scope.$apply(function () {
-				service.showConfigurationModal = true;
-			});
+			if (event.pageY > bodyDimensions.height - 20) {
+				service.configurationModal.childNodes[0].style.top = (event.pageY - configModelDimensions.height - 20) + 'px';
+			} else if (event.pageY + configModelDimensions.height > bodyDimensions.height) {
+				service.configurationModal.childNodes[0].style.top = (event.pageY - configModelDimensions.height) + 'px';
+			} else {
+				service.configurationModal.childNodes[0].style.top = event.pageY + 'px';
+			}
+			service.configurationModal.childNodes[0].style.left = event.pageX + 'px';
+
+
 		};
 
 		service.hideConfigurationModal = function() {
-			service.scope.$apply(function () {
-				service.showConfigurationModal = false;
-			});
+			service.configurationModal.style.display = 'none';
 		};
 
 		function windowClickListener(event) {

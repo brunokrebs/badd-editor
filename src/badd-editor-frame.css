@@ -16,7 +16,7 @@ body > .container-fluid {
 	position: fixed;
 	pointer-events: none;
 	border: 3px dashed lightskyblue;
-	z-index: 16777271;
+	z-index: 16777200;
 	display: none;
 }
 
@@ -30,4 +30,15 @@ body > .container-fluid {
 
 * {
 	cursor: default !important;
+}
+
+/* configuration modal */
+
+div.panel.panel-default.badd-configuration-modal {
+	position: absolute;
+	top: 200px;
+	left: 200px;
+	border: 1px solid gray;
+	border-radius: 2px;
+	z-index: 16777271;
 }
