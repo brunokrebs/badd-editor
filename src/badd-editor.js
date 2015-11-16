@@ -1,15 +1,9 @@
 (function() {
 	var editorModule = angular.module('baddEditor', []);
 
-	var editorController = function($scope, $window) {
+	var editorController = function($scope) {
 		// if attr are not set, use default values
-		$scope.title = angular.isDefined($scope.title) ? $scope.title : 'Bootstrap visual editor';
 		$scope.componentsTitle = angular.isDefined($scope.componentsTitle) ? $scope.componentsTitle : 'Components';
-
-
-		$window.addEventListener('message', function() {
-			alert('received something');
-		});
 
 		// default draggable components
 		$scope.draggables = [
@@ -27,7 +21,7 @@
 			{ titleLg: 'Image', title: 'IMG', label:'img', element: '<img src="http://www.avjobs.com/images/v_png_v5/v_collection_png/256x256/shadow/airplane2.png" alt="airplane">' }
 		];
 	};
-	editorController.$inject = ['$scope', '$window'];
+	editorController.$inject = ['$scope'];
 
 	var editorDirective = function () {
 		return {
@@ -137,7 +131,7 @@
 			var browserColumn = service.document.querySelector('td.badd-editor-components');
 			var browserDiv = service.document.querySelector('div.badd-editor-browser-frame');
 			browserDiv.style.height = (browserColumn.getBoundingClientRect().height - 1) + 'px';
-			service.iframe.style.height = (browserColumn.getBoundingClientRect().height - 101) + 'px';
+			service.iframe.style.height = (browserColumn.getBoundingClientRect().height - 100) + 'px';
 
 			var addressDiv = service.document.querySelector('div.badd-editor-browser-address');
 			var addressPageTitleDiv = addressDiv.querySelector('div.badd-editor-browser-address-page-title');
