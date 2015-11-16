@@ -5,11 +5,8 @@
 				<p class="badd-editor-title">{{componentsTitle}}</p>
 				<ul>
 					<li ng-repeat="draggable in draggables" data-element="{{draggable.element}}" badd-draggable>
-						<span class="label label-default badd-editor-label">{{draggable.label}}</span>
-						<span class="badd-editor-title visible-lg-inline">{{draggable.titleLg}}</span>
-						<span class="badd-editor-title visible-md-inline">{{draggable.title}}</span>
-						<span class="badd-editor-title"> </span>
-						<i class="fa fa-arrows-alt"></i>
+						<i class="fa {{draggable.icon}}"></i>
+						<span class="badd-editor-title">{{draggable.title}}</span>
 					</li>
 				</ul>
 			</div>

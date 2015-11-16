@@ -6,23 +6,24 @@ table.badd-editor {
 /* editor's components style */
 
 td.badd-editor-components {
-	background-color: #343434;
+	background-color: #51585E;
 	padding: 0;
-	width: 15%;
+	width: 250px;
 	vertical-align: top;
 }
 
 td.badd-editor-components p.badd-editor-title {
 	color: white;
-	line-height: 50px;
-	background-color: #343434;
-	border-bottom: 2px solid #000;
+	line-height: 30px;
+	background-color: #51585E;
+	border-bottom: 1px solid #000;
 	margin-bottom: 0;
 	padding: 0 15px 0 15px;
+	text-align: center;
 }
 
 td.badd-editor-components div.badd-editor-components {
-	background-color: #cccccc;
+	background-color: #32373B;
 	height: 100%;
 }
 
@@ -152,8 +153,22 @@ td.badd-editor-components ul {
 
 td.badd-editor-components ul li {
 	cursor: pointer;
-	border: 1px solid transparent;
+	border: 1px solid black;
+	border-radius: 1px;
 	padding: 6px 5px 10px 5px;
+	margin-bottom: 10px;
+	text-align: center;
+	width: 110px;
+	background-color: #4C5155;
+	color: white;
+}
+
+td.badd-editor-components ul li:nth-child(even) {
+	float: right;
+}
+
+td.badd-editor-components ul li:nth-child(odd) {
+	float: left;
 }
 
 td.badd-editor-components ul li.ui-draggable-dragging {
@@ -165,24 +180,13 @@ td.badd-editor-components ul li.ui-draggable-dragging {
 td.badd-editor-components ul li.drag-active,
 td.badd-editor-components ul li.ui-draggable-dragging,
 td.badd-editor-components ul li:hover {
-	background: #eee;
-	border: 1px dashed #999;
+	background: #2385DC;
 }
 
 td.badd-editor-components ul li i {
-	display: none;
-	float: right;
+	display: block;
 	font-size: 15px;
 	line-height: 30px;
-	color: #999;
-	padding-left: 15px;
-	margin-top: -2px;
-}
-
-td.badd-editor-components ul li.drag-active i,
-td.badd-editor-components ul li.ui-draggable-dragging i,
-td.badd-editor-components ul li:hover i {
-	display: block;
 }
 
 td.badd-editor-components ul li span.badd-editor-label {
@@ -196,7 +200,6 @@ td.badd-editor-components ul li span.badd-editor-label {
 td.badd-editor-components ul li span.badd-editor-title {
 	display: inline-block;
 	margin-top: 2px;
-	margin-left: 5px;
 }
 
 /* configuration modal */

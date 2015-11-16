@@ -7,18 +7,19 @@
 
 		// default draggable components
 		$scope.draggables = [
-			{ titleLg: 'Row', title: 'ROW', label:'row', element: '<div class="row"><div class="col-xs-12"><p>A simple row with a single column</p></div></div>' },
-			{ titleLg: 'Column', title: 'COL', label:'col', element: '<div class="col-xs-12"><p>You can make me a smaller column</p></div>' },
-			{ titleLg: 'Header 1', title: 'H1', label:'h1', element: '<h1>An important title</h1>' },
-			{ titleLg: 'Header 2', title: 'H2', label:'h2', element: '<h2>A secondary title</h2>' },
-			{ titleLg: 'Header 3', title: 'H3', label:'h3', element: '<h3>A third level title</h3>' },
-			{ titleLg: 'Header 4', title: 'H4', label:'h4', element: '<h4>A fourth level title</h4>' },
-			{ titleLg: 'Paragraph', title: 'P', label:'p', element: '<p>Write something useful here</p>' },
-			{ titleLg: 'Button', title: 'BTN', label:'btn', element: '<btn class="btn btn-primary">My brand new button</btn>' },
-			{ titleLg: 'Jumbotron', title: 'JMB', label:'jmb', element: '<div class="jumbotron"><h1>Hello, world!</h1><p>My name is Jumbotron</p></div>' },
-			{ titleLg: 'Panel', title: 'PNL', label:'pnl', element: '<div class="panel panel-primary"><div class="panel-heading"><h3 class="panel-title">Panel title</h3></div><div class="panel-body">Panel content</div></div>' },
-			{ titleLg: 'Well', title: 'WLL', label:'wll', element: '<div class="well">Look, I\'m in a well.</div>' },
-			{ titleLg: 'Image', title: 'IMG', label:'img', element: '<img src="http://www.avjobs.com/images/v_png_v5/v_collection_png/256x256/shadow/airplane2.png" alt="airplane">' }
+			{ title: 'Container', icon:'fa-square-o', element: '<div class="container"><div class="row">' +
+				'<div class="col-xs-12"><p>A simple row with a single column</p></div></div></div>' },
+			{ title: 'Row', icon:'fa-align-justify', element: '<div class="row"><div class="col-xs-12">' +
+				'<p>A simple row with a single column</p></div></div>' },
+			{ title: 'Column', icon:'fa-columns', element: '<div class="col-xs-12">' +
+				'<p>You can make me a smaller column</p></div>' },
+			{ title: 'Header 1', icon:'fa-header', element: '<h1>An important title</h1>' },
+			{ title: 'Paragraph', icon:'fa-align-left', element: '<p>Write something useful here</p>' },
+			{ title: 'Button', icon:'fa-plus-square', element: '<btn class="btn btn-primary">My brand ' +
+				'new button</btn>' },
+			{ title: 'Image', icon:'fa-picture-o', element: '<img ' +
+				'src="http://www.avjobs.com/images/v_png_v5/v_collection_png/256x256/shadow/airplane2.png"' +
+				'alt="airplane">' }
 		];
 	};
 	editorController.$inject = ['$scope'];
