@@ -39,7 +39,7 @@
 
 	editorModule.directive('baddEditor', editorDirective);
 
-	var editorService = function($compile, $document, $window) {
+	var editorService = function($compile, $document, $window, tinyEditorService) {
 		var service = this;
 
 		service.initializeFrame = function(frame, scope) {
@@ -59,6 +59,31 @@
 				service.frameHtml = service.frame.querySelector('html');
 				service.frameHead = service.frame.querySelector('head');
 				service.frameBody = service.frame.querySelector('body');
+
+				tinyEditorService.frameWindow = service.frame.defaultView;
+				tinyEditorService.frameDocument = service.frame;
+				tinyEditorService.textArea = service.frameBody.querySelector("#somethingnice");
+
+				new tinyEditorService.TINY.editor.edit('somethingnice',{
+					id:'something-nice',
+					width:584,
+					height:175,
+					cssclass:'te',
+					controlclass:'tecontrol',
+					rowclass:'teheader',
+					dividerclass:'tedivider',
+					controls:['bold','italic','underline','strikethrough','|','subscript','superscript','|',
+						'orderedlist','unorderedlist','|','outdent','indent','|','leftalign',
+						'centeralign','rightalign','blockjustify','|','unformat','|','undo','redo','n',
+						'font','size','style','|','image','hr','link','unlink','|','cut','copy','paste','print'],
+					footer:true,
+					fonts:['Verdana','Arial','Georgia','Trebuchet MS'],
+					xhtml:true,
+					bodyid:'editor',
+					footerclass:'tefooter',
+					toggle:{text:'show source',activetext:'show wysiwyg',cssclass:'toggle'},
+					resize:{cssclass:'resize'}
+				});
 
 				// page title
 				service.pageTitle = service.frame.querySelector('title');
@@ -386,6 +411,6 @@
 			service.hideHighlightBorder();
 		};
 	};
-	editorService.$inject = ['$compile', '$document', '$window'];
+	editorService.$inject = ['$compile', '$document', '$window', 'tinyEditorService'];
 	editorModule.service('editorService', editorService);
 }());
