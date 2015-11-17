@@ -84,6 +84,11 @@
 				service.highlightBorder = service.transferArea.childNodes[0];
 				service.frameBody.appendChild(service.highlightBorder);
 
+				// create selected area highlighter
+				service.transferArea.innerHTML = '<svg class="badd-selected-highlighter"></svg>';
+				service.selectedHighlightBorder = service.transferArea.childNodes[0];
+				service.frameBody.appendChild(service.selectedHighlightBorder);
+
 				// start baddEditor module
 				service.frameHtml.setAttribute('ng-app', 'baddEditor');
 
@@ -279,6 +284,18 @@
 			service.lastHoveredTarget = target;
 		};
 
+		service.showSelectedHighlightBorder = function(target) {
+			if (target.className.indexOf('badd-configuration-modal') >= 0) {
+				return;
+			}
+			var targetPosition = target.getBoundingClientRect();
+			service.selectedHighlightBorder.style.top = targetPosition.top + 'px';
+			service.selectedHighlightBorder.style.left = targetPosition.left + 'px';
+			service.selectedHighlightBorder.style.width = target.offsetWidth + 'px';
+			service.selectedHighlightBorder.style.height = target.offsetHeight + 'px';
+			service.selectedHighlightBorder.style.display = 'block';
+		};
+
 		service.hideHighlightBorder = function() {
 			service.highlightBorder.style.display = 'none';
 			service.highlightBorder.style.top = 0;
@@ -323,6 +340,8 @@
 			} else {
 				service.configurationModal.childNodes[0].style.left = event.pageX + 'px';
 			}
+
+			service.showSelectedHighlightBorder(event.target);
 		};
 
 
