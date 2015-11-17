@@ -135,7 +135,7 @@
 			var browserColumn = service.document.querySelector('td.badd-editor-components');
 			var browserDiv = service.document.querySelector('div.badd-editor-browser-frame');
 			browserDiv.style.height = (browserColumn.getBoundingClientRect().height - 1) + 'px';
-			service.iframe.style.height = (browserColumn.getBoundingClientRect().height - 100) + 'px';
+			service.iframe.style.height = (browserColumn.getBoundingClientRect().height - 140) + 'px';
 
 			var addressDiv = service.document.querySelector('div.badd-editor-browser-address');
 			var addressPageTitleDiv = addressDiv.querySelector('div.badd-editor-browser-address-page-title');
