@@ -64,13 +64,12 @@
 				tinyEditorService.frameDocument = service.frame;
 				tinyEditorService.textArea = service.frameBody.querySelector("#somethingnice");
 
-				new tinyEditorService.TINY.editor.edit('somethingnice',{
+				tinyEditorService.createEditor('somethingnice',{
 					id:'something-nice',
 					width:584,
 					height:175,
 					cssclass:'te',
 					controlclass:'tecontrol',
-					rowclass:'teheader',
 					dividerclass:'tedivider',
 					controls:['bold','italic','underline','strikethrough','|','subscript','superscript','|',
 						'orderedlist','unorderedlist','|','outdent','indent','|','leftalign',
