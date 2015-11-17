@@ -306,6 +306,7 @@
 			var configModelDimensions = service.configurationModal.childNodes[0].getBoundingClientRect();
 			var bodyDimensions = service.frameBody.getBoundingClientRect();
 
+			// if the clcik is too close to the bottom, make the window show above the click
 			if (event.pageY > bodyDimensions.height - 20) {
 				service.configurationModal.childNodes[0].style.top = (event.pageY - configModelDimensions.height - 20) + 'px';
 			} else if (event.pageY + configModelDimensions.height > bodyDimensions.height) {
@@ -313,10 +314,17 @@
 			} else {
 				service.configurationModal.childNodes[0].style.top = event.pageY + 'px';
 			}
-			service.configurationModal.childNodes[0].style.left = event.pageX + 'px';
 
-
+			// same idea here, but verifying if the click is too close to the right border
+			if (event.pageX > bodyDimensions.width - 20) {
+				service.configurationModal.childNodes[0].style.left = (event.pageX - configModelDimensions.width - 20) + 'px';
+			} else if (event.pageX + configModelDimensions.width > bodyDimensions.width) {
+				service.configurationModal.childNodes[0].style.left = (event.pageX - configModelDimensions.width) + 'px';
+			} else {
+				service.configurationModal.childNodes[0].style.left = event.pageX + 'px';
+			}
 		};
+
 
 		service.hideConfigurationModal = function() {
 			service.configurationModal.style.display = 'none';
