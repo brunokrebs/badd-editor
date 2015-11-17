@@ -99,6 +99,13 @@
 				service.frameBody.setAttribute('badd-droppable', '');
 				service.frameBody.setAttribute('badd-configurable', '');
 
+				// content edition textarea
+				service.transferArea.innerHTML = '<textarea resizable="false" class="badd-editor-content-edition">' +
+												 '</textarea>';
+				service.contentEdition = service.transferArea.childNodes[0];
+				service.contentEdition.addEventListener("blur", service.hideContentEditionArea);
+				service.frameBody.appendChild(service.contentEdition);
+
 				// make everything draggable and configurable, divs are also droppable
 				var elements = _.toArray(service.frameBody.querySelectorAll('*'));
 				elements.forEach(configureDirectivesOnElementAndChildren);
@@ -114,7 +121,8 @@
 
 		function configureDirectivesOnElementAndChildren(element) {
 			if (element.className !== 'badd-highlight'
-				&& element.className !== 'badd-transfer-area') {
+				&& element.className !== 'badd-transfer-area'
+				&& element.className !== 'badd-editor-content-edition') {
 
 				if (element.tagName === 'DIV' && element.getAttribute('badd-droppable') !== '') {
 					element.setAttribute('badd-droppable', '');
@@ -198,6 +206,7 @@
 			children.forEach(function(child) {
 				if (!child.getBoundingClientRect || child.className == 'badd-transfer-area'
 					|| child.className == 'badd-highlighter'
+					|| child.className == 'badd-editor-content-edition'
 					|| child == service.previewElement) {
 
 					//this does not break. _.each will run the whole array
@@ -302,7 +311,11 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			service.showHighlightBorder(event.target);
+			if (event.target.className !== 'badd-transfer-area'
+				&& event.target.className !== 'badd-highlighter'
+				&& event.target.className !== 'badd-editor-content-edition') {
+				service.showHighlightBorder(event.target);
+			}
 		};
 
 		service.mouseClick = function(event) {
@@ -310,6 +323,53 @@
 			event.preventDefault();
 
 			service.showSelectedHighlightBorder(event.target);
+
+			if (event.target.tagName === 'P') {
+				service.showContentEditionArea(event.target);
+			}
+		};
+
+		service.showContentEditionArea = function(target) {
+			var targetDimensions = target.getBoundingClientRect();
+
+			service.contentEdition.style.display = 'block';
+			service.contentEdition.style.top = targetDimensions.top + 'px';
+			service.contentEdition.style.left = targetDimensions.left + 'px';
+			service.contentEdition.style.width = target.offsetWidth + 'px';
+			service.contentEdition.style.height = target.offsetHeight + 'px';
+
+			var targetStyle = $window.getComputedStyle(target);
+			service.contentEdition.style.color = targetStyle.color;
+			service.contentEdition.style.fontSize = targetStyle.fontSize;
+			service.contentEdition.style.fontFamily = targetStyle.fontFamily;
+			service.contentEdition.style.padding = targetStyle.padding;
+			service.contentEdition.style.margin = targetStyle.margin;
+			service.contentEdition.style.lineHeight = targetStyle.lineHeight;
+
+			service.contentEdition.value = target.innerHTML.replace(/<br>/g, '\n');
+
+			target.style.color = 'transparent';
+			service.hideSelectedHighlightBorder();
+			service.elementBeingEdited = target;
+			service.contentEdition.setSelectionRange(0, 0);
+		};
+
+		service.hideContentEditionArea = function() {
+			service.elementBeingEdited.style.color = service.contentEdition.style.fontSize;
+			service.elementBeingEdited.style.color = service.contentEdition.style.fontFamily;
+			service.elementBeingEdited.style.color = service.contentEdition.style.padding;
+			service.elementBeingEdited.style.color = service.contentEdition.style.margin;
+			service.elementBeingEdited.style.color = service.contentEdition.style.lineHeight;
+			service.elementBeingEdited.innerHTML = service.contentEdition.value.replace(/\n/g, '<br>');
+			service.elementBeingEdited.style.color = service.contentEdition.style.color;
+
+			service.contentEdition.style.display = 'none';
+			service.contentEdition.style.top = 0;
+			service.contentEdition.style.left = 0;
+			service.contentEdition.style.width = 0;
+			service.contentEdition.style.height = 0;
+
+			service.elementBeingEdited = null;
 		};
 
 		function windowClickListener(event) {

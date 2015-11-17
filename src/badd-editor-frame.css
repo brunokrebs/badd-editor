@@ -40,3 +40,14 @@ body > .container-fluid {
 * {
 	cursor: default !important;
 }
+
+textarea.badd-editor-content-edition {
+	position: absolute;
+	display: none;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
+	border: none;
+	background-color: transparent;
+}
