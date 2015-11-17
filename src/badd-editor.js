@@ -147,6 +147,7 @@
 
 			if (event.target.getAttribute('badd-configurable') === '') {
 				service.previewElement = event.target;
+				service.hideSelectedHighlightBorder();
 			} else {
 				service.transferArea.innerHTML = event.target.getAttribute('data-element');
 				service.previewElement = service.transferArea.querySelector('*');
