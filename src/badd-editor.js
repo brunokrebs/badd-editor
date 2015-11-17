@@ -296,6 +296,14 @@
 			service.selectedHighlightBorder.style.display = 'block';
 		};
 
+		service.hideSelectedHighlightBorder = function() {
+			service.selectedHighlightBorder.style.display = 'none';
+			service.selectedHighlightBorder.style.top = 0;
+			service.selectedHighlightBorder.style.left = 0;
+			service.selectedHighlightBorder.style.width = 0;
+			service.selectedHighlightBorder.style.height = 0;
+		};
+
 		service.hideHighlightBorder = function() {
 			service.highlightBorder.style.display = 'none';
 			service.highlightBorder.style.top = 0;
@@ -347,6 +355,7 @@
 
 		service.hideConfigurationModal = function() {
 			service.configurationModal.style.display = 'none';
+			service.hideSelectedHighlightBorder();
 		};
 
 		function windowClickListener(event) {
