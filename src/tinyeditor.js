@@ -13,35 +13,35 @@
 		}
 
 		service.TINY.editor = function() {
-			var c=[];
-			var offset=-30;
+			var controls = [];
+			var offset = -30;
 
 			// options
-			c['cut'] = [1, 'Cut', 'a', 'cut', 1];
-			c['copy'] = [2, 'Copy', 'a', 'copy', 1];
-			c['paste'] = [3, 'Paste', 'a', 'paste', 1];
-			c['bold'] = [4, 'Bold', 'a', 'bold'];
-			c['italic'] = [5, 'Italic', 'a', 'italic'];
-			c['underline'] = [6, 'Underline', 'a', 'underline'];
-			c['strikethrough'] = [7, 'Strikethrough', 'a', 'strikethrough'];
-			c['subscript'] = [8, 'Subscript', 'a', 'subscript'];
-			c['superscript'] = [9, 'Superscript', 'a', 'superscript'];
-			c['orderedlist'] = [10, 'Insert Ordered List', 'a', 'insertorderedlist'];
-			c['unorderedlist'] = [11, 'Insert Unordered List', 'a', 'insertunorderedlist'];
-			c['outdent'] = [12, 'Outdent', 'a', 'outdent'];
-			c['indent'] = [13, 'Indent', 'a', 'indent'];
-			c['leftalign'] = [14, 'Left Align', 'a', 'justifyleft'];
-			c['centeralign'] = [15, 'Center Align', 'a', 'justifycenter'];
-			c['rightalign'] = [16, 'Right Align', 'a', 'justifyright'];
-			c['blockjustify'] = [17, 'Block Justify', 'a', 'justifyfull'];
-			c['undo'] = [18, 'Undo', 'a', 'undo'];
-			c['redo'] = [19, 'Redo', 'a', 'redo'];
-			c['image'] = [20, 'Insert Image', 'i', 'insertimage', 'Enter Image URL:', 'http://'];
-			c['hr'] = [21, 'Insert Horizontal Rule', 'a', 'inserthorizontalrule'];
-			c['link'] = [22, 'Insert Hyperlink', 'i', 'createlink', 'Enter URL:', 'http://'];
-			c['unlink'] = [23, 'Remove Hyperlink', 'a', 'unlink'];
-			c['unformat'] = [24, 'Remove Formatting', 'a', 'removeformat'];
-			c['print'] = [25, 'Print', 'a', 'print'];
+			controls['cut'] = [1, 'Cut', 'a', 'cut', 1];
+			controls['copy'] = [2, 'Copy', 'a', 'copy', 1];
+			controls['paste'] = [3, 'Paste', 'a', 'paste', 1];
+			controls['bold'] = [4, 'Bold', 'a', 'bold'];
+			controls['italic'] = [5, 'Italic', 'a', 'italic'];
+			controls['underline'] = [6, 'Underline', 'a', 'underline'];
+			controls['strikethrough'] = [7, 'Strikethrough', 'a', 'strikethrough'];
+			controls['subscript'] = [8, 'Subscript', 'a', 'subscript'];
+			controls['superscript'] = [9, 'Superscript', 'a', 'superscript'];
+			controls['orderedlist'] = [10, 'Insert Ordered List', 'a', 'insertorderedlist'];
+			controls['unorderedlist'] = [11, 'Insert Unordered List', 'a', 'insertunorderedlist'];
+			controls['outdent'] = [12, 'Outdent', 'a', 'outdent'];
+			controls['indent'] = [13, 'Indent', 'a', 'indent'];
+			controls['leftalign'] = [14, 'Left Align', 'a', 'justifyleft'];
+			controls['centeralign'] = [15, 'Center Align', 'a', 'justifycenter'];
+			controls['rightalign'] = [16, 'Right Align', 'a', 'justifyright'];
+			controls['blockjustify'] = [17, 'Block Justify', 'a', 'justifyfull'];
+			controls['undo'] = [18, 'Undo', 'a', 'undo'];
+			controls['redo'] = [19, 'Redo', 'a', 'redo'];
+			controls['image'] = [20, 'Insert Image', 'i', 'insertimage', 'Enter Image URL:', 'http://'];
+			controls['hr'] = [21, 'Insert Horizontal Rule', 'a', 'inserthorizontalrule'];
+			controls['link'] = [22, 'Insert Hyperlink', 'i', 'createlink', 'Enter URL:', 'http://'];
+			controls['unlink'] = [23, 'Remove Hyperlink', 'a', 'unlink'];
+			controls['unformat'] = [24, 'Remove Formatting', 'a', 'removeformat'];
+			controls['print'] = [25, 'Print', 'a', 'print'];
 
 			function edit(name, obj) {
 				this.editorName = name;
@@ -91,8 +91,8 @@
 							sel.options[x]=new Option(style[0],style[1])
 						}
 						h.appendChild(sel)
-					}else if(c[id]){
-						var div=service.frameDocument.createElement('div'), x=c[id], func=x[2], ex, pos=x[0]*offset;
+					}else if(controls[id]){
+						var div=service.frameDocument.createElement('div'), x=controls[id], func=x[2], ex, pos=x[0]*offset;
 						div.className=obj.controlclass;
 						div.style.backgroundPosition='0px '+pos+'px';
 						div.title=x[1];
@@ -135,96 +135,110 @@
 					try{this.e.execCommand("styleWithCSS",0,0)}
 					catch(e){try{this.e.execCommand("useCSS",0,1)}catch(e){}}
 				}
-			};
-			edit.prototype.print=function(){
+			}
+
+			edit.prototype.print = function(){
 				this.i.contentWindow.print()
-			},
-				edit.prototype.hover=function(div,pos,dir){
-					div.style.backgroundPosition=(dir?'34px ':'0px ')+(pos)+'px'
-				},
-				edit.prototype.ddaction=function(dd,a){
-					var i=dd.selectedIndex, v=dd.options[i].value;
-					this.action(a,v)
-				},
-				edit.prototype.action=function(cmd,val,ie){
-					if(ie&&!this.ie){
-						alert('Your browser does not support this function.')
-					}else{
-						this.e.execCommand(cmd,0,val||null)
+			};
+
+			edit.prototype.hover=function(div,pos,dir){
+				div.style.backgroundPosition=(dir?'34px ':'0px ')+(pos)+'px'
+			};
+
+			edit.prototype.ddaction=function(dd,a){
+				var i=dd.selectedIndex, v=dd.options[i].value;
+				this.action(a,v)
+			};
+
+			edit.prototype.action=function(cmd,val,ie){
+				if(ie&&!this.ie){
+					alert('Your browser does not support this function.')
+				}else{
+					this.e.execCommand(cmd,0,val||null)
+				}
+			};
+
+			edit.prototype.insert=function(pro,msg,cmd){
+				var val=prompt(pro,msg);
+				if(val!=null&&val!=''){this.e.execCommand(cmd,0,val)}
+			};
+
+			edit.prototype.setfont=function(){
+				execCommand('formatblock',0,hType)
+			};
+
+			edit.prototype.resize=function(e){
+				if(this.mv){this.freeze()}
+				this.i.bcs=service.TINY.cursor.top(e);
+				this.mv=new Function('event',this.editorName+'.move(event)');
+				this.sr=new Function(this.editorName+'.freeze()');
+				if(this.ie){
+					service.frameDocument.attachEvent('onmousemove',this.mv); service.frameDocument.attachEvent('onmouseup',this.sr)
+				}else{
+					service.frameDocument.addEventListener('mousemove',this.mv,1); service.frameDocument.addEventListener('mouseup',this.sr,1)
+				}
+			};
+
+			edit.prototype.move=function(e){
+				var pos=service.TINY.cursor.top(e);
+				this.i.height=parseInt(this.i.height)+pos-this.i.bcs;
+				this.i.bcs=pos
+			};
+
+			edit.prototype.freeze=function(){
+				if(this.ie){
+					service.frameDocument.detachEvent('onmousemove',this.mv); service.frameDocument.detachEvent('onmouseup',this.sr)
+				}else{
+					service.frameDocument.removeEventListener('mousemove',this.mv,1); service.frameDocument.removeEventListener('mouseup',this.sr,1)
+				}
+			};
+
+			edit.prototype.toggle=function(post,div){
+				if(!this.d){
+					var v=this.t.value;
+					if(div){div.innerHTML=this.obj.toggle.text||'source'}
+					if(this.xhtml&&!this.ie){
+						v=v.replace(/<strong>(.*)<\/strong>/gi,'<span style="font-weight: bold;">$1</span>');
+						v=v.replace(/<em>(.*)<\/em>/gi,'<span style="font-weight: italic;">$1</span>')
 					}
-				},
-				edit.prototype.insert=function(pro,msg,cmd){
-					var val=prompt(pro,msg);
-					if(val!=null&&val!=''){this.e.execCommand(cmd,0,val)}
-				},
-				edit.prototype.setfont=function(){
-					execCommand('formatblock',0,hType)
-				},
-				edit.prototype.resize=function(e){
-					if(this.mv){this.freeze()}
-					this.i.bcs=service.TINY.cursor.top(e);
-					this.mv=new Function('event',this.editorName+'.move(event)');
-					this.sr=new Function(this.editorName+'.freeze()');
-					if(this.ie){
-						service.frameDocument.attachEvent('onmousemove',this.mv); service.frameDocument.attachEvent('onmouseup',this.sr)
-					}else{
-						service.frameDocument.addEventListener('mousemove',this.mv,1); service.frameDocument.addEventListener('mouseup',this.sr,1)
+					this.e.body.innerHTML=v;
+					this.t.style.display='none'; this.i.style.display='block'; this.d=1
+				}else{
+					var v=this.e.body.innerHTML;
+					if(this.xhtml){
+						v=v.replace(/<span class="apple-style-span">(.*)<\/span>/gi,'$1');
+						v=v.replace(/ class="apple-style-span"/gi,'');
+						v=v.replace(/<span style="">/gi,'');
+						v=v.replace(/<br>/gi,'<br />');
+						v=v.replace(/<br ?\/?>$/gi,'');
+						v=v.replace(/^<br ?\/?>/gi,'');
+						v=v.replace(/(<img [^>]+[^\/])>/gi,'$1 />');
+						v=v.replace(/<b\b[^>]*>(.*?)<\/b[^>]*>/gi,'<strong>$1</strong>');
+						v=v.replace(/<i\b[^>]*>(.*?)<\/i[^>]*>/gi,'<em>$1</em>');
+						v=v.replace(/<u\b[^>]*>(.*?)<\/u[^>]*>/gi,'<span style="text-decoration:underline">$1</span>');
+						v=v.replace(/<(b|strong|em|i|u) style="font-weight: normal;?">(.*)<\/(b|strong|em|i|u)>/gi,'$2');
+						v=v.replace(/<(b|strong|em|i|u) style="(.*)">(.*)<\/(b|strong|em|i|u)>/gi,'<span style="$2"><$4>$3</$4></span>');
+						v=v.replace(/<span style="font-weight: normal;?">(.*)<\/span>/gi,'$1');
+						v=v.replace(/<span style="font-weight: bold;?">(.*)<\/span>/gi,'<strong>$1</strong>');
+						v=v.replace(/<span style="font-style: italic;?">(.*)<\/span>/gi,'<em>$1</em>');
+						v=v.replace(/<span style="font-weight: bold;?">(.*)<\/span>|<b\b[^>]*>(.*?)<\/b[^>]*>/gi,'<strong>$1</strong>')
 					}
-				},
-				edit.prototype.move=function(e){
-					var pos=service.TINY.cursor.top(e);
-					this.i.height=parseInt(this.i.height)+pos-this.i.bcs;
-					this.i.bcs=pos
-				},
-				edit.prototype.freeze=function(){
-					if(this.ie){
-						service.frameDocument.detachEvent('onmousemove',this.mv); service.frameDocument.detachEvent('onmouseup',this.sr)
-					}else{
-						service.frameDocument.removeEventListener('mousemove',this.mv,1); service.frameDocument.removeEventListener('mouseup',this.sr,1)
+					if(div){div.innerHTML=this.obj.toggle.activetext||'wysiwyg'}
+					this.t.value=v;
+					if(!post){
+						this.t.style.height=this.i.height+'px';
+						this.i.style.display='none'; this.t.style.display='block'; this.d=0
 					}
-				},
-				edit.prototype.toggle=function(post,div){
-					if(!this.d){
-						var v=this.t.value;
-						if(div){div.innerHTML=this.obj.toggle.text||'source'}
-						if(this.xhtml&&!this.ie){
-							v=v.replace(/<strong>(.*)<\/strong>/gi,'<span style="font-weight: bold;">$1</span>');
-							v=v.replace(/<em>(.*)<\/em>/gi,'<span style="font-weight: italic;">$1</span>')
-						}
-						this.e.body.innerHTML=v;
-						this.t.style.display='none'; this.i.style.display='block'; this.d=1
-					}else{
-						var v=this.e.body.innerHTML;
-						if(this.xhtml){
-							v=v.replace(/<span class="apple-style-span">(.*)<\/span>/gi,'$1');
-							v=v.replace(/ class="apple-style-span"/gi,'');
-							v=v.replace(/<span style="">/gi,'');
-							v=v.replace(/<br>/gi,'<br />');
-							v=v.replace(/<br ?\/?>$/gi,'');
-							v=v.replace(/^<br ?\/?>/gi,'');
-							v=v.replace(/(<img [^>]+[^\/])>/gi,'$1 />');
-							v=v.replace(/<b\b[^>]*>(.*?)<\/b[^>]*>/gi,'<strong>$1</strong>');
-							v=v.replace(/<i\b[^>]*>(.*?)<\/i[^>]*>/gi,'<em>$1</em>');
-							v=v.replace(/<u\b[^>]*>(.*?)<\/u[^>]*>/gi,'<span style="text-decoration:underline">$1</span>');
-							v=v.replace(/<(b|strong|em|i|u) style="font-weight: normal;?">(.*)<\/(b|strong|em|i|u)>/gi,'$2');
-							v=v.replace(/<(b|strong|em|i|u) style="(.*)">(.*)<\/(b|strong|em|i|u)>/gi,'<span style="$2"><$4>$3</$4></span>');
-							v=v.replace(/<span style="font-weight: normal;?">(.*)<\/span>/gi,'$1');
-							v=v.replace(/<span style="font-weight: bold;?">(.*)<\/span>/gi,'<strong>$1</strong>');
-							v=v.replace(/<span style="font-style: italic;?">(.*)<\/span>/gi,'<em>$1</em>');
-							v=v.replace(/<span style="font-weight: bold;?">(.*)<\/span>|<b\b[^>]*>(.*?)<\/b[^>]*>/gi,'<strong>$1</strong>')
-						}
-						if(div){div.innerHTML=this.obj.toggle.activetext||'wysiwyg'}
-						this.t.value=v;
-						if(!post){
-							this.t.style.height=this.i.height+'px';
-							this.i.style.display='none'; this.t.style.display='block'; this.d=0
-						}
-					}
-				},
-				edit.prototype.post=function(){
-					if(this.d){this.toggle(1)}
-				};
-			return{edit:edit}
+				}
+			};
+
+			edit.prototype.post=function(){
+				if(this.d){this.toggle(1)}
+			};
+
+			return {
+				edit:edit
+			}
 		}();
 
 		service.TINY.cursor=function(){
