@@ -75,10 +75,6 @@
 				service.transferArea.className = 'badd-transfer-area';
 				service.frameBody.appendChild(service.transferArea);
 
-				// adding configuration modal
-				service.configurationModal = service.document.createElement('badd-configuration-modal');
-				service.frameBody.appendChild(service.configurationModal);
-
 				// create droppable area highlighter
 				service.transferArea.innerHTML = '<svg class="badd-highlighter"></svg>';
 				service.highlightBorder = service.transferArea.childNodes[0];
@@ -107,9 +103,6 @@
 				var elements = _.toArray(service.frameBody.querySelectorAll('*'));
 				elements.forEach(configureDirectivesOnElementAndChildren);
 
-				// hide configuration modal
-				service.configurationModal.style.display = 'none';
-
 				service.scope = scope;
 				$compile(service.frameHtml)(scope);
 			};
@@ -121,8 +114,7 @@
 
 		function configureDirectivesOnElementAndChildren(element) {
 			if (element.className !== 'badd-highlight'
-				&& element.className !== 'badd-transfer-area'
-				&& element.className !== 'badd-configuration-modal') {
+				&& element.className !== 'badd-transfer-area') {
 
 				if (element.tagName === 'DIV' && element.getAttribute('badd-droppable') !== '') {
 					element.setAttribute('badd-droppable', '');
@@ -152,7 +144,6 @@
 
 		service.startDragging = function (event) {
 			event.dataTransfer.setData('text', 'firefox needs data');
-			service.hideConfigurationModal();
 
 			if (event.target.getAttribute('badd-configurable') === '') {
 				service.previewElement = event.target;
@@ -272,9 +263,6 @@
 		};
 
 		service.showHighlightBorder = function(target) {
-			if (target.className.indexOf('badd-configuration-modal') >= 0) {
-				return;
-			}
 			var targetPosition = target.getBoundingClientRect();
 			service.highlightBorder.style.top = targetPosition.top + 'px';
 			service.highlightBorder.style.left = targetPosition.left + 'px';
@@ -285,9 +273,6 @@
 		};
 
 		service.showSelectedHighlightBorder = function(target) {
-			if (target.className.indexOf('badd-configuration-modal') >= 0) {
-				return;
-			}
 			var targetPosition = target.getBoundingClientRect();
 			service.selectedHighlightBorder.style.top = targetPosition.top + 'px';
 			service.selectedHighlightBorder.style.left = targetPosition.left + 'px';
@@ -320,49 +305,17 @@
 		};
 
 		service.mouseClick = function(event) {
-			if (event.target.className.indexOf('badd-configuration-modal') >= 0) {
-				return;
-			}
-
 			event.stopPropagation();
 			event.preventDefault();
 
-			service.configurationModal.style.display = 'block';
-			var configModelDimensions = service.configurationModal.childNodes[0].getBoundingClientRect();
-			var bodyDimensions = service.frameBody.getBoundingClientRect();
-
-			// if the clcik is too close to the bottom, make the window show above the click
-			if (event.pageY > bodyDimensions.height - 20) {
-				service.configurationModal.childNodes[0].style.top = (event.pageY - configModelDimensions.height - 20) + 'px';
-			} else if (event.pageY + configModelDimensions.height > bodyDimensions.height) {
-				service.configurationModal.childNodes[0].style.top = (event.pageY - configModelDimensions.height) + 'px';
-			} else {
-				service.configurationModal.childNodes[0].style.top = event.pageY + 'px';
-			}
-
-			// same idea here, but verifying if the click is too close to the right border
-			if (event.pageX > bodyDimensions.width - 20) {
-				service.configurationModal.childNodes[0].style.left = (event.pageX - configModelDimensions.width - 20) + 'px';
-			} else if (event.pageX + configModelDimensions.width > bodyDimensions.width) {
-				service.configurationModal.childNodes[0].style.left = (event.pageX - configModelDimensions.width) + 'px';
-			} else {
-				service.configurationModal.childNodes[0].style.left = event.pageX + 'px';
-			}
-
 			service.showSelectedHighlightBorder(event.target);
-		};
-
-
-		service.hideConfigurationModal = function() {
-			service.configurationModal.style.display = 'none';
-			service.hideSelectedHighlightBorder();
 		};
 
 		function windowClickListener(event) {
 			event.stopPropagation();
 			event.preventDefault();
 
-			service.hideConfigurationModal();
+			service.hideSelectedHighlightBorder();
 		}
 
 		service.mouseLeaving = function(event) {
