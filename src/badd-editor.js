@@ -55,7 +55,7 @@
 				// set service properties with raw dom html5 element
 				service.iframePosition = service.iframe.getBoundingClientRect();
 				service.iframeDocument = service.iframe.contentDocument;
-				service.iframeDocument.designMode = 'on';
+				service.iframeDocument.designMode = 'off';
 				service.iframeDocument.addEventListener("scroll", service.updateHighlightBorderPosition);
 				service.frameHtml = service.iframeDocument.querySelector('html');
 				service.frameHead = service.iframeDocument.querySelector('head');
@@ -265,20 +265,20 @@
 
 		service.showHighlightBorder = function(target) {
 			var targetPosition = target.getBoundingClientRect();
-			service.highlightBorder.style.top = targetPosition.top + 'px';
-			service.highlightBorder.style.left = targetPosition.left + 'px';
-			service.highlightBorder.style.width = target.offsetWidth + 'px';
-			service.highlightBorder.style.height = target.offsetHeight + 'px';
+			service.highlightBorder.style.top = targetPosition.top - 3 + 'px';
+			service.highlightBorder.style.left = targetPosition.left - 3 + 'px';
+			service.highlightBorder.style.width = target.offsetWidth + 6 + 'px';
+			service.highlightBorder.style.height = target.offsetHeight + 6 + 'px';
 			service.highlightBorder.style.display = 'block';
 			service.lastHoveredTarget = target;
 		};
 
 		service.showSelectedHighlightBorder = function(target) {
 			var targetPosition = target.getBoundingClientRect();
-			service.selectedHighlightBorder.style.top = targetPosition.top + 'px';
-			service.selectedHighlightBorder.style.left = targetPosition.left + 'px';
-			service.selectedHighlightBorder.style.width = target.offsetWidth + 'px';
-			service.selectedHighlightBorder.style.height = target.offsetHeight + 'px';
+			service.selectedHighlightBorder.style.top = targetPosition.top - 3 + 'px';
+			service.selectedHighlightBorder.style.left = targetPosition.left - 3 + 'px';
+			service.selectedHighlightBorder.style.width = target.offsetWidth + 6 + 'px';
+			service.selectedHighlightBorder.style.height = target.offsetHeight + 6 + 'px';
 			service.selectedHighlightBorder.style.display = 'block';
 		};
 

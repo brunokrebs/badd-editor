@@ -15,16 +15,16 @@ body > .container-fluid {
 	background-color: transparent;
 	position: fixed;
 	pointer-events: none;
-	border: 3px dashed lightskyblue;
+	border: 2px dashed lightskyblue;
 	z-index: 16777100;
 	display: none;
 }
 
 .badd-selected-highlighter {
-	background-color: transparent;
+	background-color: rgba(135, 206, 250, 0.1);
 	position: fixed;
 	pointer-events: none;
-	border: 3px solid lightskyblue;
+	border: 2px solid lightskyblue;
 	z-index: 16777200;
 	display: none;
 }
