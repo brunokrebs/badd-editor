@@ -74,6 +74,9 @@
 				service.iframeDocument.designMode = 'off';
 				service.iframeDocument.addEventListener("scroll", service.updateHighlightBorderPosition);
 				service.frameHtml = service.iframeDocument.querySelector('html');
+				if (service.frameHtml === null) {
+					return;
+				}
 				service.frameHead = service.iframeDocument.querySelector('head');
 				service.frameBody = service.iframeDocument.querySelector('body');
 
