@@ -39,7 +39,7 @@
 
 	editorModule.directive('baddEditor', editorDirective);
 
-	var editorService = function($compile, $document, $window, tinyEditorService) {
+	var editorService = function($compile, $document, $window) {
 		var service = this;
 
 		service.initializeFrame = function(frame, scope) {
@@ -54,18 +54,15 @@
 
 				// set service properties with raw dom html5 element
 				service.iframePosition = service.iframe.getBoundingClientRect();
-				service.frame = frame.contents()[0];
-				service.frame.addEventListener("scroll", service.updateHighlightBorderPosition);
-				service.frameHtml = service.frame.querySelector('html');
-				service.frameHead = service.frame.querySelector('head');
-				service.frameBody = service.frame.querySelector('body');
-
-				tinyEditorService.frameWindow = service.frame.defaultView;
-				tinyEditorService.frameDocument = service.frame;
-				tinyEditorService.textArea = service.frameBody.querySelector("#somethingnice");
+				service.iframeDocument = service.iframe.contentDocument;
+				service.iframeDocument.designMode = 'on';
+				service.iframeDocument.addEventListener("scroll", service.updateHighlightBorderPosition);
+				service.frameHtml = service.iframeDocument.querySelector('html');
+				service.frameHead = service.iframeDocument.querySelector('head');
+				service.frameBody = service.iframeDocument.querySelector('body');
 
 				// page title
-				service.pageTitle = service.frame.querySelector('title');
+				service.pageTitle = service.iframeDocument.querySelector('title');
 				if (!service.pageTitle) {
 					service.pageTitle = service.document.createElement('title');
 				} else {
@@ -331,6 +328,6 @@
 			service.hideHighlightBorder();
 		};
 	};
-	editorService.$inject = ['$compile', '$document', '$window', 'tinyEditorService'];
+	editorService.$inject = ['$compile', '$document', '$window'];
 	editorModule.service('editorService', editorService);
 }());
