@@ -29,6 +29,10 @@ body > .container-fluid {
 	display: none;
 }
 
+.badd-selected-highlighter.badd-edition-mode {
+	background-color: transparent;
+}
+
 .badd-transfer-area {
 	display: none;
 }
