@@ -64,23 +64,6 @@
 				tinyEditorService.frameDocument = service.frame;
 				tinyEditorService.textArea = service.frameBody.querySelector("#somethingnice");
 
-				tinyEditorService.createEditor('somethingnice',{
-					id:'something-nice',
-					width:584,
-					height:175,
-					cssclass:'te',
-					controls:['bold','italic','underline','strikethrough','|','subscript','superscript','|',
-						'orderedlist','unorderedlist','|','outdent','indent','|','leftalign',
-						'centeralign','rightalign','blockjustify','|','unformat','|','undo','redo','n',
-						'font','size','style','|','image','hr','link','unlink','|','cut','copy','paste','print'],
-					fonts:['Verdana','Arial','Georgia','Trebuchet MS'],
-					xhtml:true,
-					toggle: {
-						text:'show source',
-						activetext:'show wysiwyg'
-					}
-				});
-
 				// page title
 				service.pageTitle = service.frame.querySelector('title');
 				if (!service.pageTitle) {
@@ -119,14 +102,6 @@
 				// enable controller on body
 				service.frameBody.setAttribute('badd-droppable', '');
 				service.frameBody.setAttribute('badd-configurable', '');
-
-				// content edition textarea
-				service.transferArea.innerHTML = '<textarea resizable="false" ' +
-												 'class="badd-editor-content-edition badd-avoid-dd">' +
-												 '</textarea>';
-				service.contentEdition = service.transferArea.childNodes[0];
-				service.contentEdition.addEventListener("blur", service.hideContentEditionArea);
-				service.frameBody.appendChild(service.contentEdition);
 
 				// make everything draggable and configurable, divs are also droppable
 				var elements = _.toArray(service.frameBody.querySelectorAll('*'));
@@ -340,53 +315,6 @@
 			event.preventDefault();
 
 			service.showSelectedHighlightBorder(event.target);
-
-			if (event.target.tagName === 'P') {
-				service.showContentEditionArea(event.target);
-			}
-		};
-
-		service.showContentEditionArea = function(target) {
-			var targetDimensions = target.getBoundingClientRect();
-
-			service.contentEdition.style.display = 'block';
-			service.contentEdition.style.top = targetDimensions.top + 'px';
-			service.contentEdition.style.left = targetDimensions.left + 'px';
-			service.contentEdition.style.width = target.offsetWidth + 'px';
-			service.contentEdition.style.height = target.offsetHeight + 'px';
-
-			var targetStyle = $window.getComputedStyle(target);
-			service.contentEdition.style.color = targetStyle.color;
-			service.contentEdition.style.fontSize = targetStyle.fontSize;
-			service.contentEdition.style.fontFamily = targetStyle.fontFamily;
-			service.contentEdition.style.padding = targetStyle.padding;
-			service.contentEdition.style.margin = targetStyle.margin;
-			service.contentEdition.style.lineHeight = targetStyle.lineHeight;
-
-			service.contentEdition.value = target.innerHTML.replace(/<br>/g, '\n');
-
-			target.style.color = 'transparent';
-			service.hideSelectedHighlightBorder();
-			service.elementBeingEdited = target;
-			service.contentEdition.setSelectionRange(0, 0);
-		};
-
-		service.hideContentEditionArea = function() {
-			service.elementBeingEdited.style.color = service.contentEdition.style.fontSize;
-			service.elementBeingEdited.style.color = service.contentEdition.style.fontFamily;
-			service.elementBeingEdited.style.color = service.contentEdition.style.padding;
-			service.elementBeingEdited.style.color = service.contentEdition.style.margin;
-			service.elementBeingEdited.style.color = service.contentEdition.style.lineHeight;
-			service.elementBeingEdited.innerHTML = service.contentEdition.value.replace(/\n/g, '<br>');
-			service.elementBeingEdited.style.color = service.contentEdition.style.color;
-
-			service.contentEdition.style.display = 'none';
-			service.contentEdition.style.top = 0;
-			service.contentEdition.style.left = 0;
-			service.contentEdition.style.width = 0;
-			service.contentEdition.style.height = 0;
-
-			service.elementBeingEdited = null;
 		};
 
 		function windowClickListener(event) {
