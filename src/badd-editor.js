@@ -73,10 +73,8 @@
 						'orderedlist','unorderedlist','|','outdent','indent','|','leftalign',
 						'centeralign','rightalign','blockjustify','|','unformat','|','undo','redo','n',
 						'font','size','style','|','image','hr','link','unlink','|','cut','copy','paste','print'],
-					footer:true,
 					fonts:['Verdana','Arial','Georgia','Trebuchet MS'],
 					xhtml:true,
-					footerclass:'tefooter',
 					toggle: {
 						text:'show source',
 						activetext:'show wysiwyg'
