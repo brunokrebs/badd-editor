@@ -42,6 +42,22 @@
 	var editorService = function($compile, $document, $window) {
 		var service = this;
 
+		service.editableTags = [
+			'H1',
+			'H2',
+			'H3',
+			'H4',
+			'H5',
+			'H6',
+			'H7',
+			'P',
+			'B',
+			'A',
+			'UL',
+			'OL',
+			'LI'
+		];
+
 		service.initializeFrame = function(frame, scope) {
 			return function () {
 				service.document = $document[0];
@@ -144,6 +160,7 @@
 
 		service.startDragging = function (event) {
 			event.dataTransfer.setData('text', 'firefox needs data');
+			service.iframeDocument.designMode = 'off';
 
 			if (event.target.getAttribute('badd-configurable') === '') {
 				service.previewElement = event.target;
@@ -311,7 +328,43 @@
 			event.stopPropagation();
 			event.preventDefault();
 
+			if (event.target !== service.elementBeingEdited
+				&& service.elementBeingEdited) {
+				service.iframeDocument.designMode = 'off';
+				service.elementBeingEdited.addEventListener('dragstart', service.startDragging, false);
+				service.elementBeingEdited.setAttribute('draggable', 'true');
+
+				var parent = service.elementBeingEdited.parentNode;
+				while (parent.tagName != 'BODY') {
+					if (parent.getAttribute('badd-draggable') || parent.getAttribute('draggable')) {
+						parent.setAttribute('draggable', 'true');
+					}
+					parent = parent.parentNode;
+				}
+
+				service.elementBeingEdited = null;
+			}
 			service.showSelectedHighlightBorder(event.target);
+		};
+
+		service.mouseDoubleClick = function(event) {
+			event.stopPropagation();
+			event.preventDefault();
+
+			if (_.contains(service.editableTags, event.target.tagName)) {
+				service.iframeDocument.designMode = 'on';
+				service.elementBeingEdited = event.target;
+				service.elementBeingEdited.removeEventListener('dragstart', service.startDragging, false);
+				service.elementBeingEdited.setAttribute('draggable', 'false');
+
+				var parent = service.elementBeingEdited.parentNode;
+				while (parent.tagName != 'BODY') {
+					if (parent.getAttribute('badd-draggable') || parent.getAttribute('draggable')) {
+						parent.setAttribute('draggable', 'false');
+					}
+					parent = parent.parentNode;
+				}
+			}
 		};
 
 		function windowClickListener(event) {

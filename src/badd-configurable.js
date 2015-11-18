@@ -8,6 +8,7 @@
 				var configurableDom = element[0];
 				configurableDom.addEventListener("mouseover", editorService.mouseHovering);
 				configurableDom.addEventListener("click", editorService.mouseClick);
+				configurableDom.addEventListener("dblclick", editorService.mouseDoubleClick);
 				configurableDom.addEventListener("mouseout", editorService.mouseLeaving);
 			}
 		}
