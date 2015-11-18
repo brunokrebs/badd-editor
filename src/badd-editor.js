@@ -69,8 +69,6 @@
 					width:584,
 					height:175,
 					cssclass:'te',
-					controlclass:'tecontrol',
-					dividerclass:'tedivider',
 					controls:['bold','italic','underline','strikethrough','|','subscript','superscript','|',
 						'orderedlist','unorderedlist','|','outdent','indent','|','leftalign',
 						'centeralign','rightalign','blockjustify','|','unformat','|','undo','redo','n',
@@ -78,10 +76,11 @@
 					footer:true,
 					fonts:['Verdana','Arial','Georgia','Trebuchet MS'],
 					xhtml:true,
-					bodyid:'editor',
 					footerclass:'tefooter',
-					toggle:{text:'show source',activetext:'show wysiwyg',cssclass:'toggle'},
-					resize:{cssclass:'resize'}
+					toggle: {
+						text:'show source',
+						activetext:'show wysiwyg'
+					}
 				});
 
 				// page title
@@ -100,12 +99,12 @@
 				service.frameBody.appendChild(service.transferArea);
 
 				// create droppable area highlighter
-				service.transferArea.innerHTML = '<svg class="badd-highlighter"></svg>';
+				service.transferArea.innerHTML = '<svg class="badd-highlighter badd-avoid-dd"></svg>';
 				service.highlightBorder = service.transferArea.childNodes[0];
 				service.frameBody.appendChild(service.highlightBorder);
 
 				// create selected area highlighter
-				service.transferArea.innerHTML = '<svg class="badd-selected-highlighter"></svg>';
+				service.transferArea.innerHTML = '<svg class="badd-selected-highlighter badd-avoid-dd"></svg>';
 				service.selectedHighlightBorder = service.transferArea.childNodes[0];
 				service.frameBody.appendChild(service.selectedHighlightBorder);
 
@@ -124,7 +123,8 @@
 				service.frameBody.setAttribute('badd-configurable', '');
 
 				// content edition textarea
-				service.transferArea.innerHTML = '<textarea resizable="false" class="badd-editor-content-edition">' +
+				service.transferArea.innerHTML = '<textarea resizable="false" ' +
+												 'class="badd-editor-content-edition badd-avoid-dd">' +
 												 '</textarea>';
 				service.contentEdition = service.transferArea.childNodes[0];
 				service.contentEdition.addEventListener("blur", service.hideContentEditionArea);
@@ -144,9 +144,7 @@
 		};
 
 		function configureDirectivesOnElementAndChildren(element) {
-			if (element.className !== 'badd-highlight'
-				&& element.className !== 'badd-transfer-area'
-				&& element.className !== 'badd-editor-content-edition') {
+			if (!_.contains(element.classList, 'badd-avoid-dd')) {
 
 				if (element.tagName === 'DIV' && element.getAttribute('badd-droppable') !== '') {
 					element.setAttribute('badd-droppable', '');
@@ -228,9 +226,8 @@
 			var nearestSibling = null;
 			var nearestSiblingPosition = null;
 			children.forEach(function(child) {
-				if (!child.getBoundingClientRect || child.className == 'badd-transfer-area'
-					|| child.className == 'badd-highlighter'
-					|| child.className == 'badd-editor-content-edition'
+				if (!child.getBoundingClientRect
+					|| _.contains(event.target.classList, 'badd-avoid-dd')
 					|| child == service.previewElement) {
 
 					//this does not break. _.each will run the whole array
@@ -335,9 +332,7 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			if (event.target.className !== 'badd-transfer-area'
-				&& event.target.className !== 'badd-highlighter'
-				&& event.target.className !== 'badd-editor-content-edition') {
+			if (!_.contains(event.target.classList, 'badd-avoid-dd')) {
 				service.showHighlightBorder(event.target);
 			}
 		};
