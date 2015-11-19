@@ -73,13 +73,8 @@
 				service.iframeDocument = service.iframe.contentDocument;
 				service.iframeDocument.addEventListener("scroll", service.updateHighlightBorderPosition);
 				service.frameHtml = service.iframeDocument.querySelector('html');
-				if (service.frameHtml === null) {
-					return;
-				}
 				service.frameHead = service.iframeDocument.querySelector('head');
 				service.frameBody = service.iframeDocument.querySelector('body');
-
-				service.iframeDocument.addEventListener('keydown', service.handleKeydown);
 
 				// page title
 				service.pageTitle = service.iframeDocument.querySelector('title');
@@ -375,12 +370,6 @@
 				var selection = service.iframeDocument.getSelection();
 				selection.removeAllRanges();
 				selection.addRange(range);
-			}
-		};
-
-		service.handleKeydown = function(event) {
-			if (_.contains([37,38,39,40], event.keyCode)) {
-				event.preventDefault();
 			}
 		};
 
