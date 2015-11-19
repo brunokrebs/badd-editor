@@ -71,7 +71,6 @@
 				// set service properties with raw dom html5 element
 				service.iframePosition = service.iframe.getBoundingClientRect();
 				service.iframeDocument = service.iframe.contentDocument;
-				service.iframeDocument.designMode = 'off';
 				service.iframeDocument.addEventListener("scroll", service.updateHighlightBorderPosition);
 				service.frameHtml = service.iframeDocument.querySelector('html');
 				if (service.frameHtml === null) {
@@ -81,11 +80,6 @@
 				service.frameBody = service.iframeDocument.querySelector('body');
 
 				service.iframeDocument.addEventListener('keydown', service.handleKeydown);
-				service.iframeDocument.addEventListener('mousedown', function (event) {
-					if (event.target !== service.elementBeingEdited) {
-						service.iframeDocument.designMode = 'off';
-					}
-				});
 
 				// page title
 				service.pageTitle = service.iframeDocument.querySelector('title');
@@ -170,7 +164,6 @@
 
 		service.startDragging = function (event) {
 			event.dataTransfer.setData('text', 'firefox needs data');
-			service.iframeDocument.designMode = 'off';
 
 			if (event.target.getAttribute('badd-configurable') === '') {
 				service.previewElement = event.target;
@@ -340,7 +333,6 @@
 
 			if (event.target !== service.elementBeingEdited
 				&& service.elementBeingEdited) {
-				service.iframeDocument.designMode = 'off';
 				service.elementBeingEdited.addEventListener('dragstart', service.startDragging, false);
 				service.elementBeingEdited.setAttribute('draggable', 'true');
 
@@ -363,7 +355,6 @@
 			event.preventDefault();
 
 			if (_.contains(service.editableTags, event.target.tagName)) {
-				service.iframeDocument.designMode = 'on';
 				service.elementBeingEdited = event.target;
 				service.elementBeingEdited.removeEventListener('dragstart', service.startDragging, false);
 				service.elementBeingEdited.setAttribute('draggable', 'false');
@@ -399,6 +390,18 @@
 
 			service.hideSelectedHighlightBorder();
 		}
+
+		function enableDesignMode() {
+			if (service.isIE10) {
+				service.iframeDocument.designMode = 'On';
+			} else {
+				service.iframeDocument.designMode = 'on';
+			}
+		}
+
+		service.isIE10 = function() {
+			return service.iframe.all != null;
+		};
 
 		service.mouseLeaving = function(event) {
 			event.stopPropagation();
