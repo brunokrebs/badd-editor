@@ -101,15 +101,27 @@
 				service.selectedHighlightBorder = service.transferArea.childNodes[0];
 				service.frameBody.appendChild(service.selectedHighlightBorder);
 
+				// create iframe for editable content
+				service.transferArea.innerHTML = '<iframe class="badd-editable-content-iframe badd-avoid-dd"></iframe>';
+				service.editableFrame = service.transferArea.childNodes[0];
+				service.editableFrame.onload = function() {
+					service.editableFrameDocument = service.editableFrame.contentWindow.document;
+					enableDesignMode(service.editableFrameDocument);
+					service.editableFrameHead = service.editableFrame.contentWindow.document.querySelector('head');
+					if (service.editableFrameHead == null) {
+						return;
+					}
+					addStylesheet(service.editableFrameDocument, 'badd-editor-editable-frame.min.css');
+					service.editableFrameBody = service.editableFrame.contentWindow.document.querySelector('body');
+					service.editableFrameBody.innerHTML = '';
+				};
+				service.frameBody.appendChild(service.editableFrame);
+
 				// start baddEditor module
 				service.frameHtml.setAttribute('ng-app', 'baddEditor');
 
 				// give editable style to editable page
-				service.stylesheet = service.document.createElement('link');
-				service.stylesheet.setAttribute('rel', 'stylesheet');
-				service.stylesheet.setAttribute('href', 'badd-editor-frame.min.css');
-				service.stylesheet.setAttribute('type', 'text/css');
-				service.frameHead.appendChild(service.stylesheet);
+				addStylesheet(service.iframeDocument, 'badd-editor-frame.min.css');
 
 				// enable controller on body
 				service.frameBody.setAttribute('badd-droppable', '');
@@ -127,6 +139,14 @@
 		service.changePageTitle = function(newTitle) {
 			service.pageTitle.textContent = newTitle;
 		};
+
+		function addStylesheet(targetDocument, stylesheet) {
+			var stylesheetElement = targetDocument.createElement('link');
+			stylesheetElement.setAttribute('rel', 'stylesheet');
+			stylesheetElement.setAttribute('href', stylesheet);
+			stylesheetElement.setAttribute('type', 'text/css');
+			targetDocument.querySelector('head').appendChild(stylesheetElement);
+		}
 
 		function configureDirectivesOnElementAndChildren(element) {
 			if (!_.contains(element.classList, 'badd-avoid-dd')) {
@@ -341,6 +361,7 @@
 
 				service.selectedHighlightBorder.classList.remove('badd-edition-mode');
 				service.elementBeingEdited = null;
+				hideEditableFrame();
 			}
 			service.showSelectedHighlightBorder(event.target);
 		};
@@ -361,17 +382,38 @@
 					}
 					parent = parent.parentNode;
 				}
-				service.selectedHighlightBorder.classList.add('badd-edition-mode');
-
-				var range = service.iframeDocument.createRange();
-				range.setStart(service.elementBeingEdited, 0);
-				range.setEnd(service.elementBeingEdited, 0);
-
-				var selection = service.iframeDocument.getSelection();
-				selection.removeAllRanges();
-				selection.addRange(range);
+				service.selectedHighlightBorder.className +=' badd-edition-mode';
+				showEditableFrame(service.elementBeingEdited);
 			}
 		};
+
+		function showEditableFrame(target) {
+			service.editableFrameBody.appendChild(target.cloneNode(true));
+
+			// make everything look the same way
+			var originalElements = _.toArray(target.querySelectorAll('*'));
+			originalElements.unshift(target);
+			var elements = _.toArray(service.editableFrameBody.querySelectorAll('*'));
+			elements.forEach(function(element, index) {
+				element.style.cssText = $window.getComputedStyle(originalElements[index]).cssText;
+			});
+
+			var targetPosition = target.getBoundingClientRect();
+			service.editableFrame.style.top = targetPosition.top + 'px';
+			service.editableFrame.style.left = targetPosition.left + 'px';
+			service.editableFrame.style.width = target.offsetWidth + 'px';
+			service.editableFrame.style.height = target.offsetHeight + 'px';
+			service.editableFrame.style.display = 'block';
+		}
+
+		function hideEditableFrame() {
+			service.editableFrameBody.innerHTML = '';
+			service.editableFrame.style.display = 'none';
+			service.editableFrame.style.top = 0;
+			service.editableFrame.style.left = 0;
+			service.editableFrame.style.width = 0;
+			service.editableFrame.style.height = 0;
+		}
 
 		function windowClickListener(event) {
 			event.stopPropagation();
@@ -380,11 +422,11 @@
 			service.hideSelectedHighlightBorder();
 		}
 
-		function enableDesignMode() {
+		function enableDesignMode(target) {
 			if (service.isIE10) {
-				service.iframeDocument.designMode = 'On';
+				target.designMode = 'On';
 			} else {
-				service.iframeDocument.designMode = 'on';
+				target.designMode = 'on';
 			}
 		}
 

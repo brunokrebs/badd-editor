@@ -16,7 +16,7 @@ body > .container-fluid {
 	position: fixed;
 	pointer-events: none;
 	border: 2px dashed lightskyblue;
-	z-index: 16777100;
+	z-index: 16777200;
 	display: none;
 }
 
@@ -25,7 +25,7 @@ body > .container-fluid {
 	position: fixed;
 	pointer-events: none;
 	border: 2px solid lightskyblue;
-	z-index: 16777200;
+	z-index: 16777201;
 	display: none;
 }
 
@@ -43,4 +43,12 @@ body > .container-fluid {
 
 * {
 	cursor: default !important;
+}
+
+.badd-editable-content-iframe {
+	border: none;
+	overflow: hidden;
+	display: none;
+	position: fixed;
+	z-index: 16777202;
 }
