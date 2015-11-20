@@ -431,9 +431,18 @@
 		function getComputedCSSText(target) {
 			var computedStyle = '';
 			var styles = $window.getComputedStyle(target);
+
+			// this properties make IE show a undesired resizable border around editable content
+			var ignoredProperties = ['height', 'margin', 'margin-bottom', 'margin-left',
+				'margin-right', 'margin-top', 'max-height', 'min-height', 'min-width', 'width'];
+
 			for (var i = 0; i < styles.length; i++) {
-				computedStyle += styles[i] + ':' + styles.getPropertyValue(styles[i]) + ';';
+				var style = styles[i];
+				if (!_.contains(ignoredProperties, style) && style.substring(0, 1) != '-') {
+					computedStyle += styles[i] + ':' + styles.getPropertyValue(styles[i]) + ';';
+				}
 			}
+
 			return '{' + computedStyle + '}';
 		}
 
