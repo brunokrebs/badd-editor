@@ -394,18 +394,19 @@
 
 		function showEditableFrame(target) {
 			service.editableFrameBody.appendChild(target.cloneNode(true));
-			service.editableFrameStyle.innerHTML += 'body>'+target.tagName.toLowerCase()
-				+ '{' + getComputedCSSText(target) + '}';
 
 			// no outer margins
-			service.editableFrameStyle.innerHTML += 'body>'+target.tagName.toLowerCase()
-				+ '{margin:0}';
+			service.editableFrameStyle.innerHTML += 'body>' + target.tagName.toLowerCase()
+				+ '{margin:0 !important}';
 
 			// make everything look the same way
 			var originalElements = _.toArray(target.querySelectorAll('*'));
 			originalElements.unshift(target);
 			var elements = _.toArray(service.editableFrameBody.querySelectorAll('*'));
 			elements.forEach(function(element, index) {
+				var randomClassName = 'badd-random-class-' + (new Date()).getMilliseconds() + '' + index;
+				element.classList.add(randomClassName);
+				service.editableFrameStyle.innerHTML += ' .' + randomClassName + getComputedCSSText(originalElements[index]);
 				element.style.cssText = originalElements[index].cssText;
 			});
 
@@ -417,31 +418,31 @@
 			service.editableFrame.style.display = 'block';
 
 			target.style.opacity = '0';
+
+			//var range = service.editableFrameDocument.createRange();
+			//range.setStart(service.editableFrameBody.firstElementChild, 0);
+			//range.setEnd(service.editableFrameBody.firstElementChild, 0);
+			//
+			//var selection = service.editableFrameDocument.getSelection();
+			//selection.removeAllRanges();
+			//selection.addRange(range);
 		}
 
 		function getComputedCSSText(target) {
-			var cssText = $window.getComputedStyle(target).cssText;
-			if (cssText) {
-				return cssText;
+			var computedStyle = '';
+			var styles = $window.getComputedStyle(target);
+			for (var i = 0; i < styles.length; i++) {
+				computedStyle += styles[i] + ':' + styles.getPropertyValue(styles[i]) + ';';
 			}
-
-			// ie hack
-			var style = [];
-			for (var propertyName in target.currentStyle) {
-
-				if ('string' == typeof(target.currentStyle[propertyName]) && target.currentStyle[propertyName] != '') {
-					style[style.length] = (propertyName.replace(/[A-Z]/g, function (x) {
-							return '-' + (x.toLowerCase())
-						})) + ': ' + target.currentStyle[propertyName];
-				}
-			}
-
-			return style.join('; ') + ';';
+			return '{' + computedStyle + '}';
 		}
 
 		function hideEditableFrame() {
 			service.editableFrameStyle.innerHTML = 'html,body{overflow:hidden;margin:0}';
 			service.editableFrameBody.innerHTML = '';
+			if (service.editableFrameBody.firstChild) {
+				service.editableFrameBody.removeChild(service.editableFrameBody.firstChild);
+			}
 			service.editableFrame.style.display = 'none';
 			service.editableFrame.style.top = 0;
 			service.editableFrame.style.left = 0;
