@@ -369,6 +369,10 @@
 							element.classList.remove(styleClass);
 						}
 					});
+
+					if (element.classList.length == 0) {
+						element.removeAttribute('class');
+					}
 				});
 
 				service.selectedHighlightBorder.className = 'badd-selected-highlighter badd-avoid-dd';
@@ -414,7 +418,7 @@
 			originalElements.unshift(target);
 			var elements = _.toArray(service.editableFrameBody.querySelectorAll('*'));
 			elements.forEach(function(element, index) {
-				var randomClassName = 'badd-random-class-' + (new Date()).getMilliseconds() + '' + index;
+				var randomClassName = 'badd-random-class-' + (new Date()).getTime() + '' + index;
 				element.classList.add(randomClassName);
 				service.editableFrameStyle.innerHTML += ' .' + randomClassName + getComputedCSSText(originalElements[index]);
 				element.style.cssText = originalElements[index].cssText;
