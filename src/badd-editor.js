@@ -111,7 +111,9 @@
 					if (service.editableFrameHead == null) {
 						return;
 					}
-					addStylesheet(service.editableFrameDocument, 'badd-editor-editable-frame.min.css');
+					service.editableFrameStyle = service.editableFrameDocument.createElement('style');
+					service.editableFrameStyle.innerHTML = 'html,body{overflow:hidden;margin:0}';
+					service.editableFrameHead.appendChild(service.editableFrameStyle);
 					service.editableFrameBody = service.editableFrame.contentWindow.document.querySelector('body');
 					service.editableFrameBody.innerHTML = '';
 				};
@@ -359,7 +361,10 @@
 					parent = parent.parentNode;
 				}
 
-				service.selectedHighlightBorder.classList.remove('badd-edition-mode');
+				service.selectedHighlightBorder.className = 'badd-selected-highlighter badd-avoid-dd';
+				service.transferArea.innerHTML = service.editableFrameBody.innerHTML;
+				service.elementBeingEdited.parentNode.replaceChild(service.transferArea.childNodes[0],
+																   service.elementBeingEdited);
 				service.elementBeingEdited = null;
 				hideEditableFrame();
 			}
@@ -389,13 +394,19 @@
 
 		function showEditableFrame(target) {
 			service.editableFrameBody.appendChild(target.cloneNode(true));
+			service.editableFrameStyle.innerHTML += 'body>'+target.tagName.toLowerCase()
+				+ '{' + getComputedCSSText(target) + '}';
+
+			// no outer margins
+			service.editableFrameStyle.innerHTML += 'body>'+target.tagName.toLowerCase()
+				+ '{margin:0}';
 
 			// make everything look the same way
 			var originalElements = _.toArray(target.querySelectorAll('*'));
 			originalElements.unshift(target);
 			var elements = _.toArray(service.editableFrameBody.querySelectorAll('*'));
 			elements.forEach(function(element, index) {
-				element.style.cssText = $window.getComputedStyle(originalElements[index]).cssText;
+				element.style.cssText = originalElements[index].cssText;
 			});
 
 			var targetPosition = target.getBoundingClientRect();
@@ -404,9 +415,32 @@
 			service.editableFrame.style.width = target.offsetWidth + 'px';
 			service.editableFrame.style.height = target.offsetHeight + 'px';
 			service.editableFrame.style.display = 'block';
+
+			target.style.opacity = '0';
+		}
+
+		function getComputedCSSText(target) {
+			var cssText = $window.getComputedStyle(target).cssText;
+			if (cssText) {
+				return cssText;
+			}
+
+			// ie hack
+			var style = [];
+			for (var propertyName in target.currentStyle) {
+
+				if ('string' == typeof(target.currentStyle[propertyName]) && target.currentStyle[propertyName] != '') {
+					style[style.length] = (propertyName.replace(/[A-Z]/g, function (x) {
+							return '-' + (x.toLowerCase())
+						})) + ': ' + target.currentStyle[propertyName];
+				}
+			}
+
+			return style.join('; ') + ';';
 		}
 
 		function hideEditableFrame() {
+			service.editableFrameStyle.innerHTML = 'html,body{overflow:hidden;margin:0}';
 			service.editableFrameBody.innerHTML = '';
 			service.editableFrame.style.display = 'none';
 			service.editableFrame.style.top = 0;
