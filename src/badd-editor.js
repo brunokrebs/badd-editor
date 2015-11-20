@@ -361,6 +361,16 @@
 					parent = parent.parentNode;
 				}
 
+				var editedElements = service.editableFrameBody.querySelectorAll('*');
+				_.forEach(editedElements, function(element) {
+					var styleClasses = element.classList;
+					_.forEach(styleClasses, function(styleClass) {
+						if (styleClass.indexOf('badd-random-class') >= 0) {
+							element.classList.remove(styleClass);
+						}
+					});
+				});
+
 				service.selectedHighlightBorder.className = 'badd-selected-highlighter badd-avoid-dd';
 				service.transferArea.innerHTML = service.editableFrameBody.innerHTML;
 				service.elementBeingEdited.parentNode.replaceChild(service.transferArea.childNodes[0],
