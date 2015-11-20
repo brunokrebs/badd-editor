@@ -433,13 +433,13 @@
 
 			target.style.opacity = '0';
 
-			//var range = service.editableFrameDocument.createRange();
-			//range.setStart(service.editableFrameBody.firstElementChild, 0);
-			//range.setEnd(service.editableFrameBody.firstElementChild, 0);
-			//
-			//var selection = service.editableFrameDocument.getSelection();
-			//selection.removeAllRanges();
-			//selection.addRange(range);
+			var range = service.editableFrameDocument.createRange();
+			range.setStart(service.editableFrameBody.firstElementChild, 0);
+			range.setEnd(service.editableFrameBody.firstElementChild, 0);
+
+			var selection = service.editableFrameDocument.getSelection();
+			selection.removeAllRanges();
+			selection.addRange(range);
 		}
 
 		function getComputedCSSText(target) {
