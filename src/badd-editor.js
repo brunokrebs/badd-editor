@@ -375,7 +375,7 @@
 					}
 				});
 
-				service.selectedHighlightBorder.className = 'badd-selected-highlighter badd-avoid-dd';
+				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter badd-avoid-dd');
 				service.transferArea.innerHTML = service.editableFrameBody.innerHTML;
 				service.elementBeingEdited.parentNode.replaceChild(service.transferArea.childNodes[0],
 																   service.elementBeingEdited);
@@ -401,7 +401,8 @@
 					}
 					parent = parent.parentNode;
 				}
-				service.selectedHighlightBorder.className +=' badd-edition-mode';
+				service.selectedHighlightBorder.setAttribute('class', service.selectedHighlightBorder.className.baseVal
+																		+ ' badd-edition-mode');
 				showEditableFrame(service.elementBeingEdited);
 			}
 		};
