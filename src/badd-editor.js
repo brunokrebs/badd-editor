@@ -391,6 +391,17 @@
 
 			if (_.contains(service.editableTags, event.target.tagName)) {
 				service.elementBeingEdited = event.target;
+
+				// removing focus pseudo class
+				service.elementBeingEdited.ownerDocument.activeElement = null;
+
+				// editing inline elements directly causes a problem on the editable frame position, that why we:
+				while (getComputedCssProperty(service.elementBeingEdited, 'display') == 'inline') {
+					service.elementBeingEdited = service.elementBeingEdited.parentNode;
+				}
+				service.hideHighlightBorder();
+				service.showSelectedHighlightBorder(service.elementBeingEdited);
+
 				service.elementBeingEdited.removeEventListener('dragstart', service.startDragging, false);
 				service.elementBeingEdited.setAttribute('draggable', 'false');
 
@@ -456,6 +467,11 @@
 			}
 
 			return '{' + computedStyle + '}';
+		}
+
+		function getComputedCssProperty(target, property) {
+			var styles = $window.getComputedStyle(target);
+			return styles.getPropertyValue(property);
 		}
 
 		function hideEditableFrame() {

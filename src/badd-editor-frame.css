@@ -52,3 +52,10 @@ body > .container-fluid {
 	position: fixed;
 	z-index: 16777202;
 }
+
+a:active,
+a:focus,
+a:hover {
+	outline: none;
+	text-decoration: none;
+}
