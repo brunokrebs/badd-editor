@@ -434,12 +434,9 @@
 
 			target.style.opacity = '0';
 
-			service.editableFrame.contentWindow.focus();
 			service.editableFrameBody.firstElementChild.focus();
-
 			var selection = service.editableFrame.contentWindow.getSelection();
 			service.editableFrame.contentWindow.focus();
-			service.editableFrameBody.firstElementChild.focus();
 			selection.collapse(service.editableFrameBody.firstElementChild, 0);
 		}
 
