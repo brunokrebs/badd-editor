@@ -361,6 +361,7 @@
 					parent = parent.parentNode;
 				}
 
+				// removing random generated classes
 				var editedElements = service.editableFrameBody.querySelectorAll('*');
 				_.forEach(editedElements, function(element) {
 					var styleClasses = element.classList;
@@ -377,8 +378,21 @@
 
 				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter badd-avoid-dd');
 				service.transferArea.innerHTML = service.editableFrameBody.innerHTML;
-				service.elementBeingEdited.parentNode.replaceChild(service.transferArea.childNodes[0],
-																   service.elementBeingEdited);
+
+				if (service.transferArea.childNodes.length == 1) {
+					service.elementBeingEdited.parentNode.replaceChild(service.transferArea.childNodes[0],
+						service.elementBeingEdited);
+				} else if (service.transferArea.childNodes.length > 1) {
+					parent = service.elementBeingEdited.parentNode;
+					var newElement = service.transferArea.childNodes[0];
+
+					parent.replaceChild(newElement, service.elementBeingEdited);
+
+					while (service.transferArea.childNodes.length > 0) {
+						parent.insertBefore(service.transferArea.childNodes[0], newElement.nextSibling);
+					}
+				}
+
 				service.elementBeingEdited = null;
 				hideEditableFrame();
 			}
