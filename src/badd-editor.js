@@ -107,6 +107,20 @@
 				service.editableFrame.onload = function() {
 					service.editableFrameDocument = service.editableFrame.contentWindow.document;
 					enableDesignMode(service.editableFrameDocument);
+
+					service.editableFrameDocument.addEventListener('keydown', function(event) {
+						if (event.keyCode === 13) {
+							event.preventDefault();
+							service.editableFrameDocument.execCommand('insertParagraph',false);
+						}
+					});
+
+					service.editableFrameDocument.addEventListener('keyup', function() {
+						if (service.editableFrame.style.display != 'none') {
+							service.editableFrame.style.height = service.editableFrameBody.scrollHeight + 'px';
+						}
+					});
+
 					service.editableFrameHead = service.editableFrame.contentWindow.document.querySelector('head');
 					if (service.editableFrameHead == null) {
 						return;
@@ -348,11 +362,7 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			if (event.target !== service.elementBeingEdited
-				&& service.elementBeingEdited) {
-				service.elementBeingEdited.addEventListener('dragstart', service.startDragging, false);
-				service.elementBeingEdited.setAttribute('draggable', 'true');
-
+			if (service.elementBeingEdited) {
 				var parent = service.elementBeingEdited.parentNode;
 				while (parent.tagName != 'BODY') {
 					if (parent.getAttribute('badd-draggable') || parent.getAttribute('draggable')) {
@@ -403,22 +413,18 @@
 			event.stopPropagation();
 			event.preventDefault();
 
+			// only a few elements are content editable, e.g. divs are not, text should be placed on p elements
 			if (_.contains(service.editableTags, event.target.tagName)) {
 				service.elementBeingEdited = event.target;
-
-				// removing focus pseudo class
-				service.elementBeingEdited.ownerDocument.activeElement = null;
 
 				// editing inline elements directly causes a problem on the editable frame position, that why we:
 				while (getComputedCssProperty(service.elementBeingEdited, 'display') == 'inline') {
 					service.elementBeingEdited = service.elementBeingEdited.parentNode;
 				}
-				service.hideHighlightBorder();
-				service.showSelectedHighlightBorder(service.elementBeingEdited);
 
+				// disable dragging during edition
 				service.elementBeingEdited.removeEventListener('dragstart', service.startDragging, false);
 				service.elementBeingEdited.setAttribute('draggable', 'false');
-
 				var parent = service.elementBeingEdited.parentNode;
 				while (parent.tagName != 'BODY') {
 					if (parent.getAttribute('badd-draggable') || parent.getAttribute('draggable')) {
@@ -426,13 +432,24 @@
 					}
 					parent = parent.parentNode;
 				}
-				service.selectedHighlightBorder.setAttribute('class', service.selectedHighlightBorder.className.baseVal
-																		+ ' badd-edition-mode');
+
+				// hide highlight borders
+				service.hideHighlightBorder();
+				service.hideSelectedHighlightBorder();
+
+				// show iframe
 				showEditableFrame(service.elementBeingEdited);
 			}
 		};
 
 		function showEditableFrame(target) {
+			var targetPosition = target.getBoundingClientRect();
+			service.editableFrame.style.margin = getComputedCssProperty(target, 'margin');
+			service.editableFrame.style.width = target.offsetWidth + 'px';
+			service.editableFrame.style.height = target.offsetHeight + 'px';
+			service.editableFrame.style.display = getComputedCssProperty(target, 'display');
+			service.editableFrame.style.position = getComputedCssProperty(target, 'position');
+			target.parentNode.insertBefore(service.editableFrame, target.nextSibling);
 			service.editableFrameBody.appendChild(target.cloneNode(true));
 
 			// no outer margins
@@ -450,14 +467,7 @@
 				element.style.cssText = originalElements[index].cssText;
 			});
 
-			var targetPosition = target.getBoundingClientRect();
-			service.editableFrame.style.top = targetPosition.top + 'px';
-			service.editableFrame.style.left = targetPosition.left + 'px';
-			service.editableFrame.style.width = target.offsetWidth + 'px';
-			service.editableFrame.style.height = target.offsetHeight + 'px';
-			service.editableFrame.style.display = 'block';
-
-			target.style.opacity = '0';
+			target.style.display = 'none';
 
 			service.editableFrameBody.firstElementChild.focus();
 			var selection = service.editableFrame.contentWindow.getSelection();
