@@ -43,19 +43,11 @@ body > .container-fluid {
 
 * {
 	cursor: default !important;
-}
-
-.badd-editable-content-iframe {
-	border: none;
-	overflow: hidden;
-	display: none;
-	position: fixed;
-	z-index: 16777202;
+	outline: none;
 }
 
 a:active,
 a:focus,
 a:hover {
 	outline: none;
-	text-decoration: none;
 }

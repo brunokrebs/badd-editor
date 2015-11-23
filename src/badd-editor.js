@@ -71,6 +71,10 @@
 				// set service properties with raw dom html5 element
 				service.iframePosition = service.iframe.getBoundingClientRect();
 				service.iframeDocument = service.iframe.contentDocument;
+				service.iframeDocument.addEventListener("keyup", function() {
+					service.hideHighlightBorder();
+					service.updateSelectedHighlightBorderPosition();
+				});
 				service.iframeDocument.addEventListener("scroll", service.updateHighlightBorderPosition);
 				service.frameHtml = service.iframeDocument.querySelector('html');
 				service.frameHead = service.iframeDocument.querySelector('head');
@@ -100,38 +104,6 @@
 				service.transferArea.innerHTML = '<svg class="badd-selected-highlighter badd-avoid-dd"></svg>';
 				service.selectedHighlightBorder = service.transferArea.childNodes[0];
 				service.frameBody.appendChild(service.selectedHighlightBorder);
-
-				// create iframe for editable content
-				service.transferArea.innerHTML = '<iframe class="badd-editable-content-iframe badd-avoid-dd"></iframe>';
-				service.editableFrame = service.transferArea.childNodes[0];
-				service.editableFrame.onload = function() {
-					service.editableFrameDocument = service.editableFrame.contentWindow.document;
-					enableDesignMode(service.editableFrameDocument);
-
-					service.editableFrameDocument.addEventListener('keydown', function(event) {
-						if (event.keyCode === 13) {
-							event.preventDefault();
-							service.editableFrameDocument.execCommand('insertParagraph',false);
-						}
-					});
-
-					service.editableFrameDocument.addEventListener('keyup', function() {
-						if (service.editableFrame.style.display != 'none') {
-							service.editableFrame.style.height = service.editableFrameBody.scrollHeight + 'px';
-						}
-					});
-
-					service.editableFrameHead = service.editableFrame.contentWindow.document.querySelector('head');
-					if (service.editableFrameHead == null) {
-						return;
-					}
-					service.editableFrameStyle = service.editableFrameDocument.createElement('style');
-					service.editableFrameStyle.innerHTML = 'html,body{overflow:hidden;margin:0}';
-					service.editableFrameHead.appendChild(service.editableFrameStyle);
-					service.editableFrameBody = service.editableFrame.contentWindow.document.querySelector('body');
-					service.editableFrameBody.innerHTML = '';
-				};
-				service.frameBody.appendChild(service.editableFrame);
 
 				// start baddEditor module
 				service.frameHtml.setAttribute('ng-app', 'baddEditor');
@@ -341,6 +313,12 @@
 			service.selectedHighlightBorder.style.height = 0;
 		};
 
+		service.updateSelectedHighlightBorderPosition = function() {
+			if (service.elementBeingEdited) {
+				service.showSelectedHighlightBorder(service.elementBeingEdited);
+			}
+		};
+
 		service.hideHighlightBorder = function() {
 			service.highlightBorder.style.display = 'none';
 			service.highlightBorder.style.top = 0;
@@ -362,7 +340,7 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			if (service.elementBeingEdited) {
+			if (service.elementBeingEdited && service.elementBeingEdited !== event.target) {
 				var parent = service.elementBeingEdited.parentNode;
 				while (parent.tagName != 'BODY') {
 					if (parent.getAttribute('badd-draggable') || parent.getAttribute('draggable')) {
@@ -371,40 +349,9 @@
 					parent = parent.parentNode;
 				}
 
-				// removing random generated classes
-				var editedElements = service.editableFrameBody.querySelectorAll('*');
-				_.forEach(editedElements, function(element) {
-					var styleClasses = element.classList;
-					_.forEach(styleClasses, function(styleClass) {
-						if (styleClass.indexOf('badd-random-class') >= 0) {
-							element.classList.remove(styleClass);
-						}
-					});
-
-					if (element.classList.length == 0) {
-						element.removeAttribute('class');
-					}
-				});
-
 				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter badd-avoid-dd');
-				service.transferArea.innerHTML = service.editableFrameBody.innerHTML;
-
-				if (service.transferArea.childNodes.length == 1) {
-					service.elementBeingEdited.parentNode.replaceChild(service.transferArea.childNodes[0],
-						service.elementBeingEdited);
-				} else if (service.transferArea.childNodes.length > 1) {
-					parent = service.elementBeingEdited.parentNode;
-					var newElement = service.transferArea.childNodes[0];
-
-					parent.replaceChild(newElement, service.elementBeingEdited);
-
-					while (service.transferArea.childNodes.length > 0) {
-						parent.insertBefore(service.transferArea.childNodes[0], newElement.nextSibling);
-					}
-				}
-
+				service.elementBeingEdited.setAttribute('contenteditable', 'false');
 				service.elementBeingEdited = null;
-				hideEditableFrame();
 			}
 			service.showSelectedHighlightBorder(event.target);
 		};
@@ -417,11 +364,6 @@
 			if (_.contains(service.editableTags, event.target.tagName)) {
 				service.elementBeingEdited = event.target;
 
-				// editing inline elements directly causes a problem on the editable frame position, that why we:
-				while (getComputedCssProperty(service.elementBeingEdited, 'display') == 'inline') {
-					service.elementBeingEdited = service.elementBeingEdited.parentNode;
-				}
-
 				// disable dragging during edition
 				service.elementBeingEdited.removeEventListener('dragstart', service.startDragging, false);
 				service.elementBeingEdited.setAttribute('draggable', 'false');
@@ -433,83 +375,17 @@
 					parent = parent.parentNode;
 				}
 
-				// hide highlight borders
+				// update highlights
 				service.hideHighlightBorder();
-				service.hideSelectedHighlightBorder();
+				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter ' +
+					'badd-avoid-dd badd-edition-mode');
 
-				// show iframe
-				showEditableFrame(service.elementBeingEdited);
+				// make target editable
+				service.elementBeingEdited.setAttribute('contenteditable', 'true');
+
+				service.elementBeingEdited.focus();
 			}
 		};
-
-		function showEditableFrame(target) {
-			var targetPosition = target.getBoundingClientRect();
-			service.editableFrame.style.margin = getComputedCssProperty(target, 'margin');
-			service.editableFrame.style.width = target.offsetWidth + 'px';
-			service.editableFrame.style.height = target.offsetHeight + 'px';
-			service.editableFrame.style.display = getComputedCssProperty(target, 'display');
-			service.editableFrame.style.position = getComputedCssProperty(target, 'position');
-			target.parentNode.insertBefore(service.editableFrame, target.nextSibling);
-			service.editableFrameBody.appendChild(target.cloneNode(true));
-
-			// no outer margins
-			service.editableFrameStyle.innerHTML += 'body>' + target.tagName.toLowerCase()
-				+ '{margin:0 !important}';
-
-			// make everything look the same way
-			var originalElements = _.toArray(target.querySelectorAll('*'));
-			originalElements.unshift(target);
-			var elements = _.toArray(service.editableFrameBody.querySelectorAll('*'));
-			elements.forEach(function(element, index) {
-				var randomClassName = 'badd-random-class-' + (new Date()).getTime() + '' + index;
-				element.classList.add(randomClassName);
-				service.editableFrameStyle.innerHTML += ' .' + randomClassName + getComputedCSSText(originalElements[index]);
-				element.style.cssText = originalElements[index].cssText;
-			});
-
-			target.style.display = 'none';
-
-			service.editableFrameBody.firstElementChild.focus();
-			var selection = service.editableFrame.contentWindow.getSelection();
-			service.editableFrame.contentWindow.focus();
-			selection.collapse(service.editableFrameBody.firstElementChild, 0);
-		}
-
-		function getComputedCSSText(target) {
-			var computedStyle = '';
-			var styles = $window.getComputedStyle(target);
-
-			// this properties make IE show a undesired resizable border around editable content
-			var ignoredProperties = ['height', 'margin', 'margin-bottom', 'margin-left',
-				'margin-right', 'margin-top', 'max-height', 'min-height', 'min-width', 'width'];
-
-			for (var i = 0; i < styles.length; i++) {
-				var style = styles[i];
-				if (!_.contains(ignoredProperties, style) && style.substring(0, 1) != '-') {
-					computedStyle += styles[i] + ':' + styles.getPropertyValue(styles[i]) + ';';
-				}
-			}
-
-			return '{' + computedStyle + '}';
-		}
-
-		function getComputedCssProperty(target, property) {
-			var styles = $window.getComputedStyle(target);
-			return styles.getPropertyValue(property);
-		}
-
-		function hideEditableFrame() {
-			service.editableFrameStyle.innerHTML = 'html,body{overflow:hidden;margin:0}';
-			service.editableFrameBody.innerHTML = '';
-			if (service.editableFrameBody.firstChild) {
-				service.editableFrameBody.removeChild(service.editableFrameBody.firstChild);
-			}
-			service.editableFrame.style.display = 'none';
-			service.editableFrame.style.top = 0;
-			service.editableFrame.style.left = 0;
-			service.editableFrame.style.width = 0;
-			service.editableFrame.style.height = 0;
-		}
 
 		function windowClickListener(event) {
 			event.stopPropagation();
