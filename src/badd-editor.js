@@ -29,16 +29,20 @@
 		$scope.buttons = [
 			{ label: 'Arial', tooltip: 'Font', icon: 'caret' },
 			{ label: '11', tooltip: 'Font size', icon: 'fa fa-caret-down', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold' },
+			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold', action: editorService.bold },
 			{ label: '', tooltip: 'Italic', icon: 'fa fa-italic' },
 			{ label: '', tooltip: 'Underline', icon: 'fa fa-underline', separate: 'btn-separate' },
 			{ label: 'F', tooltip: '', icon: 'Font color' },
 			{ label: '', tooltip: 'Background color', icon: 'fa fa-square', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left' },
-			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center' },
-			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right' },
-			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify' }
+			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left', action: editorService.alignLeft },
+			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center', action: editorService.alignCenter },
+			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right', action: editorService.alignRight },
+			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', action: editorService.justify }
 		];
+
+		$scope.execute = function(action) {
+			editorService.executeAction(action);
+		}
 	};
 	editorController.$inject = ['$scope', 'editorService'];
 
@@ -432,10 +436,6 @@
 			service.hideSelectedHighlightBorder();
 		}
 
-		function enableDesignMode(target) {
-			target.designMode = 'on';
-		}
-
 		function belongsTo(child, parent) {
 			if (child == null || parent == null || child === parent) {
 				return false;
@@ -456,6 +456,45 @@
 
 			service.hideHighlightBorder();
 		};
+
+		service.executeAction = function(action) {
+			if (service.lastSelectedElement == null && service.elementBeingEdited == null) {
+				return;
+			}
+			service.iframeDocument.designMode = 'on';
+
+			if (service.elementBeingEdited == null) {
+				var selection = service.iframeDocument.defaultView.getSelection();
+				var range = service.iframeDocument.createRange();
+				range.setStart(service.lastSelectedElement, 0);
+				range.setEnd(service.lastSelectedElement, 0);
+				selection.removeAllRanges();
+				selection.addRange(range);
+			}
+
+			action();
+			service.iframeDocument.designMode = 'off';
+		};
+
+		service.alignLeft = function() {
+			service.iframeDocument.execCommand('justifyleft', false);
+		};
+
+		service.alignRight = function() {
+			service.iframeDocument.execCommand('justifyright', false);
+		};
+
+		service.alignCenter = function() {
+			service.iframeDocument.execCommand('justifycenter', false);
+		};
+
+		service.justify = function() {
+			service.iframeDocument.execCommand('justifyfull', false);
+		};
+
+		service.bold = function() {
+			service.iframeDocument.execCommand('bold', false);
+		}
 	};
 	editorService.$inject = ['$compile', '$document', '$window'];
 	editorModule.service('editorService', editorService);
