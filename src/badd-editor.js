@@ -25,6 +25,20 @@
 				'src="http://www.avjobs.com/images/v_png_v5/v_collection_png/256x256/shadow/airplane2.png"' +
 				'alt="airplane">' }
 		];
+
+		$scope.buttons = [
+			{ label: 'Arial', tooltip: 'Font', icon: 'caret' },
+			{ label: '11', tooltip: 'Font size', icon: 'fa fa-caret-down', separate: 'btn-separate' },
+			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold' },
+			{ label: '', tooltip: 'Italic', icon: 'fa fa-italic' },
+			{ label: '', tooltip: 'Underline', icon: 'fa fa-underline', separate: 'btn-separate' },
+			{ label: 'F', tooltip: '', icon: 'Font color' },
+			{ label: '', tooltip: 'Background color', icon: 'fa fa-square', separate: 'btn-separate' },
+			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left' },
+			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center' },
+			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right' },
+			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify' }
+		];
 	};
 	editorController.$inject = ['$scope', 'editorService'];
 

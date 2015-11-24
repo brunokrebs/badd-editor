@@ -28,41 +28,9 @@
 		</ul>
 	</div>
 	<div class="badd-editor-browser-configuration">
-		<button type="button" class="btn btn-default" title="Font">
-			Arial <span class="caret"></span>
-		</button>
-		<button type="button" class="btn btn-default" title="Font size">
-			11 <span class="fa fa-caret-up"></span> <span class="fa fa-caret-down"></span>
-		</button>
-		<div class="btn-separator"></div>
-		<button type="button" class="btn btn-default" title="Bold">
-			<i class="fa fa-bold"></i>
-		</button>
-		<button type="button" class="btn btn-default" title="Italic">
-			<i class="fa fa-italic"></i>
-		</button>
-		<button type="button" class="btn btn-default" title="Underline">
-			<i class="fa fa-underline"></i>
-		</button>
-		<div class="btn-separator"></div>
-		<button type="button" class="btn btn-default" title="Font color">
-			<strong>F</strong>
-		</button>
-		<button type="button" class="btn btn-default" title="Background color">
-			<i class="fa fa-square"></i>
-		</button>
-		<div class="btn-separator"></div>
-		<button type="button" class="btn btn-default" title="Background color">
-			<i class="fa fa-align-left"></i>
-		</button>
-		<button type="button" class="btn btn-default" title="Background color">
-			<i class="fa fa-align-center"></i>
-		</button>
-		<button type="button" class="btn btn-default" title="Background color">
-			<i class="fa fa-align-right"></i>
-		</button>
-		<button type="button" class="btn btn-default" title="Background color">
-			<i class="fa fa-align-justify"></i>
+		<button ng-repeat="button in buttons" type="button" title="{{button.tooltip}}"
+				class="btn btn-default" ng-class="button.separate">
+			{{button.label}} <i class="{{button.icon}}"></i>
 		</button>
 	</div>
 	<iframe class="badd-editor-browser"></iframe>

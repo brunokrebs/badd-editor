@@ -228,6 +228,21 @@ div.badd-editor-browser-configuration .btn.btn-default {
 	background-color: #e7e7e7;
 	border-color: #d7d7d7;
 	color: #555;
+	margin-right: 3px;
+}
+
+div.badd-editor-browser-configuration .btn.btn-default.btn-separate {
+	margin-right: 11px;
+}
+
+div.badd-editor-browser-configuration .btn.btn-default.btn-separate::after {
+	content: '';
+	position: absolute;
+	margin-left: 18px;
+	color: #d7d7d7;
+	border-right: 1px solid #d7d7d7;
+	height: 23px;
+	margin-top: -2px;
 }
 
 div.badd-editor-browser-configuration .btn.btn-default:hover {
@@ -241,10 +256,18 @@ div.badd-editor-browser-configuration .btn.btn-default.disabled {
 	border-color: #d7d7d7 !important;
 }
 
-div.btn-separator {
-	display: inline-block;
-	width: 1px;
-	height: 23px;
-	background-color: #d7d7d7;
-	margin: 0 3px -7px 3px;
+/* firefox hacks */
+
+@-moz-document url-prefix() {
+	div.badd-editor-browser-address-return i.fa,
+	div.badd-editor-browser-address-redo i.fa {
+		margin-top: 3px;
+	}
+}
+
+/* ie hacks */
+@media all and (-ms-high-contrast:none) {
+	*::-ms-backdrop, div.badd-editor-browser-configuration .btn.btn-default.btn-separate::after {
+		margin-left: 14px;
+	}
 }
