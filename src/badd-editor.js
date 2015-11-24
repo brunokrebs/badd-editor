@@ -84,7 +84,10 @@
 					service.hideHighlightBorder();
 					service.updateSelectedHighlightBorderPosition();
 				});
-				service.iframeDocument.addEventListener("scroll", service.updateHighlightBorderPosition);
+				service.iframeDocument.addEventListener("scroll", function() {
+					service.updateHighlightBorderPosition();
+					service.updateSelectedHighlightBorderPosition();
+				});
 				service.frameHtml = service.iframeDocument.querySelector('html');
 				service.frameHead = service.iframeDocument.querySelector('head');
 				service.frameBody = service.iframeDocument.querySelector('body');
@@ -313,8 +316,8 @@
 		};
 
 		service.updateSelectedHighlightBorderPosition = function() {
-			if (service.elementBeingEdited) {
-				service.showSelectedHighlightBorder(service.elementBeingEdited);
+			if (service.lastSelectedElement) {
+				service.showSelectedHighlightBorder(service.lastSelectedElement);
 			}
 		};
 
@@ -389,6 +392,7 @@
 
 				// update highlights
 				service.hideHighlightBorder();
+				service.showSelectedHighlightBorder(service.elementBeingEdited);
 				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter ' +
 					'badd-avoid-dd badd-edition-mode');
 
