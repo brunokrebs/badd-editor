@@ -18,6 +18,15 @@
 				   ng-model="pageTitle" ng-change="pageTitleChanged()">
 		</div>
 	</div>
+	<div class="badd-editor-dragglable-components">
+		<p class="badd-editor-title">{{componentsTitle}}</p>
+		<ul>
+			<li ng-repeat="draggable in draggables" data-element="{{draggable.element}}" badd-draggable>
+				<i class="fa {{draggable.icon}}"></i>
+				<span class="badd-editor-title">{{draggable.title}}</span>
+			</li>
+		</ul>
+	</div>
 	<div class="badd-editor-browser-configuration">
 		<button type="button" class="btn btn-default " title="Font">
 			Arial <span class="caret"></span>
@@ -55,15 +64,6 @@
 		<button type="button" class="btn btn-default " title="Background color">
 			<i class="fa fa-align-justify"></i>
 		</button>
-	</div>
-	<div class="badd-editor-dragglable-components">
-		<p class="badd-editor-title">{{componentsTitle}}</p>
-		<ul>
-			<li ng-repeat="draggable in draggables" data-element="{{draggable.element}}" badd-draggable>
-				<i class="fa {{draggable.icon}}"></i>
-				<span class="badd-editor-title">{{draggable.title}}</span>
-			</li>
-		</ul>
 	</div>
 	<iframe class="badd-editor-browser"></iframe>
 	<div class="badd-editor-browser-footer"></div>

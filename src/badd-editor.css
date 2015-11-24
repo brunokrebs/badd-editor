@@ -39,7 +39,7 @@ div.badd-editor-browser-configuration {
 
 div.badd-editor-browser-header {
 	position: absolute;
-	top: 0px;
+	top: 0;
 }
 
 div.badd-editor-browser-address {
@@ -50,11 +50,14 @@ div.badd-editor-browser-address {
 div.badd-editor-browser-configuration {
 	position: absolute;
 	top: 70px;
+	padding-left: 260px;
+	border-bottom: 1px solid #bbb;
 }
 
 div.badd-editor-browser-footer {
 	position: absolute;
-	bottom: 0px;
+	bottom: 0;
+	border-top: 1px solid #bbb;
 }
 
 div.badd-editor-browser-header-close {
@@ -140,21 +143,25 @@ div.badd-editor-browser-address-redo i.fa {
 div.badd-editor-dragglable-components {
 	position: absolute;
 	background-color: #e7e7e7;
-	width: 260px;
-	top: 110px;
+	width: 250px;
+	top: 70px;
 	left: 0;
-	bottom: 30px;
-	overflow-y: auto;
+	bottom: 0;
+	overflow-y: hidden;
 	overflow-x: hidden;
+	z-index: 16777102;
+	border-right: 1px solid #bbb;
 }
 
 div.badd-editor-dragglable-components p.badd-editor-title {
 	color: #222;
-	line-height: 30px;
+	line-height: 39px;
 	background-color: #aaa;
 	margin-bottom: 0;
 	padding: 0 15px 0 15px;
 	text-align: center;
+	border-bottom: 1px solid #999;
+	border-right: 1px solid #999;
 }
 
 div.badd-editor-dragglable-components ul {
@@ -220,6 +227,7 @@ div.badd-editor-browser-configuration .btn.btn-default {
 	border-radius: 2px;
 	background-color: #e7e7e7;
 	border-color: #d7d7d7;
+	color: #555;
 }
 
 div.badd-editor-browser-configuration .btn.btn-default:hover {
