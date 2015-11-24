@@ -1,7 +1,11 @@
 (function() {
 	var editorModule = angular.module('baddEditor', []);
 
-	var editorController = function($scope) {
+	var editorController = function($scope, editorService) {
+		$scope.pageTitleChanged = function() {
+			editorService.changePageTitle($scope.pageTitle);
+		};
+
 		// if attr are not set, use default values
 		$scope.componentsTitle = angular.isDefined($scope.componentsTitle) ? $scope.componentsTitle : 'Components';
 
@@ -22,9 +26,9 @@
 				'alt="airplane">' }
 		];
 	};
-	editorController.$inject = ['$scope'];
+	editorController.$inject = ['$scope', 'editorService'];
 
-	var editorDirective = function () {
+	var editorDirective = function (editorService) {
 		return {
 			restrict: 'E',
 			templateUrl: 'badd-editor.html',
@@ -33,10 +37,16 @@
 				componentsTitle: '@',
 				template: '@'
 			},
-			controller: editorController
+			controller: editorController,
+			link: function (scope, element, attrs) {
+				var iframe = element.find('iframe');
+
+				iframe.attr('src', attrs.template);
+				iframe.on('load', editorService.initializeFrame(iframe, scope));
+			}
 		};
 	};
-
+	editorDirective.$inject = ['editorService'];
 	editorModule.directive('baddEditor', editorDirective);
 
 	var editorService = function($compile, $document, $window) {
@@ -63,8 +73,6 @@
 			return function () {
 				service.document = $document[0];
 				service.iframe = frame[0];
-
-				fixLayout();
 
 				// helper listener
 				$window.addEventListener("click", windowClickListener);
@@ -152,18 +160,6 @@
 				var elements = _.toArray(element.querySelectorAll('*'));
 				elements.forEach(configureDirectivesOnElementAndChildren);
 			}
-		}
-
-		function fixLayout() {
-			// fulfill height
-			var browserColumn = service.document.querySelector('td.badd-editor-components');
-			var browserDiv = service.document.querySelector('div.badd-editor-browser-frame');
-			browserDiv.style.height = (browserColumn.getBoundingClientRect().height - 1) + 'px';
-			service.iframe.style.height = (browserColumn.getBoundingClientRect().height - 140) + 'px';
-
-			var addressDiv = service.document.querySelector('div.badd-editor-browser-address');
-			var addressPageTitleDiv = addressDiv.querySelector('div.badd-editor-browser-address-page-title');
-			addressPageTitleDiv.style.width = (addressDiv.getBoundingClientRect().width - 75) + 'px';
 		}
 
 		service.startDragging = function (event) {

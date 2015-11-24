@@ -1,18 +1,70 @@
-<table class="badd-editor">
-	<tr>
-		<td class="badd-editor-components">
-			<div class="badd-editor-components">
-				<p class="badd-editor-title">{{componentsTitle}}</p>
-				<ul>
-					<li ng-repeat="draggable in draggables" data-element="{{draggable.element}}" badd-draggable>
-						<i class="fa {{draggable.icon}}"></i>
-						<span class="badd-editor-title">{{draggable.title}}</span>
-					</li>
-				</ul>
+<div class="badd-editor-browser-frame">
+	<div class="badd-editor-browser-header">
+		<div class="badd-editor-browser-header-close"></div>
+		<div class="badd-editor-browser-header-min"></div>
+		<div class="badd-editor-browser-header-max"></div>
+	</div>
+	<div class="badd-editor-browser-address">
+		<div class="badd-editor-browser-address-undo-redo">
+			<div class="badd-editor-browser-address-return">
+				<i class="fa fa-arrow-left"></i>
 			</div>
-		</td>
-		<td class="badd-editor-browser">
-			<badd-droppable-frame template="{{template}}"></badd-droppable-frame>
-		</td>
-	</tr>
-</table>
+			<div class="badd-editor-browser-address-redo">
+				<i class="fa fa-arrow-right"></i>
+			</div>
+		</div>
+		<div class="badd-editor-browser-address-page-title">
+			<input type="text" class="form-control" placeholder="Page title"
+				   ng-model="pageTitle" ng-change="pageTitleChanged()">
+		</div>
+	</div>
+	<div class="badd-editor-browser-configuration">
+		<button type="button" class="btn btn-default " title="Font">
+			Arial <span class="caret"></span>
+		</button>
+		<button type="button" class="btn btn-default " title="Font size">
+			11 <span class="fa fa-caret-up"></span> <span class="fa fa-caret-down"></span>
+		</button>
+		<div class="btn-separator"></div>
+		<button type="button" class="btn btn-default " title="Bold">
+			<i class="fa fa-bold"></i>
+		</button>
+		<button type="button" class="btn btn-default " title="Italic">
+			<i class="fa fa-italic"></i>
+		</button>
+		<button type="button" class="btn btn-default " title="Underline">
+			<i class="fa fa-underline"></i>
+		</button>
+		<div class="btn-separator"></div>
+		<button type="button" class="btn btn-default " title="Font color">
+			<strong>F</strong>
+		</button>
+		<button type="button" class="btn btn-default " title="Background color">
+			<i class="fa fa-square"></i>
+		</button>
+		<div class="btn-separator"></div>
+		<button type="button" class="btn btn-default " title="Background color">
+			<i class="fa fa-align-left"></i>
+		</button>
+		<button type="button" class="btn btn-default " title="Background color">
+			<i class="fa fa-align-center"></i>
+		</button>
+		<button type="button" class="btn btn-default " title="Background color">
+			<i class="fa fa-align-right"></i>
+		</button>
+		<button type="button" class="btn btn-default " title="Background color">
+			<i class="fa fa-align-justify"></i>
+		</button>
+	</div>
+	<div class="badd-editor-dragglable-components">
+		<p class="badd-editor-title">{{componentsTitle}}</p>
+		<ul>
+			<li ng-repeat="draggable in draggables" data-element="{{draggable.element}}" badd-draggable>
+				<i class="fa {{draggable.icon}}"></i>
+				<span class="badd-editor-title">{{draggable.title}}</span>
+			</li>
+		</ul>
+	</div>
+	<iframe class="badd-editor-browser"></iframe>
+	<div class="badd-editor-browser-footer"></div>
+</div>
