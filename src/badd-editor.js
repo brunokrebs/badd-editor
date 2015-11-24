@@ -341,10 +341,11 @@
 		};
 
 		service.mouseClick = function(event) {
+			event.preventDefault();
+
 			if (event.target === service.lastSelectedElement && service.elementBeingEdited == null) {
 				service.hideSelectedHighlightBorder();
 				event.stopPropagation();
-				event.preventDefault();
 				return;
 			}
 
@@ -353,7 +354,6 @@
 			}
 
 			event.stopPropagation();
-			event.preventDefault();
 
 			if (service.elementBeingEdited && service.elementBeingEdited !== event.target) {
 				var parent = service.elementBeingEdited.parentNode;
@@ -399,6 +399,9 @@
 				// make target editable
 				service.elementBeingEdited.contentEditable = true;
 
+				var selection = service.iframe.contentWindow.getSelection();
+				service.iframe.contentWindow.focus();
+				selection.collapse(service.elementBeingEdited, 0);
 				service.elementBeingEdited.focus();
 			}
 		};
@@ -411,11 +414,7 @@
 		}
 
 		function enableDesignMode(target) {
-			if (service.isIE10) {
-				target.designMode = 'On';
-			} else {
-				target.designMode = 'on';
-			}
+			target.designMode = 'on';
 		}
 
 		function belongsTo(child, parent) {
@@ -431,10 +430,6 @@
 			}
 			return false;
 		}
-
-		service.isIE10 = function() {
-			return service.iframe.all != null;
-		};
 
 		service.mouseLeaving = function(event) {
 			event.stopPropagation();

@@ -46,6 +46,10 @@ body > .container-fluid {
 	outline: none;
 }
 
+btn {
+	outline: none !important;
+}
+
 a:active,
 a:focus,
 a:hover {
