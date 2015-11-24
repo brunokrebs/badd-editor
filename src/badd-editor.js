@@ -364,7 +364,7 @@
 				}
 
 				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter badd-avoid-dd');
-				service.elementBeingEdited.contentEditable = false;
+				service.elementBeingEdited.removeAttribute('contentEditable');
 				service.elementBeingEdited = null;
 			}
 			service.showSelectedHighlightBorder(event.target);
@@ -372,6 +372,11 @@
 
 		service.mouseDoubleClick = function(event) {
 			event.stopPropagation();
+
+			if (event.target === service.elementBeingEdited || belongsTo(event.target, service.elementBeingEdited)) {
+				return;
+			}
+
 			event.preventDefault();
 
 			// only a few elements are content editable, e.g. divs are not, text should be placed on p elements
