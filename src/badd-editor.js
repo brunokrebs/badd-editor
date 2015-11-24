@@ -55,7 +55,8 @@
 			'A',
 			'UL',
 			'OL',
-			'LI'
+			'LI',
+			'BTN'
 		];
 
 		service.initializeFrame = function(frame, scope) {
@@ -297,6 +298,7 @@
 		};
 
 		service.showSelectedHighlightBorder = function(target) {
+			service.lastSelectedElement = target;
 			var targetPosition = target.getBoundingClientRect();
 			service.selectedHighlightBorder.style.top = targetPosition.top - 3 + 'px';
 			service.selectedHighlightBorder.style.left = targetPosition.left - 3 + 'px';
@@ -306,6 +308,7 @@
 		};
 
 		service.hideSelectedHighlightBorder = function() {
+			service.lastSelectedElement = null;
 			service.selectedHighlightBorder.style.display = 'none';
 			service.selectedHighlightBorder.style.top = 0;
 			service.selectedHighlightBorder.style.left = 0;
@@ -331,12 +334,26 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			if (!_.contains(event.target.classList, 'badd-avoid-dd')) {
+			if (!_.contains(event.target.classList, 'badd-avoid-dd')
+				&& ! belongsTo(event.target, service.elementBeingEdited)) {
 				service.showHighlightBorder(event.target);
 			}
 		};
 
 		service.mouseClick = function(event) {
+			if (event.target === service.lastSelectedElement) {
+				service.hideSelectedHighlightBorder();
+				event.stopPropagation();
+				event.preventDefault();
+				return;
+			}
+
+			if (belongsTo(event.target, service.elementBeingEdited)) {
+				return;
+			}
+
+			console.log('add');
+
 			event.stopPropagation();
 			event.preventDefault();
 
@@ -361,11 +378,12 @@
 			event.preventDefault();
 
 			// only a few elements are content editable, e.g. divs are not, text should be placed on p elements
-			if (_.contains(service.editableTags, event.target.tagName)) {
+			if (_.contains(service.editableTags, event.target.tagName)
+				&& ! belongsTo(event.target, service.elementBeingEdited)) {
+
 				service.elementBeingEdited = event.target;
 
 				// disable dragging during edition
-				service.elementBeingEdited.removeEventListener('dragstart', service.startDragging, false);
 				service.elementBeingEdited.setAttribute('draggable', 'false');
 				var parent = service.elementBeingEdited.parentNode;
 				while (parent.tagName != 'BODY') {
@@ -400,6 +418,20 @@
 			} else {
 				target.designMode = 'on';
 			}
+		}
+
+		function belongsTo(child, parent) {
+			if (child == null || parent == null || child === parent) {
+				return false;
+			}
+			var nextParent = child.parentNode;
+			while (nextParent != null) {
+				if (nextParent === parent) {
+					return true;
+				}
+				nextParent = nextParent.parentNode;
+			}
+			return false;
 		}
 
 		service.isIE10 = function() {
