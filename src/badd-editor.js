@@ -341,18 +341,16 @@
 		};
 
 		service.mouseClick = function(event) {
-			if (event.target === service.lastSelectedElement) {
+			if (event.target === service.lastSelectedElement && service.elementBeingEdited == null) {
 				service.hideSelectedHighlightBorder();
 				event.stopPropagation();
 				event.preventDefault();
 				return;
 			}
 
-			if (belongsTo(event.target, service.elementBeingEdited)) {
+			if (belongsTo(event.target, service.elementBeingEdited) || service.elementBeingEdited == event.target) {
 				return;
 			}
-
-			console.log('add');
 
 			event.stopPropagation();
 			event.preventDefault();
@@ -367,7 +365,7 @@
 				}
 
 				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter badd-avoid-dd');
-				service.elementBeingEdited.setAttribute('contenteditable', 'false');
+				service.elementBeingEdited.contentEditable = false;
 				service.elementBeingEdited = null;
 			}
 			service.showSelectedHighlightBorder(event.target);
@@ -399,7 +397,7 @@
 					'badd-avoid-dd badd-edition-mode');
 
 				// make target editable
-				service.elementBeingEdited.setAttribute('contenteditable', 'true');
+				service.elementBeingEdited.contentEditable = true;
 
 				service.elementBeingEdited.focus();
 			}
