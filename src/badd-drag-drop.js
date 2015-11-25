@@ -79,6 +79,7 @@
 			// otherwise lets create a nice icon to follow the pointer
 			service.draggableConteiner.appendChild(draggableElement.querySelector('i').cloneNode(true));
 			service.draggableIcon = service.draggableConteiner.childNodes[0];
+			service.draggableIcon.style.display = 'none';
 			service.draggableIcon.style.position = 'fixed';
 			service.draggableIcon.style.fontSize = '30px';
 			service.draggableIcon.style.backgroundColor = '#2385DC';
@@ -91,6 +92,7 @@
 			// adding preview element to our transfer area
 			service.transferArea.innerHTML = draggableElement.getAttribute('data-element');
 			service.previewElement = service.transferArea.childNodes[0];
+			service.previewElement.style.pointerEvents = 'none';
 		}
 
 		function startDraggingElement(event) {
@@ -107,6 +109,7 @@
 			// setting draggable icon to be equal to the element being dragged
 			service.draggableConteiner.innerHTML = '<i class="' + getDraggableIcon(event.target) + '"></i>';
 			service.draggableIcon = service.draggableConteiner.childNodes[0];
+			service.draggableIcon.style.display = 'none';
 			service.draggableIcon.style.position = 'fixed';
 			service.draggableIcon.style.fontSize = '30px';
 			service.draggableIcon.style.backgroundColor = '#2385DC';
@@ -119,9 +122,9 @@
 			// adding preview element to our transfer area
 			service.transferArea.appendChild(event.target.cloneNode(true));
 			service.previewElement = service.transferArea.childNodes[0];
+			service.previewElement.style.pointerEvents = 'none';
 
 			service.lastDraggedElement = event.target;
-			service.lastDraggedElement.style.pointerEvents = 'none';
 		}
 
 		function getDraggableIcon(target) {
@@ -157,7 +160,7 @@
 			cleanPreviewElement(droppableTarget);
 		}
 
-		function updateDraggableIcon(event) {
+		function updateDraggableIcon(event, display) {
 			if (!service.draggableIcon) {
 				// we are dragging nothing, so stop now
 				return;
@@ -171,6 +174,13 @@
 				service.draggableIcon.style.left = (event.screenX - 50) + 'px';
 				service.draggableIcon.style.top = (event.screenY - 150) + 'px';
 			}
+
+			if (display) {
+				if (service.lastDraggedElement) {
+					service.lastDraggedElement.style.pointerEvents = 'none';
+				}
+				service.draggableIcon.style.display = 'block';
+			}
 		}
 
 		function focusLost() {
@@ -183,7 +193,7 @@
 			if (service.previewElement == null) {
 				service.baddElementSelector.showHighlightBorder(event.target);
 			} else {
-				updateDraggableIcon(event);
+				updateDraggableIcon(event, true);
 				updatePreviewElement(event);
 			}
 		}
@@ -224,7 +234,12 @@
 			var nearestSibling = getNearestSibling(event, droppableTarget);
 
 			if (nearestSibling) {
-				droppableTarget.insertBefore(service.previewElement, nearestSibling);
+				try {
+					droppableTarget.insertBefore(service.previewElement, nearestSibling);
+				} catch (e) {
+					console.log('oi');
+				}
+
 			} else {
 				droppableTarget.appendChild(service.previewElement);
 			}
@@ -285,6 +300,7 @@
 				service.lastHoveredDroppable.removeChild(service.previewElement);
 			}
 			service.transferArea.innerHTML = '';
+			service.previewElement.style.pointerEvents = null;
 			service.previewElement = null;
 			service.lastHoveredDroppable = null;
 		}
