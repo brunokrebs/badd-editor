@@ -124,19 +124,14 @@
 					});
 				}
 
-				// create transfer area
-				service.transferArea = service.document.createElement('div');
-				service.transferArea.className = 'badd-transfer-area';
-				service.frameBody.appendChild(service.transferArea);
-
 				// create droppable area highlighter
-				service.transferArea.innerHTML = '<svg class="badd-highlighter badd-avoid-dd"></svg>';
-				service.highlightBorder = service.transferArea.childNodes[0];
+				service.highlightBorder = service.iframeDocument.createElement('svg');
+				service.highlightBorder.className = 'badd-highlighter badd-avoid-dd';
 				service.frameBody.appendChild(service.highlightBorder);
 
 				// create selected area highlighter
-				service.transferArea.innerHTML = '<svg class="badd-selected-highlighter badd-avoid-dd"></svg>';
-				service.selectedHighlightBorder = service.transferArea.childNodes[0];
+				service.selectedHighlightBorder = service.iframeDocument.createElement('svg');
+				service.selectedHighlightBorder.className = 'badd-selected-highlighter badd-avoid-dd';
 				service.frameBody.appendChild(service.selectedHighlightBorder);
 
 				// start baddEditor module
@@ -194,7 +189,7 @@
 				service.previewElement = event.target;
 				service.hideSelectedHighlightBorder();
 			} else {
-				service.transferArea.innerHTML = event.target.getAttribute('data-element');
+
 				service.previewElement = service.transferArea.querySelector('*');
 			}
 		};
@@ -227,69 +222,7 @@
 		};
 
 		service.elementHovering = function(event) {
-			event.stopPropagation();
-			event.preventDefault();
 
-			if (!event.target.getAttribute
-				|| event.target === service.previewElement
-				|| event.target.getAttribute('badd-droppable') !== '') {
-
-				return;
-			}
-
-			var children = _.toArray(event.target.childNodes);
-			var nearestSibling = null;
-			var nearestSiblingPosition = null;
-			children.forEach(function(child) {
-				if (!child.getBoundingClientRect
-					|| _.contains(event.target.classList, 'badd-avoid-dd')
-					|| child == service.previewElement) {
-
-					//this does not break. _.each will run the whole array
-					return;
-				}
-
-				var childPosition = child.getBoundingClientRect();
-
-				var childCenter = {
-					X: childPosition.width / 2 + childPosition.left,
-					Y: childPosition.height / 2 + childPosition.top
-				};
-
-				var belowThreshold = childCenter.Y;
-				if (belowThreshold - childPosition.top > 30) {
-					// no need to be so greedy
-					belowThreshold = childPosition.top + 30;
-				}
-
-				var besidesThreshold = childCenter.X;
-				if (besidesThreshold - childPosition.left > 30) {
-					// no need to be so greedy
-					besidesThreshold = childPosition.left + 30;
-				}
-
-				if ((event.clientY > belowThreshold && event.clientX > besidesThreshold)
-					|| (event.clientY > childPosition.bottom)){
-					//this does not break. _.each will run the whole array
-					return;
-				}
-
-				if (nearestSibling == null) {
-					nearestSibling = child;
-					nearestSiblingPosition = childPosition;
-				} else if (nearestSiblingPosition.left >= childPosition.left
-							&& nearestSiblingPosition.top >= childPosition.top) {
-					nearestSibling = child;
-					nearestSiblingPosition = childPosition;
-				}
-			});
-
-			if (nearestSibling) {
-				event.target.insertBefore(service.previewElement, nearestSibling);
-			} else {
-				event.target.appendChild(service.previewElement);
-			}
-			service.showHighlightBorder(event.target);
 		};
 
 		service.elementDropped = function(event) {

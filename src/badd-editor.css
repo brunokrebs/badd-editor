@@ -141,6 +141,10 @@ svg.badd-draggable-conteiner {
 	pointer-events: none;
 }
 
+.badd-transfer-area {
+	display: none;
+}
+
 div.badd-editor-dragglable-components {
 	position: absolute;
 	background-color: #e7e7e7;
