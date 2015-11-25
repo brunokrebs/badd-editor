@@ -140,6 +140,10 @@
 		function stopDragging(event) {
 			event.preventDefault();
 
+			if (!_.contains(draggableElements, event.target.tagName) || !service.lastDraggedElement) {
+				return;
+			}
+
 			// now that the user released the button we can remove our nice icon
 			service.draggableConteiner.innerHTML = '';
 			service.draggableIcon = null;
