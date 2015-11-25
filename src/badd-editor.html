@@ -22,8 +22,8 @@
 		<p class="badd-editor-title">{{componentsTitle}}</p>
 		<ul>
 			<li ng-repeat="draggable in draggables" data-element="{{draggable.element}}" badd-draggable>
-				<i class="fa {{draggable.icon}}"></i>
-				<span class="badd-editor-title">{{draggable.title}}</span>
+				<i class="fa {{draggable.icon}}" badd-draggble-label></i>
+				<span class="badd-editor-title" badd-draggble-label>{{draggable.title}}</span>
 			</li>
 		</ul>
 	</div>

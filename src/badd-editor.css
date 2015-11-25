@@ -135,6 +135,12 @@ div.badd-editor-browser-address-redo i.fa {
 
 /* draggable components style */
 
+svg.badd-draggable-conteiner {
+	width: 0;
+	height: 0;
+	pointer-events: none;
+}
+
 div.badd-editor-dragglable-components {
 	position: absolute;
 	background-color: #e7e7e7;
