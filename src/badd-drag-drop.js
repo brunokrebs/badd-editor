@@ -122,9 +122,8 @@
 			service.transferArea.appendChild(event.target.cloneNode(true));
 			service.previewElement = service.transferArea.childNodes[0];
 
-			var currentParent = event.target.parentNode;
-			currentParent.removeChild(event.target);
-			dropElement(event, currentParent);
+			service.lastDraggedElement = event.target;
+			service.lastDraggedElement.style.pointerEvents = 'none';
 		}
 
 		function getDraggableIcon(target) {
@@ -144,6 +143,11 @@
 			service.draggableConteiner.innerHTML = '';
 			service.draggableIcon = null;
 			service.removeElement = null;
+
+			if (service.lastDraggedElement) {
+				service.lastDraggedElement.style.pointerEvents = null;
+				service.lastDraggedElement = null;
+			}
 
 			var droppableTarget = event.target;
 			// lets try to find a droppable parent
@@ -177,7 +181,7 @@
 				service.baddElementSelector.showHighlightBorder(event.target);
 			} else {
 				updateDraggableIcon(event);
-				updatePreviewElement(event, droppableTarget);
+				updatePreviewElement(event);
 			}
 		}
 
@@ -189,6 +193,17 @@
 			// lets try to find a droppable parent
 			while (! _.contains(droppableElements, droppableTarget.tagName)) {
 				droppableTarget = droppableTarget.parentNode;
+			}
+
+			if (service.lastDraggedElement) {
+				var nextSibling = getNearestSibling(event, droppableTarget);
+				if (droppableTarget == service.lastDraggedElement.parentNode && (
+						nextSibling == service.lastDraggedElement.nextElementSibling || nextSibling == service.lastDraggedElement)) {
+					return;
+				} else {
+					service.lastDraggedElement.parentNode.removeChild(service.lastDraggedElement);
+					service.lastDraggedElement = null;
+				}
 			}
 
 			if (shouldIDrop(droppableTarget) == false) {
@@ -203,10 +218,16 @@
 			service.baddElementSelector.showHighlightBorder(droppableTarget);
 
 			// ok, it is a droppable element, lets see where we put the preview element
-			dropElement(event, droppableTarget);
+			var nearestSibling = getNearestSibling(event, droppableTarget);
+
+			if (nearestSibling) {
+				droppableTarget.insertBefore(service.previewElement, nearestSibling);
+			} else {
+				droppableTarget.appendChild(service.previewElement);
+			}
 		}
 
-		function dropElement(event, droppableTarget) {
+		function getNearestSibling(event, droppableTarget) {
 			var children = _.toArray(droppableTarget.childNodes);
 			var nearestSibling = null;
 			var nearestSiblingPosition = null;
@@ -252,11 +273,7 @@
 				}
 			});
 
-			if (nearestSibling) {
-				droppableTarget.insertBefore(service.previewElement, nearestSibling);
-			} else {
-				droppableTarget.appendChild(service.previewElement);
-			}
+			return nearestSibling;
 		}
 
 		function cleanPreviewElement(target) {
