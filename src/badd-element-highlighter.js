@@ -1,7 +1,7 @@
 (function() {
 	var editorModule = angular.module('baddEditor');
 
-	var baddElementSelector = function() {
+	var baddElementHighlighter = function() {
 		var service = this;
 
 		service.setup = function (window) {
@@ -49,5 +49,5 @@
 			service.highlightBorder.style.height = 0;
 		};
 	};
-	editorModule.service('baddElementSelector', baddElementSelector);
+	editorModule.service('baddElementHighlighter', baddElementHighlighter);
 }());

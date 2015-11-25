@@ -69,7 +69,7 @@
 	editorDirective.$inject = ['editorService'];
 	editorModule.directive('baddEditor', editorDirective);
 
-	var editorService = function(baddDragDropService, baddElementSelector, $document, $window) {
+	var editorService = function(baddDragDropService, baddElementHighlighter, $document, $window) {
 		var service = this;
 
 		service.editableTags = [
@@ -94,8 +94,8 @@
 				service.document = $document[0];
 				service.iframe = frame[0];
 
-				baddElementSelector.setup($window);
-				baddDragDropService.setup($window, baddElementSelector);
+				baddElementHighlighter.setup($window);
+				baddDragDropService.setup($window, baddElementHighlighter);
 
 				// helper listener
 				$window.addEventListener("click", windowClickListener);
@@ -104,7 +104,6 @@
 				service.iframePosition = service.iframe.getBoundingClientRect();
 				service.iframeDocument = service.iframe.contentDocument;
 				service.iframeDocument.addEventListener("keyup", function() {
-					service.hideHighlightBorder();
 					service.updateSelectedHighlightBorderPosition();
 				});
 				service.iframeDocument.addEventListener("scroll", function() {
@@ -286,13 +285,6 @@
 			return false;
 		}
 
-		service.mouseLeaving = function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-
-			service.hideHighlightBorder();
-		};
-
 		service.executeAction = function(action) {
 			if (service.lastSelectedElement == null && service.elementBeingEdited == null) {
 				return;
@@ -358,6 +350,6 @@
 			service.iframeDocument.execCommand('insertUnorderedList', false);
 		};
 	};
-	editorService.$inject = ['baddDragDropService', 'baddElementSelector', '$document', '$window'];
+	editorService.$inject = ['baddDragDropService', 'baddElementHighlighter', '$document', '$window'];
 	editorModule.service('editorService', editorService);
 }());
