@@ -142,8 +142,14 @@
 			service.draggableIcon = null;
 			service.removeElement = null;
 
+			var droppableTarget = event.target;
+			// lets try to find a droppable parent
+			while (! _.contains(droppableElements, droppableTarget.tagName)) {
+				droppableTarget = droppableTarget.parentNode;
+			}
+
 			// removing preview
-			cleanPreviewElement(event.target);
+			cleanPreviewElement(droppableTarget);
 		}
 
 		function updateDraggableIcon(event) {
