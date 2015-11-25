@@ -64,8 +64,8 @@
 
 		function stopDragging(event) {
 			event.preventDefault();
-			//service.draggableConteiner.innerHTML = '';
-			//service.draggableIcon = null;
+			service.draggableConteiner.innerHTML = '';
+			service.draggableIcon = null;
 		}
 
 		function updateDraggableIcon(event) {
@@ -78,7 +78,8 @@
 		}
 
 		function focusLost() {
-			event.preventDefault();
+			service.draggableConteiner.innerHTML = '';
+			service.draggableIcon = null;
 		}
 
 		function gotFocus() {
