@@ -85,8 +85,7 @@
 			service.draggableIcon.style.border = '1px solid #999';
 			service.draggableIcon.style.color = '#fff';
 			service.draggableIcon.style.padding = '10px';
-			service.draggableIcon.style.left = (event.screenX - 50) + 'px';
-			service.draggableIcon.style.top = (event.screenY - 150) + 'px';
+			updateDraggableIcon(event);
 			service.draggableIcon.style.zIndex = 16777220;
 
 			// adding preview element to our transfer area
@@ -114,8 +113,7 @@
 			service.draggableIcon.style.border = '1px solid #999';
 			service.draggableIcon.style.color = '#fff';
 			service.draggableIcon.style.padding = '10px';
-			service.draggableIcon.style.left = (event.screenX - 50) + 'px';
-			service.draggableIcon.style.top = (event.screenY - 150) + 'px';
+			updateDraggableIcon(event);
 			service.draggableIcon.style.zIndex = 16777220;
 
 			// adding preview element to our transfer area
@@ -166,8 +164,13 @@
 			}
 
 			// making our nice icon follow the pointer
-			service.draggableIcon.style.left = (event.screenX - 50) + 'px';
-			service.draggableIcon.style.top = (event.screenY - 150) + 'px';
+			if (isIE11()) {
+				service.draggableIcon.style.left = (event.screenX + 20) + 'px';
+				service.draggableIcon.style.top = (event.screenY - 120) + 'px';
+			} else {
+				service.draggableIcon.style.left = (event.screenX - 50) + 'px';
+				service.draggableIcon.style.top = (event.screenY - 150) + 'px';
+			}
 		}
 
 		function focusLost() {
@@ -293,6 +296,13 @@
 				|| ! _.contains(droppableElements, target.tagName)) {
 				return false;
 			}
+		}
+
+		function isIE11() {
+			if (service.ie11 == null) {
+				service.ie11 = !(window.ActiveXObject) && "ActiveXObject" in window;
+			}
+			return service.ie11;
 		}
 	};
 	editorModule.service('baddDragDropService', baddDragDropService);
