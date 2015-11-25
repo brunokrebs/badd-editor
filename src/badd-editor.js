@@ -461,7 +461,7 @@
 			if (service.lastSelectedElement == null && service.elementBeingEdited == null) {
 				return;
 			}
-			service.iframeDocument.designMode = 'on';
+			enableDesignMode();
 
 			if (service.elementBeingEdited == null) {
 				var selection = service.iframeDocument.defaultView.getSelection();
@@ -473,8 +473,26 @@
 			}
 
 			action();
-			service.iframeDocument.designMode = 'off';
+			disableDesignMode();
 		};
+
+		function enableDesignMode() {
+			if (isIE11()) return;
+			service.iframeDocument.designMode = 'on';
+			service.iframeDocument.execCommand("StyleWithCSS", false, true);
+		}
+
+		function disableDesignMode() {
+			if (isIE11()) return;
+			service.iframeDocument.designMode = 'off';
+		}
+
+		function isIE11() {
+			if (service.ie11 == null) {
+				service.ie11 = !(window.ActiveXObject) && "ActiveXObject" in window;
+			}
+			return service.ie11;
+		}
 
 		service.alignLeft = function() {
 			service.iframeDocument.execCommand('justifyleft', false);
@@ -485,7 +503,7 @@
 		};
 
 		service.alignCenter = function() {
-			service.iframeDocument.execCommand('justifycenter', false);
+			service.iframeDocument.execCommand('justifyCenter', false);
 		};
 
 		service.justify = function() {
