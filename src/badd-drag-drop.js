@@ -6,6 +6,7 @@
 		service.mainWindow = null;
 
 		var droppableElements = ['DIV', 'BODY', 'P'];
+		var draggableElements = ['DIV', 'IMG', 'P', 'BUTTON', 'A'];
 
 		service.setupWindow = function(window) {
 			if (service.mainWindow != null) {
@@ -24,11 +25,11 @@
 			service.iframeBody = service.iframeDocument.querySelector('body');
 
 			// adding mouse event handlers for both windows (main's and iframe's)
-			service.mainWindow.addEventListener('mousedown', startDragging);
+			service.mainWindow.addEventListener('mousedown', startDraggingComponent);
 			service.mainWindow.addEventListener('mouseup', stopDragging);
 			service.mainWindow.addEventListener('mousemove', updateDraggableIcon);
 			service.mainWindow.addEventListener('blur', focusLost);
-			service.iframeWindow.addEventListener('mousedown', startDragging);
+			service.iframeWindow.addEventListener('mousedown', startDraggingElement);
 			service.iframeWindow.addEventListener('mouseup', stopDragging);
 			service.iframeWindow.addEventListener('mousemove', updateIframe);
 
@@ -43,7 +44,7 @@
 			service.mainBody.appendChild(service.transferArea);
 		};
 
-		function startDragging(event) {
+		function startDraggingComponent(event) {
 			event.preventDefault();
 
 			// trying to find the real draggable element
@@ -69,12 +70,36 @@
 			service.draggableIcon.style.color = '#fff';
 			service.draggableIcon.style.padding = '10px';
 			service.draggableIcon.style.left = (event.pageX + 10) + 'px';
-			service.draggableIcon.style.top = (event.pageY - 100) + 'px';
+			service.draggableIcon.style.top = (event.pageY - 60) + 'px';
 			service.draggableIcon.style.zIndex = 16777220;
 
 			// adding preview element to our transfer area
 			service.transferArea.innerHTML = draggableElement.getAttribute('data-element');
 			service.previewElement = service.transferArea.childNodes[0];
+		}
+
+		function startDraggingElement(event) {
+			event.preventDefault();
+
+			if (!_.contains(draggableElements, event.target.tagName)) {
+				return;
+			}
+
+			// setting draggable icon to be equal to the element being dragged
+			service.draggableConteiner.appendChild(event.target.cloneNode(true));
+			service.draggableIcon = service.draggableConteiner.childNodes[0];
+			service.draggableIcon.style.position = 'fixed';
+			service.draggableIcon.style.left = (event.pageX + 10) + 'px';
+			service.draggableIcon.style.top = (event.pageY - 100) + 'px';
+			service.draggableIcon.style.zIndex = 16777220;
+
+			// adding preview element to our transfer area
+			service.transferArea.appendChild(event.target.cloneNode(true));
+			service.previewElement = service.transferArea.childNodes[0];
+
+			var currentParent = event.target.parentNode;
+			currentParent.removeChild(event.target);
+			dropElement(event, currentParent);
 		}
 
 		function stopDragging(event) {
@@ -83,6 +108,7 @@
 			// now that the user released the button we can remove our nice icon
 			service.draggableConteiner.innerHTML = '';
 			service.draggableIcon = null;
+			service.removeElement = null;
 
 			// removing preview
 			cleanPreviewElement(event.target);
@@ -114,18 +140,28 @@
 			event.stopPropagation();
 			event.preventDefault();
 
-			if (shouldIDrop(event.target) == false) {
-				if (service.lastHoveredDroppable && event.target !== service.previewElement
+			var droppableTarget = event.target;
+			// lets try to find a droppable parent
+			while (! _.contains(droppableElements, droppableTarget.tagName)) {
+				droppableTarget = droppableTarget.parentNode;
+			}
+
+			if (shouldIDrop(droppableTarget) == false) {
+				if (service.lastHoveredDroppable && droppableTarget !== service.previewElement
 						&& service.previewElement.parentNode === service.lastHoveredDroppable) {
 					service.lastHoveredDroppable.removeChild(service.previewElement);
 				}
 				return;
 			}
 
-			service.lastHoveredDroppable = event.target;
+			service.lastHoveredDroppable = droppableTarget;
 
 			// ok, it is a droppable element, lets see where we put the preview element
-			var children = _.toArray(event.target.childNodes);
+			dropElement(event, droppableTarget);
+		}
+
+		function dropElement(event, droppableTarget) {
+			var children = _.toArray(droppableTarget.childNodes);
 			var nearestSibling = null;
 			var nearestSiblingPosition = null;
 			children.forEach(function(child) {
@@ -171,9 +207,9 @@
 			});
 
 			if (nearestSibling) {
-				event.target.insertBefore(service.previewElement, nearestSibling);
+				droppableTarget.insertBefore(service.previewElement, nearestSibling);
 			} else {
-				event.target.appendChild(service.previewElement);
+				droppableTarget.appendChild(service.previewElement);
 			}
 		}
 
