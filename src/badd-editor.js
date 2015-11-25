@@ -69,7 +69,7 @@
 	editorDirective.$inject = ['editorService'];
 	editorModule.directive('baddEditor', editorDirective);
 
-	var editorService = function(baddDragDropService, $document, $window) {
+	var editorService = function(baddDragDropService, baddElementSelector, $document, $window) {
 		var service = this;
 
 		service.editableTags = [
@@ -94,7 +94,8 @@
 				service.document = $document[0];
 				service.iframe = frame[0];
 
-				baddDragDropService.setupWindow($window);
+				baddElementSelector.setup($window);
+				baddDragDropService.setup($window, baddElementSelector);
 
 				// helper listener
 				$window.addEventListener("click", windowClickListener);
@@ -123,11 +124,6 @@
 						scope.pageTitle = service.pageTitle.textContent;
 					});
 				}
-
-				// create droppable area highlighter
-				service.highlightBorder = service.iframeDocument.createElement('svg');
-				service.highlightBorder.className = 'badd-highlighter badd-avoid-dd';
-				service.frameBody.appendChild(service.highlightBorder);
 
 				// create selected area highlighter
 				service.selectedHighlightBorder = service.iframeDocument.createElement('svg');
@@ -160,21 +156,7 @@
 			targetDocument.querySelector('head').appendChild(stylesheetElement);
 		}
 
-		service.updateHighlightBorderPosition = function() {
-			if (service.highlightBorder.style.display === 'block' && service.lastHoveredTarget) {
-				service.showHighlightBorder(service.lastHoveredTarget);
-			}
-		};
 
-		service.showHighlightBorder = function(target) {
-			var targetPosition = target.getBoundingClientRect();
-			service.highlightBorder.style.top = targetPosition.top - 3 + 'px';
-			service.highlightBorder.style.left = targetPosition.left - 3 + 'px';
-			service.highlightBorder.style.width = target.offsetWidth + 6 + 'px';
-			service.highlightBorder.style.height = target.offsetHeight + 6 + 'px';
-			service.highlightBorder.style.display = 'block';
-			service.lastHoveredTarget = target;
-		};
 
 		service.showSelectedHighlightBorder = function(target) {
 			service.lastSelectedElement = target;
@@ -201,21 +183,13 @@
 			}
 		};
 
-		service.hideHighlightBorder = function() {
-			service.highlightBorder.style.display = 'none';
-			service.highlightBorder.style.top = 0;
-			service.highlightBorder.style.left = 0;
-			service.highlightBorder.style.width = 0;
-			service.highlightBorder.style.height = 0;
-		};
-
 		service.mouseHovering = function(event) {
 			event.stopPropagation();
 			event.preventDefault();
 
 			if (!_.contains(event.target.classList, 'badd-avoid-dd')
 				&& ! belongsTo(event.target, service.elementBeingEdited)) {
-				service.showHighlightBorder(event.target);
+				baddElementSelector.showHighlightBorder(event.target);
 			}
 		};
 
@@ -384,6 +358,6 @@
 			service.iframeDocument.execCommand('insertUnorderedList', false);
 		};
 	};
-	editorService.$inject = ['baddDragDropService', '$document', '$window'];
+	editorService.$inject = ['baddDragDropService', 'baddElementSelector', '$document', '$window'];
 	editorModule.service('editorService', editorService);
 }());

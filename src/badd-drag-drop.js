@@ -4,6 +4,7 @@
 	var baddDragDropService = function() {
 		var service = this;
 		service.mainWindow = null;
+		service.baddElementSelector = null;
 
 		var droppableElements = ['DIV', 'BODY', 'P'];
 		var draggableElements = ['DIV', 'IMG', 'P', 'BUTTON', 'A', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
@@ -21,10 +22,12 @@
 			{ tagName: 'H6', icon: 'fa fa-header' }
 		];
 
-		service.setupWindow = function(window) {
+		service.setup = function(window, baddElementSelector) {
 			if (service.mainWindow != null) {
 				return;
 			}
+
+			service.baddElementSelector = baddElementSelector;
 
 			// defining shortcuts to editor's window, document and body
 			service.mainWindow = window;
@@ -170,8 +173,12 @@
 		}
 
 		function updateIframe(event) {
-			updateDraggableIcon(event);
-			updatePreviewElement(event);
+			if (service.previewElement == null) {
+				service.baddElementSelector.showHighlightBorder(event.target);
+			} else {
+				updateDraggableIcon(event);
+				updatePreviewElement(event, droppableTarget);
+			}
 		}
 
 		function updatePreviewElement(event) {
@@ -193,6 +200,7 @@
 			}
 
 			service.lastHoveredDroppable = droppableTarget;
+			service.baddElementSelector.showHighlightBorder(droppableTarget);
 
 			// ok, it is a droppable element, lets see where we put the preview element
 			dropElement(event, droppableTarget);
