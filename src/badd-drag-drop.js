@@ -85,7 +85,7 @@
 			service.draggableIcon.style.border = '1px solid #999';
 			service.draggableIcon.style.color = '#fff';
 			service.draggableIcon.style.padding = '10px';
-			service.draggableIcon.style.left = (event.screenX -50) + 'px';
+			service.draggableIcon.style.left = (event.screenX - 50) + 'px';
 			service.draggableIcon.style.top = (event.screenY - 150) + 'px';
 			service.draggableIcon.style.zIndex = 16777220;
 
@@ -114,7 +114,7 @@
 			service.draggableIcon.style.border = '1px solid #999';
 			service.draggableIcon.style.color = '#fff';
 			service.draggableIcon.style.padding = '10px';
-			service.draggableIcon.style.left = (event.screenX -50) + 'px';
+			service.draggableIcon.style.left = (event.screenX - 50) + 'px';
 			service.draggableIcon.style.top = (event.screenY - 150) + 'px';
 			service.draggableIcon.style.zIndex = 16777220;
 
@@ -162,7 +162,7 @@
 			}
 
 			// making our nice icon follow the pointer
-			service.draggableIcon.style.left = (event.screenX -50) + 'px';
+			service.draggableIcon.style.left = (event.screenX - 50) + 'px';
 			service.draggableIcon.style.top = (event.screenY - 150) + 'px';
 		}
 
