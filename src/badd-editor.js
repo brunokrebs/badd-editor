@@ -69,7 +69,7 @@
 	editorDirective.$inject = ['editorService'];
 	editorModule.directive('baddEditor', editorDirective);
 
-	var editorService = function(baddDragDropService, $compile, $document, $window) {
+	var editorService = function(baddDragDropService, $document, $window) {
 		var service = this;
 
 		service.editableTags = [
@@ -145,7 +145,6 @@
 				service.frameBody.setAttribute('badd-configurable', '');
 
 				service.scope = scope;
-				$compile(service.frameHtml)(scope);
 			};
 		};
 
@@ -385,6 +384,6 @@
 			service.iframeDocument.execCommand('insertUnorderedList', false);
 		};
 	};
-	editorService.$inject = ['baddDragDropService', '$compile', '$document', '$window'];
+	editorService.$inject = ['baddDragDropService', '$document', '$window'];
 	editorModule.service('editorService', editorService);
 }());
