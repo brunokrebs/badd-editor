@@ -144,10 +144,6 @@
 				service.frameBody.setAttribute('badd-droppable', '');
 				service.frameBody.setAttribute('badd-configurable', '');
 
-				// make everything draggable and configurable, divs are also droppable
-				var elements = _.toArray(service.frameBody.querySelectorAll('*'));
-				elements.forEach(configureDirectivesOnElementAndChildren);
-
 				service.scope = scope;
 				$compile(service.frameHtml)(scope);
 			};
@@ -164,76 +160,6 @@
 			stylesheetElement.setAttribute('type', 'text/css');
 			targetDocument.querySelector('head').appendChild(stylesheetElement);
 		}
-
-		function configureDirectivesOnElementAndChildren(element) {
-			if (!_.contains(element.classList, 'badd-avoid-dd')) {
-
-				if (element.tagName === 'DIV' && element.getAttribute('badd-droppable') !== '') {
-					element.setAttribute('badd-droppable', '');
-				}
-
-				if (element.getAttribute('badd-draggable') !== '') {
-					element.setAttribute('badd-draggable', '');
-					element.setAttribute('badd-configurable', '');
-				}
-
-				var elements = _.toArray(element.querySelectorAll('*'));
-				elements.forEach(configureDirectivesOnElementAndChildren);
-			}
-		}
-
-		service.startDragging = function (event) {
-			event.dataTransfer.setData('text', 'firefox needs data');
-
-			if (event.target.getAttribute('badd-configurable') === '') {
-				service.previewElement = event.target;
-				service.hideSelectedHighlightBorder();
-			} else {
-
-				service.previewElement = service.transferArea.querySelector('*');
-			}
-		};
-
-		service.stopDragging = function(event) {
-			service.transferArea.innerHTML = '';
-			if (service.previewElement && service.previewElement.parentNode) {
-				service.previewElement.parentNode.removeChild(service.previewElement);
-				service.previewElement = null;
-			}
-			service.hideHighlightBorder();
-		};
-
-		service.elementEntering = function(event) {
-			service.previewElement.classList.remove('badd-hidden-preview-element');
-
-			event.stopPropagation();
-			event.preventDefault();
-		};
-
-		service.elementLeaving = function (event) {
-			var elementBeingHovered = service.document.elementFromPoint(event.clientX + service.iframePosition.left,
-																		event.clientY + service.iframePosition.top);
-			if (elementBeingHovered == null || elementBeingHovered.tagName !== 'IFRAME' ||
-				! _.contains(elementBeingHovered.classList, 'badd-editor-browser')) {
-
-				service.previewElement.classList.add('badd-hidden-preview-element');
-				service.hideHighlightBorder();
-			}
-		};
-
-		service.elementHovering = function(event) {
-
-		};
-
-		service.elementDropped = function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-
-			configureDirectivesOnElementAndChildren(service.previewElement);
-			$compile(service.previewElement)(service.scope);
-
-			service.previewElement = null;
-		};
 
 		service.updateHighlightBorderPosition = function() {
 			if (service.highlightBorder.style.display === 'block' && service.lastHoveredTarget) {

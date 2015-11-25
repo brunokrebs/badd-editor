@@ -74,7 +74,7 @@
 
 			// adding preview element to our transfer area
 			service.transferArea.innerHTML = draggableElement.getAttribute('data-element');
-			service.previewElement = service.transferArea.querySelector('*');
+			service.previewElement = service.transferArea.childNodes[0];
 		}
 
 		function stopDragging(event) {
@@ -115,6 +115,10 @@
 			event.preventDefault();
 
 			if (shouldIDrop(event.target) == false) {
+				if (service.lastHoveredDroppable && event.target !== service.previewElement
+						&& service.previewElement.parentNode === service.lastHoveredDroppable) {
+					service.lastHoveredDroppable.removeChild(service.previewElement);
+				}
 				return;
 			}
 
@@ -174,11 +178,13 @@
 		}
 
 		function cleanPreviewElement(target) {
-			if (service.lastHoveredDroppable && shouldIDrop(target) == false) {
+			if (service.lastHoveredDroppable && shouldIDrop(target) == false && target !== service.previewElement
+					&& service.previewElement.parentNode === service.lastHoveredDroppable) {
 				service.lastHoveredDroppable.removeChild(service.previewElement);
 			}
 			service.transferArea.innerHTML = '';
 			service.previewElement = null;
+			service.lastHoveredDroppable = null;
 		}
 
 		function shouldIDrop(target) {
