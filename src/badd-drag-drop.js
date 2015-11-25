@@ -6,7 +6,20 @@
 		service.mainWindow = null;
 
 		var droppableElements = ['DIV', 'BODY', 'P'];
-		var draggableElements = ['DIV', 'IMG', 'P', 'BUTTON', 'A'];
+		var draggableElements = ['DIV', 'IMG', 'P', 'BUTTON', 'A', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
+		var draggableIcons = [
+			{ tagName: 'DIV', icon: 'fa fa-square-o' },
+			{ tagName: 'IMG', icon: 'fa fa-picture-o' },
+			{ tagName: 'P', icon: 'fa fa-align-left' },
+			{ tagName: 'BUTTON', icon: 'fa fa-plus-square' },
+			{ tagName: 'A', icon: 'fa fa-link' },
+			{ tagName: 'H1', icon: 'fa fa-header' },
+			{ tagName: 'H2', icon: 'fa fa-header' },
+			{ tagName: 'H3', icon: 'fa fa-header' },
+			{ tagName: 'H4', icon: 'fa fa-header' },
+			{ tagName: 'H5', icon: 'fa fa-header' },
+			{ tagName: 'H6', icon: 'fa fa-header' }
+		];
 
 		service.setupWindow = function(window) {
 			if (service.mainWindow != null) {
@@ -69,8 +82,8 @@
 			service.draggableIcon.style.border = '1px solid #999';
 			service.draggableIcon.style.color = '#fff';
 			service.draggableIcon.style.padding = '10px';
-			service.draggableIcon.style.left = (event.pageX + 10) + 'px';
-			service.draggableIcon.style.top = (event.pageY - 60) + 'px';
+			service.draggableIcon.style.left = (event.screenX -50) + 'px';
+			service.draggableIcon.style.top = (event.screenY - 150) + 'px';
 			service.draggableIcon.style.zIndex = 16777220;
 
 			// adding preview element to our transfer area
@@ -79,6 +92,10 @@
 		}
 
 		function startDraggingElement(event) {
+			if (event.which == 3) {
+				return;
+			}
+
 			event.preventDefault();
 
 			if (!_.contains(draggableElements, event.target.tagName)) {
@@ -86,11 +103,16 @@
 			}
 
 			// setting draggable icon to be equal to the element being dragged
-			service.draggableConteiner.appendChild(event.target.cloneNode(true));
+			service.draggableConteiner.innerHTML = '<i class="' + getDraggableIcon(event.target) + '"></i>';
 			service.draggableIcon = service.draggableConteiner.childNodes[0];
 			service.draggableIcon.style.position = 'fixed';
-			service.draggableIcon.style.left = (event.pageX + 10) + 'px';
-			service.draggableIcon.style.top = (event.pageY - 100) + 'px';
+			service.draggableIcon.style.fontSize = '30px';
+			service.draggableIcon.style.backgroundColor = '#2385DC';
+			service.draggableIcon.style.border = '1px solid #999';
+			service.draggableIcon.style.color = '#fff';
+			service.draggableIcon.style.padding = '10px';
+			service.draggableIcon.style.left = (event.screenX -50) + 'px';
+			service.draggableIcon.style.top = (event.screenY - 150) + 'px';
 			service.draggableIcon.style.zIndex = 16777220;
 
 			// adding preview element to our transfer area
@@ -100,6 +122,16 @@
 			var currentParent = event.target.parentNode;
 			currentParent.removeChild(event.target);
 			dropElement(event, currentParent);
+		}
+
+		function getDraggableIcon(target) {
+			var icon = 'fa fa-question';
+			_.forEach(draggableIcons, function(draggableIcon) {
+				if (draggableIcon.tagName === target.tagName) {
+					icon = draggableIcon.icon;
+				}
+			});
+			return icon;
 		}
 
 		function stopDragging(event) {
@@ -121,8 +153,8 @@
 			}
 
 			// making our nice icon follow the pointer
-			service.draggableIcon.style.left = (event.pageX + 10) + 'px';
-			service.draggableIcon.style.top = (event.pageY - 60) + 'px';
+			service.draggableIcon.style.left = (event.screenX -50) + 'px';
+			service.draggableIcon.style.top = (event.screenY - 150) + 'px';
 		}
 
 		function focusLost() {

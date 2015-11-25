@@ -19,8 +19,8 @@
 				'<p>You can make me a smaller column</p></div>' },
 			{ title: 'Header 1', icon:'fa-header', element: '<h1>An important title</h1>' },
 			{ title: 'Paragraph', icon:'fa-align-left', element: '<p>Write something useful here</p>' },
-			{ title: 'Button', icon:'fa-plus-square', element: '<btn class="btn btn-primary">My brand ' +
-				'new button</btn>' },
+			{ title: 'Button', icon:'fa-plus-square', element: '<button class="btn btn-primary">My brand ' +
+				'new button</button>' },
 			{ title: 'Image', icon:'fa-picture-o', element: '<img ' +
 				'src="http://www.avjobs.com/images/v_png_v5/v_collection_png/256x256/shadow/airplane2.png"' +
 				'alt="airplane">' }
