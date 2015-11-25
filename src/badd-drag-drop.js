@@ -22,12 +22,13 @@
 			{ tagName: 'H6', icon: 'fa fa-header' }
 		];
 
-		service.setup = function(window, baddElementHighlighter) {
+		service.setup = function(window, baddElementHighlighter, baddElementSelector) {
 			if (service.mainWindow != null) {
 				return;
 			}
 
 			service.baddElementHighlighter = baddElementHighlighter;
+			service.baddElementSelector = baddElementSelector;
 
 			// defining shortcuts to editor's window, document and body
 			service.mainWindow = window;
@@ -140,7 +141,7 @@
 		function stopDragging(event) {
 			event.preventDefault();
 
-			if (!_.contains(draggableElements, event.target.tagName) || !service.lastDraggedElement) {
+			if (!service.previewElement) {
 				return;
 			}
 
@@ -189,14 +190,22 @@
 
 		function focusLost() {
 			// when main window looses focus, we can remove our nice icon
+			if (service.lastDraggedElement) {
+				service.lastDraggedElement.style.pointerEvents = 'none';
+			}
 			service.draggableConteiner.innerHTML = '';
 			service.draggableIcon = null;
+			if (service.previewElement) {
+				cleanPreviewElement(service.lastHoveredDroppable);
+			}
 		}
 
 		function updateIframe(event) {
 			if (service.previewElement == null) {
 				service.baddElementHighlighter.showHighlightBorder(event.target);
 			} else {
+				service.baddElementHighlighter.hideHighlightBorder();
+				service.baddElementSelector.hideSelectedHighlightBorder();
 				updateDraggableIcon(event, true);
 				updatePreviewElement(event);
 			}

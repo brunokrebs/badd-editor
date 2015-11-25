@@ -96,7 +96,7 @@
 
 				baddElementHighlighter.setup($window);
 				baddElementSelector.setup($window);
-				baddDragDropService.setup($window, baddElementHighlighter);
+				baddDragDropService.setup($window, baddElementHighlighter, baddElementSelector);
 
 				// helper listener
 				$window.addEventListener("click", windowClickListener);

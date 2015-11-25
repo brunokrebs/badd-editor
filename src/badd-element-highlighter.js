@@ -25,12 +25,6 @@
 			service.iframeBody.appendChild(service.highlightBorder);
 		};
 
-		service.updateHighlightBorderPosition = function() {
-			if (service.highlightBorder.style.display === 'block' && service.lastHoveredTarget) {
-				service.showHighlightBorder(service.lastHoveredTarget);
-			}
-		};
-
 		service.showHighlightBorder = function(target) {
 			var targetPosition = target.getBoundingClientRect();
 			service.highlightBorder.style.top = targetPosition.top - 3 + 'px';

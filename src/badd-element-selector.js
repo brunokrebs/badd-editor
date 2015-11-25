@@ -47,12 +47,6 @@
 			service.selectedHighlightBorder.style.height = 0;
 		};
 
-		service.updateSelectedHighlightBorderPosition = function() {
-			if (service.lastSelectedElement) {
-				service.showSelectedHighlightBorder(service.lastSelectedElement);
-			}
-		};
-
 		function mouseClick(event) {
 			event.preventDefault();
 
