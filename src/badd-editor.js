@@ -37,7 +37,9 @@
 			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left', action: editorService.alignLeft },
 			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center', action: editorService.alignCenter },
 			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right', action: editorService.alignRight },
-			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', action: editorService.justify }
+			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', separate: 'btn-separate', action: editorService.justify },
+			{ label: '', tooltip: 'Ordered list', icon: 'fa fa-list-ol', action: editorService.orderedList },
+			{ label: '', tooltip: 'Unordered list', icon: 'fa fa-list-ul', action: editorService.unorderedList }
 		];
 
 		$scope.execute = function(action) {
@@ -512,7 +514,15 @@
 
 		service.bold = function() {
 			service.iframeDocument.execCommand('bold', false);
-		}
+		};
+
+		service.orderedList = function() {
+			service.iframeDocument.execCommand('insertOrderedList', false);
+		};
+
+		service.unorderedList = function() {
+			service.iframeDocument.execCommand('insertUnorderedList', false);
+		};
 	};
 	editorService.$inject = ['$compile', '$document', '$window'];
 	editorModule.service('editorService', editorService);
