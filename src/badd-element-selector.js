@@ -30,6 +30,7 @@
 
 			service.iframeWindow.addEventListener('click', mouseClick);
 			service.iframeWindow.addEventListener('dblclick', mouseDoubleClick);
+			service.iframeWindow.addEventListener("resize", updateSelectedHighlightBorderPosition);
 
 			service.iframeDocument.addEventListener("scroll", updateSelectedHighlightBorderPosition);
 			service.iframeDocument.addEventListener("keyup", updateSelectedHighlightBorderPosition);

@@ -24,6 +24,8 @@
 			service.highlightBorder.className = 'badd-highlighter';
 			service.iframeBody.appendChild(service.highlightBorder);
 
+			// adding listeners to update highlight border
+			service.iframeWindow.addEventListener("resize", updateHighlightBorderPosition);
 			service.iframeDocument.addEventListener("scroll", updateHighlightBorderPosition);
 		};
 
