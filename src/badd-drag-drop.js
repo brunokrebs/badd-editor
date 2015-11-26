@@ -244,12 +244,7 @@
 			var nearestSibling = getNearestSibling(event, droppableTarget);
 
 			if (nearestSibling) {
-				try {
-					droppableTarget.insertBefore(service.previewElement, nearestSibling);
-				} catch (e) {
-					console.log('oi');
-				}
-
+				droppableTarget.insertBefore(service.previewElement, nearestSibling);
 			} else {
 				droppableTarget.appendChild(service.previewElement);
 			}
