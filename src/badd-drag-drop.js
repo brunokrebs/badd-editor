@@ -126,6 +126,7 @@
 			service.previewElement.style.pointerEvents = 'none';
 
 			service.lastDraggedElement = event.target;
+			service.lastDraggedElement.style.pointerEvents = 'none';
 		}
 
 		function getDraggableIcon(target) {
@@ -151,7 +152,7 @@
 			service.removeElement = null;
 
 			if (service.lastDraggedElement) {
-				service.lastDraggedElement.style.pointerEvents = null;
+				service.lastDraggedElement.style.removeProperty('pointer-events');
 				service.lastDraggedElement = null;
 			}
 
@@ -181,9 +182,6 @@
 			}
 
 			if (display) {
-				if (service.lastDraggedElement) {
-					service.lastDraggedElement.style.pointerEvents = 'none';
-				}
 				service.draggableIcon.style.display = 'block';
 			}
 		}
@@ -313,7 +311,7 @@
 				service.lastHoveredDroppable.removeChild(service.previewElement);
 			}
 			service.transferArea.innerHTML = '';
-			service.previewElement.style.pointerEvents = null;
+			service.previewElement.style.removeProperty('pointer-events');
 			service.previewElement = null;
 			service.lastHoveredDroppable = null;
 		}
