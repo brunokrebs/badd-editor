@@ -40,6 +40,10 @@
 			service.iframeWindow = service.iframe.contentWindow;
 			service.iframeDocument = service.iframeWindow.document;
 			service.iframeBody = service.iframeDocument.querySelector('body');
+			var boundingRect = service.iframe.getBoundingClientRect();
+			var computedStyle = window.getComputedStyle(service.iframe);
+			service.iframeLeftOffset = boundingRect.left + parseInt(computedStyle['padding-left']);
+			service.iframeTopOffset = boundingRect.top + parseInt(computedStyle['padding-top']);
 
 			// adding mouse event handlers for both windows (main's and iframe's)
 			service.mainWindow.addEventListener('mousedown', startDraggingComponent);
@@ -165,13 +169,15 @@
 			}
 
 			// making our nice icon follow the pointer
-			if (isIE11()) {
-				service.draggableIcon.style.left = (event.screenX + 20) + 'px';
-				service.draggableIcon.style.top = (event.screenY - 120) + 'px';
-			} else {
-				service.draggableIcon.style.left = (event.screenX - 50) + 'px';
-				service.draggableIcon.style.top = (event.screenY - 150) + 'px';
+			var leftOffset = 0;
+			var topOffset = 0;
+
+			if (event.target.ownerDocument == service.iframeDocument) {
+				leftOffset = service.iframeLeftOffset;
+				topOffset = service.iframeTopOffset;
 			}
+			service.draggableIcon.style.left = (event.clientX + leftOffset) + 'px';
+			service.draggableIcon.style.top = (event.clientY - 55 + topOffset) + 'px';
 		}
 
 		function focusLost() {
@@ -316,13 +322,6 @@
 				|| ! _.contains(droppableElements, target.tagName)) {
 				return false;
 			}
-		}
-
-		function isIE11() {
-			if (service.ie11 == null) {
-				service.ie11 = !(window.ActiveXObject) && "ActiveXObject" in window;
-			}
-			return service.ie11;
 		}
 	};
 	editorModule.service('baddDragDropService', baddDragDropService);
