@@ -24,8 +24,15 @@
 			service.selectedHighlightBorder.className = 'badd-selected-highlighter badd-avoid-dd';
 			service.iframeBody.appendChild(service.selectedHighlightBorder);
 
+
+			// adding listeners to update selected highlight border
+			window.addEventListener("click", service.hideSelectedHighlightBorder);
+
 			service.iframeWindow.addEventListener('click', mouseClick);
 			service.iframeWindow.addEventListener('dblclick', mouseDoubleClick);
+
+			service.iframeDocument.addEventListener("scroll", updateSelectedHighlightBorderPosition);
+			service.iframeDocument.addEventListener("keyup", updateSelectedHighlightBorderPosition);
 		};
 
 		service.showSelectedHighlightBorder = function(target) {
@@ -46,6 +53,12 @@
 			service.selectedHighlightBorder.style.width = 0;
 			service.selectedHighlightBorder.style.height = 0;
 		};
+
+		function updateSelectedHighlightBorderPosition() {
+			if (service.lastSelectedElement) {
+				service.showSelectedHighlightBorder(service.lastSelectedElement);
+			}
+		}
 
 		function mouseClick(event) {
 			event.preventDefault();

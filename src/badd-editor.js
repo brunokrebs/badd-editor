@@ -98,19 +98,9 @@
 				baddElementSelector.setup($window);
 				baddDragDropService.setup($window, baddElementHighlighter, baddElementSelector);
 
-				// helper listener
-				$window.addEventListener("click", windowClickListener);
-
 				// set service properties with raw dom html5 element
 				service.iframePosition = service.iframe.getBoundingClientRect();
 				service.iframeDocument = service.iframe.contentDocument;
-				service.iframeDocument.addEventListener("keyup", function() {
-					service.updateSelectedHighlightBorderPosition();
-				});
-				service.iframeDocument.addEventListener("scroll", function() {
-					service.updateHighlightBorderPosition();
-					service.updateSelectedHighlightBorderPosition();
-				});
 				service.frameHtml = service.iframeDocument.querySelector('html');
 				service.frameHead = service.iframeDocument.querySelector('head');
 				service.frameBody = service.iframeDocument.querySelector('body');
@@ -160,15 +150,6 @@
 				baddElementSelector.showHighlightBorder(event.target);
 			}
 		};
-
-
-
-		function windowClickListener(event) {
-			event.stopPropagation();
-			event.preventDefault();
-
-			service.hideSelectedHighlightBorder();
-		}
 
 		service.executeAction = function(action) {
 			if (service.lastSelectedElement == null && service.elementBeingEdited == null) {

@@ -23,6 +23,8 @@
 			service.highlightBorder = service.iframeDocument.createElement('svg');
 			service.highlightBorder.className = 'badd-highlighter';
 			service.iframeBody.appendChild(service.highlightBorder);
+
+			service.iframeDocument.addEventListener("scroll", updateHighlightBorderPosition);
 		};
 
 		service.showHighlightBorder = function(target) {
@@ -42,6 +44,12 @@
 			service.highlightBorder.style.width = 0;
 			service.highlightBorder.style.height = 0;
 		};
+
+		function updateHighlightBorderPosition() {
+			if (service.highlightBorder.style.display === 'block' && service.lastHoveredTarget) {
+				service.showHighlightBorder(service.lastHoveredTarget);
+			}
+		}
 	};
 	editorModule.service('baddElementHighlighter', baddElementHighlighter);
 }());
