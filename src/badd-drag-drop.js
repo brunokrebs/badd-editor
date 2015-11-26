@@ -150,6 +150,17 @@
 		}
 
 		function updateDraggableIcon(event, draggableTagName) {
+			if (event.target.ownerDocument == service.mainDocument) {
+				service.baddElementHighlighter.hideHighlightBorder();
+
+				if (service.previewElement && service.previewElement.parentNode
+						&& service.previewElement.ownerDocument == service.iframeDocument) {
+					service.previewElement.parentNode.removeChild(service.previewElement);
+				} else if (service.lastDraggedElement) {
+					service.lastDraggedElement.parentNode.removeChild(service.lastDraggedElement);
+					service.lastDraggedElement = null;
+				}
+			}
 			if (!service.draggableIcon && !draggableTagName) {
 				// we are dragging nothing, so stop now
 				return;
@@ -209,9 +220,6 @@
 		}
 
 		function updatePreviewElement(event) {
-			event.stopPropagation();
-			event.preventDefault();
-
 			var droppableTarget = event.target;
 			// lets try to find a droppable parent
 			while (! _.contains(droppableElements, droppableTarget.tagName)) {
@@ -304,6 +312,7 @@
 					&& service.previewElement.parentNode === service.lastHoveredDroppable) {
 				service.lastHoveredDroppable.removeChild(service.previewElement);
 			}
+
 			service.transferArea.innerHTML = '';
 			service.previewElement.style.removeProperty('pointer-events');
 			service.previewElement = null;

@@ -141,16 +141,6 @@
 			targetDocument.querySelector('head').appendChild(stylesheetElement);
 		}
 
-		service.mouseHovering = function(event) {
-			event.stopPropagation();
-			event.preventDefault();
-
-			if (!_.contains(event.target.classList, 'badd-avoid-dd')
-				&& ! belongsTo(event.target, service.elementBeingEdited)) {
-				baddElementSelector.showHighlightBorder(event.target);
-			}
-		};
-
 		service.executeAction = function(action) {
 			if (service.lastSelectedElement == null && service.elementBeingEdited == null) {
 				return;
