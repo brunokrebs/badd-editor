@@ -9,8 +9,7 @@
 iframe.badd-editor-browser {
 	width: 100%;
 	height: 100%;
-	padding-top: 110px;
-	padding-left: 250px;
+	padding: 110px 0 30px 250px;
 	border: none;
 	display: block;
 }
