@@ -64,6 +64,11 @@
 		function mouseClick(event) {
 			event.preventDefault();
 
+			if (event.target == service.iframeDocument) {
+				// firefox work around
+				return;
+			}
+
 			if (event.target === service.lastSelectedElement && service.elementBeingEdited == null) {
 				service.hideSelectedHighlightBorder();
 				event.stopPropagation();

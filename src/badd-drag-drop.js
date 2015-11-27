@@ -134,14 +134,14 @@
 			service.draggableIcon = null;
 			service.removeElement = null;
 
-			if (service.lastDraggedElement) {
+			if (service.lastDraggedElement && event.target != service.iframeDocument) {
 				service.lastDraggedElement.style.removeProperty('pointer-events');
 				service.lastDraggedElement = null;
 			}
 
 			var droppableTarget = event.target;
 			// lets try to find a droppable parent
-			while (! _.contains(droppableElements, droppableTarget.tagName)) {
+			while (droppableTarget && ! _.contains(droppableElements, droppableTarget.tagName)) {
 				droppableTarget = droppableTarget.parentNode;
 			}
 
@@ -187,6 +187,13 @@
 				leftOffset = service.iframeLeftOffset;
 				topOffset = service.iframeTopOffset;
 			}
+
+			// firefox bug
+			if (event.clientX < 0 || event.clientY < 0) {
+				leftOffset = service.iframeLeftOffset;
+				topOffset = service.iframeTopOffset;
+			}
+
 			service.draggableIcon.style.left = (event.clientX + leftOffset) + 'px';
 			service.draggableIcon.style.top = (event.clientY - 55 + topOffset) + 'px';
 		}
@@ -204,12 +211,25 @@
 		}
 
 		function updateIframe(event) {
+			if (event.target == service.iframeDocument) {
+				// firefox work around
+				if (service.lastDraggedElement) {
+					service.lastDraggedElement.parentNode.removeChild(service.lastDraggedElement);
+					service.lastDraggedElement = null;
+					service.baddElementHighlighter.hideHighlightBorder();
+				} else if (service.previewElement && service.previewElement.parentNode) {
+					service.previewElement.parentNode.removeChild(service.previewElement);
+					service.baddElementHighlighter.hideHighlightBorder();
+				}
+				updateDraggableIcon(event);
+				return;
+			}
+
 			if (service.previewElement == null) {
 				service.baddElementHighlighter.showHighlightBorder(event.target);
 			} else {
 				if (service.lastDraggedElement && service.lastDraggedElement.style.pointerEvents != 'none') {
 					service.lastDraggedElement.style.pointerEvents = 'none';
-					return;
 				}
 
 				service.baddElementHighlighter.hideHighlightBorder();
@@ -313,6 +333,17 @@
 				service.lastHoveredDroppable.removeChild(service.previewElement);
 			}
 
+			if (target == null) {
+				// firefox work around
+				if (service.lastDraggedElement) {
+					service.lastDraggedElement.parentNode.removeChild(service.lastDraggedElement);
+					service.lastDraggedElement = null;
+				}
+				if (service.previewElement && service.previewElement.parentNode) {
+					service.previewElement.parentNode.removeChild(service.previewElement);
+				}
+			}
+
 			service.transferArea.innerHTML = '';
 			service.previewElement.style.removeProperty('pointer-events');
 			service.previewElement = null;
@@ -320,7 +351,8 @@
 		}
 
 		function shouldIDrop(target) {
-			if (!target.getAttribute
+			if (!target
+				|| !target.getAttribute
 				|| ! service.previewElement
 				|| target === service.previewElement
 				|| ! _.contains(droppableElements, target.tagName)) {
