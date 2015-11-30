@@ -230,6 +230,7 @@
 			} else {
 				if (service.lastDraggedElement && service.lastDraggedElement.style.pointerEvents != 'none') {
 					service.lastDraggedElement.style.pointerEvents = 'none';
+					return;
 				}
 
 				service.baddElementHighlighter.hideHighlightBorder();
