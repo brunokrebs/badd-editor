@@ -72,23 +72,6 @@
 	var editorService = function(baddDragDropService, baddElementHighlighter, baddElementSelector, $document, $window) {
 		var service = this;
 
-		service.editableTags = [
-			'H1',
-			'H2',
-			'H3',
-			'H4',
-			'H5',
-			'H6',
-			'H7',
-			'P',
-			'B',
-			'A',
-			'UL',
-			'OL',
-			'LI',
-			'BTN'
-		];
-
 		service.initializeFrame = function(frame, scope) {
 			return function () {
 				service.document = $document[0];
@@ -99,11 +82,10 @@
 				baddDragDropService.setup($window, baddElementHighlighter, baddElementSelector);
 
 				// set service properties with raw dom html5 element
-				service.iframePosition = service.iframe.getBoundingClientRect();
 				service.iframeDocument = service.iframe.contentDocument;
-				service.frameHtml = service.iframeDocument.querySelector('html');
-				service.frameHead = service.iframeDocument.querySelector('head');
-				service.frameBody = service.iframeDocument.querySelector('body');
+
+				// give editable style to editable page
+				addStylesheet(service.iframeDocument, 'badd-editor-frame.min.css');
 
 				// page title
 				service.pageTitle = service.iframeDocument.querySelector('title');
@@ -114,18 +96,6 @@
 						scope.pageTitle = service.pageTitle.textContent;
 					});
 				}
-
-				// start baddEditor module
-				service.frameHtml.setAttribute('ng-app', 'baddEditor');
-
-				// give editable style to editable page
-				addStylesheet(service.iframeDocument, 'badd-editor-frame.min.css');
-
-				// enable controller on body
-				service.frameBody.setAttribute('badd-droppable', '');
-				service.frameBody.setAttribute('badd-configurable', '');
-
-				service.scope = scope;
 			};
 		};
 
@@ -140,71 +110,6 @@
 			stylesheetElement.setAttribute('type', 'text/css');
 			targetDocument.querySelector('head').appendChild(stylesheetElement);
 		}
-
-		service.executeAction = function(action) {
-			if (service.lastSelectedElement == null && service.elementBeingEdited == null) {
-				return;
-			}
-			enableDesignMode();
-
-			if (service.elementBeingEdited == null) {
-				var selection = service.iframeDocument.defaultView.getSelection();
-				var range = service.iframeDocument.createRange();
-				range.setStart(service.lastSelectedElement, 0);
-				range.setEnd(service.lastSelectedElement, 0);
-				selection.removeAllRanges();
-				selection.addRange(range);
-			}
-
-			action();
-			disableDesignMode();
-		};
-
-		function enableDesignMode() {
-			if (isIE11()) return;
-			service.iframeDocument.designMode = 'on';
-			service.iframeDocument.execCommand("StyleWithCSS", false, true);
-		}
-
-		function disableDesignMode() {
-			if (isIE11()) return;
-			service.iframeDocument.designMode = 'off';
-		}
-
-		function isIE11() {
-			if (service.ie11 == null) {
-				service.ie11 = !(window.ActiveXObject) && "ActiveXObject" in window;
-			}
-			return service.ie11;
-		}
-
-		service.alignLeft = function() {
-			service.iframeDocument.execCommand('justifyleft', false);
-		};
-
-		service.alignRight = function() {
-			service.iframeDocument.execCommand('justifyright', false);
-		};
-
-		service.alignCenter = function() {
-			service.iframeDocument.execCommand('justifyCenter', false);
-		};
-
-		service.justify = function() {
-			service.iframeDocument.execCommand('justifyfull', false);
-		};
-
-		service.bold = function() {
-			service.iframeDocument.execCommand('bold', false);
-		};
-
-		service.orderedList = function() {
-			service.iframeDocument.execCommand('insertOrderedList', false);
-		};
-
-		service.unorderedList = function() {
-			service.iframeDocument.execCommand('insertUnorderedList', false);
-		};
 	};
 	editorService.$inject = ['baddDragDropService', 'baddElementHighlighter', 'baddElementSelector', '$document', '$window'];
 	editorModule.service('editorService', editorService);
