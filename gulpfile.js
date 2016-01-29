@@ -8,6 +8,7 @@ var concat = require('gulp-concat');
 var webserver = require('gulp-webserver');
 var watch = require('gulp-watch');
 var batch = require('gulp-batch');
+var gulpIf = require('gulp-if');
 
 var development = false;
 
@@ -21,11 +22,9 @@ gulp.task('generate-templates', function () {
 });
 
 gulp.task('uglify-js', function() {
-	var js = gulp.src('src/**/*.js');
-	if (development == false) {
-		js = js.pipe(uglify());
-	}
-	return js.pipe(gulp.dest('build'));
+	var js = gulp.src('src/**/*.js')
+		.pipe(gulpIf(development == false, uglify()))
+		.pipe(gulp.dest('build'));
 });
 
 gulp.task('concat-js', ['uglify-js'], function() {
@@ -42,23 +41,26 @@ gulp.task('minify-css', function() {
 		.pipe(gulp.dest('build'));
 });
 
-gulp.task('copy-images', function() {
-	return gulp.src('src/**/*.png')
-		.pipe(gulp.dest('dist'));
-});
+function getDestination() {
+	if (development) {
+		return './demo';
+	}
+	return './dist';
+}
+
+function renameMin(path) {
+	path.basename += '.min';
+	return path;
+}
 
 gulp.task('generate-dist', [
 	'generate-templates',
 	'concat-js',
-	'minify-css',
-	'copy-images'
+	'minify-css'
 ], function() {
-	return gulp.src(["./build/badd-editor.js", "./build/**/*.css"])
-		.pipe(rename(function (path) {
-			path.basename += ".min";
-			return path;
-		}))
-		.pipe(gulp.dest("./dist"));
+	return gulp.src(['./build/badd-editor.js', './build/**/*.css'])
+		.pipe(rename(renameMin))
+		.pipe(gulp.dest(getDestination()));
 });
 
 gulp.task('clean', function () {
@@ -79,4 +81,13 @@ gulp.task('watch', function () {
 gulp.task('webserver', function() {
 	gulp.src(['demo', 'dist'])
 		.pipe(webserver());
+});
+
+gulp.task('set-development-mode', function() {
+	development = true;
+});
+
+gulp.task('develop', ['set-development-mode', 'generate-dist'], function () {
+	gulp.watch(['./src/**/*.js', './src/**/*.css'], ['generate-dist']);
+	gulp.src('./demo').pipe(webserver({host: '0.0.0.0'}));
 });
