@@ -22,13 +22,12 @@
 			{ tagName: 'H6', icon: 'fa fa-header' }
 		];
 
-		service.setup = function(window, baddElementHighlighter, baddElementSelector) {
+		service.setup = function(window, scope) {
 			if (service.mainWindow != null) {
 				return;
 			}
 
-			service.baddElementHighlighter = baddElementHighlighter;
-			service.baddElementSelector = baddElementSelector;
+			service.scope = scope;
 
 			// defining shortcuts to editor's window, document and body
 			service.mainWindow = window;
@@ -64,6 +63,10 @@
 			service.transferArea.className = 'badd-transfer-area';
 			service.mainBody.appendChild(service.transferArea);
 		};
+
+		function emitHovering(target, dragging) {
+			service.scope.$emit('badd-element–dragger-hovering', { target: target, dragging: dragging });
+		}
 
 		function startDraggingComponent(event) {
 			event.preventDefault();
@@ -151,7 +154,7 @@
 
 		function updateDraggableIcon(event, draggableTagName) {
 			if (event.target.ownerDocument == service.mainDocument) {
-				service.baddElementHighlighter.hideHighlightBorder();
+				emitHovering(null, draggableTagName != null);
 
 				if (service.previewElement && service.previewElement.parentNode
 						&& service.previewElement.ownerDocument == service.iframeDocument) {
@@ -216,25 +219,22 @@
 				if (service.lastDraggedElement) {
 					service.lastDraggedElement.parentNode.removeChild(service.lastDraggedElement);
 					service.lastDraggedElement = null;
-					service.baddElementHighlighter.hideHighlightBorder();
 				} else if (service.previewElement && service.previewElement.parentNode) {
 					service.previewElement.parentNode.removeChild(service.previewElement);
-					service.baddElementHighlighter.hideHighlightBorder();
 				}
 				updateDraggableIcon(event);
 				return;
 			}
 
 			if (service.previewElement == null) {
-				service.baddElementHighlighter.showHighlightBorder(event.target);
+				emitHovering(event.target, false);
 			} else {
 				if (service.lastDraggedElement && service.lastDraggedElement.style.pointerEvents != 'none') {
 					service.lastDraggedElement.style.pointerEvents = 'none';
 					return;
 				}
 
-				service.baddElementHighlighter.hideHighlightBorder();
-				service.baddElementSelector.hideSelectedHighlightBorder();
+				emitHovering(null, true);
 				updateDraggableIcon(event, service.previewElement.tagName);
 				updatePreviewElement(event);
 			}
@@ -267,7 +267,7 @@
 			}
 
 			service.lastHoveredDroppable = droppableTarget;
-			service.baddElementHighlighter.showHighlightBorder(droppableTarget);
+			emitHovering(droppableTarget, true);
 
 			// ok, it is a droppable element, lets see where we put the preview element
 			var nearestSibling = getNearestSibling(event, droppableTarget);

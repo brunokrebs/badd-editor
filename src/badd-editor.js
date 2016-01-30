@@ -78,10 +78,10 @@
 				service.document = $document[0];
 				service.iframe = frame[0];
 
-				baddElementHighlighter.setup($window);
-				baddElementSelector.setup($window, baddElementHighlighter);
+				baddElementHighlighter.setup($window, scope);
+				baddElementSelector.setup($window, baddElementHighlighter, scope);
 				baddContentEditor.setup($window, baddElementSelector);
-				baddDragDropService.setup($window, baddElementHighlighter, baddElementSelector);
+				baddDragDropService.setup($window, scope);
 
 				// set service properties with raw dom html5 element
 				service.iframeDocument = service.iframe.contentDocument;

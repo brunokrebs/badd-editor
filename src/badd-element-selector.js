@@ -4,12 +4,13 @@
 	var baddElementSelector = function() {
 		var service = this;
 
-		service.setup = function (window, baddElementHighlighter) {
+		service.setup = function (window, baddElementHighlighter, scope) {
 			if (service.mainWindow != null) {
 				return;
 			}
 
 			service.baddElementHighlighter = baddElementHighlighter;
+			service.scope = scope;
 
 			// defining shortcuts to editor's window, document and body
 			service.mainWindow = window;
@@ -36,6 +37,13 @@
 
 			service.iframeDocument.addEventListener("scroll", updateSelectedHighlightBorderPosition);
 			service.iframeDocument.addEventListener("keyup", updateSelectedHighlightBorderPosition);
+
+			// listening to events
+			service.scope.$on('badd-element–dragger-hovering', function(event, state) {
+				if (state.dragging) {
+					service.hideSelectedHighlightBorder();
+				}
+			});
 		};
 
 		service.showSelectedHighlightBorder = function(target) {

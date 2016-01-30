@@ -4,10 +4,12 @@
 	var baddElementHighlighter = function() {
 		var service = this;
 
-		service.setup = function (window) {
+		service.setup = function (window, scope) {
 			if (service.mainWindow != null) {
 				return;
 			}
+
+			service.scope = scope;
 
 			// defining shortcuts to editor's window, document and body
 			service.mainWindow = window;
@@ -27,6 +29,14 @@
 			// adding listeners to update highlight border
 			service.iframeWindow.addEventListener("resize", updateHighlightBorderPosition);
 			service.iframeDocument.addEventListener("scroll", updateHighlightBorderPosition);
+
+			// listen to events
+			service.scope.$on('badd-element–dragger-hovering', function(event, state) {
+				if (!state.target) {
+					return service.hideHighlightBorder();
+				}
+				service.showHighlightBorder(state.target);
+			});
 		};
 
 		service.showHighlightBorder = function(target) {
