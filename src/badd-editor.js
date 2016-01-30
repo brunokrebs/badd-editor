@@ -72,6 +72,14 @@
 	var editorService = function(baddDragDropService, baddElementHighlighter, baddElementSelector, $document, $window) {
 		var service = this;
 
+		service.executeAction = function(action) {
+			action();
+		};
+
+		service.bold = function() {
+			alert('hi ' + baddElementSelector.lastSelectedElement);
+		};
+
 		service.initializeFrame = function(frame, scope) {
 			return function () {
 				service.document = $document[0];

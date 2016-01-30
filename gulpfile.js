@@ -13,32 +13,33 @@ var gulpIf = require('gulp-if');
 var development = false;
 
 gulp.task('generate-templates', function () {
-	return gulp.src('src/**/*.html')
+	return gulp.src('./src/**/*.html')
 		.pipe(templateCache({
 			filename: 'badd-template.js',
 			module: 'baddEditor'
 		}))
-		.pipe(gulp.dest('build'));
+		.pipe(gulp.dest('./build/concat/'));
 });
 
 gulp.task('uglify-js', function() {
-	var js = gulp.src('src/**/*.js')
+	return gulp.src('./src/**/*.js')
 		.pipe(gulpIf(development == false, uglify()))
-		.pipe(gulp.dest('build'));
+		.pipe(gulp.dest('./build/concat/'));
 });
 
 gulp.task('concat-js', ['uglify-js'], function() {
 	return gulp.src([
-			'./build/badd-editor.js',
-			'./build/**/!(badd-editor)*.js'
-		]).pipe(concat('badd-editor.js'))
-		  .pipe(gulp.dest('./build/'));
+			'./build/concat/badd-editor.js',
+			'./build/concat/**/!(badd-editor)*.js'
+		])
+		.pipe(concat('badd-editor.js'))
+		.pipe(gulp.dest('./build/min/'));
 });
 
 gulp.task('minify-css', function() {
-	return gulp.src('src/**/*.css')
+	return gulp.src('./src/**/*.css')
 		.pipe(minifyCss())
-		.pipe(gulp.dest('build'));
+		.pipe(gulp.dest('./build/css/'));
 });
 
 function getDestination() {
@@ -58,7 +59,7 @@ gulp.task('generate-dist', [
 	'concat-js',
 	'minify-css'
 ], function() {
-	return gulp.src(['./build/badd-editor.js', './build/**/*.css'])
+	return gulp.src(['./build/min/badd-editor.js', './build/css/**/*.css'])
 		.pipe(rename(renameMin))
 		.pipe(gulp.dest(getDestination()));
 });
@@ -88,6 +89,6 @@ gulp.task('set-development-mode', function() {
 });
 
 gulp.task('develop', ['set-development-mode', 'generate-dist'], function () {
-	gulp.watch(['./src/**/*.js', './src/**/*.css'], ['generate-dist']);
+	gulp.watch(['./src/**/*.js', './src/**/*.css', './src/**/*.html'], ['generate-dist']);
 	gulp.src('./demo').pipe(webserver({host: '0.0.0.0'}));
 });
