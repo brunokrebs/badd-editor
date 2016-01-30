@@ -88,6 +88,32 @@
 		service.unorderedList = function() {
 			service.iframeDocument.execCommand('insertUnorderedList', false);
 		};
+
+		function insertHTML(html) {
+			var sel = service.iframeWindow.getSelection();
+			if (sel.getRangeAt && sel.rangeCount) {
+				var range = sel.getRangeAt(0);
+				var elementHolder = service.iframeDocument.createElement("div");
+				var fragment = service.iframeDocument.createDocumentFragment();
+				var node, lastNode;
+
+				range.deleteContents();
+				elementHolder.innerHTML = html;
+				while ((node = elementHolder.firstChild)) {
+					lastNode = fragment.appendChild(node);
+				}
+				range.insertNode(fragment);
+
+				// Preserve the selection
+				if (lastNode) {
+					range = range.cloneRange();
+					range.setStartAfter(lastNode);
+					range.collapse(true);
+					sel.removeAllRanges();
+					sel.addRange(range);
+				}
+			}
+		}
 	};
 
 	editorModule.service('baddConfigurableService', baddConfigurableService);
