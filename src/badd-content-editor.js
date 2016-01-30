@@ -1,7 +1,7 @@
 (function () {
 	var editorModule = angular.module('baddEditor');
 
-	var baddConfigurableService = function() {
+	var baddContentEditor = function() {
 		var service = this;
 
 		service.editableTags = [
@@ -11,7 +11,7 @@
 
 		service.setup = function(window, baddElementSelector) {
 			service.baddElementSelector = baddElementSelector;
-			service.baddElementSelector.baddConfigurableService = service;
+			service.baddElementSelector.baddContentEditor = service;
 
 			// defining shortcuts to editor's window, document and body
 			service.mainWindow = window;
@@ -116,5 +116,5 @@
 		}
 	};
 
-	editorModule.service('baddConfigurableService', baddConfigurableService);
+	editorModule.service('baddContentEditor', baddContentEditor);
 }());

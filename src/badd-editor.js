@@ -1,7 +1,7 @@
 (function() {
 	var editorModule = angular.module('baddEditor', []);
 
-	var editorController = function($scope, editorService, baddConfigurableService) {
+	var editorController = function($scope, editorService, baddContentEditor) {
 		$scope.pageTitleChanged = function() {
 			editorService.changePageTitle($scope.pageTitle);
 		};
@@ -29,24 +29,24 @@
 		$scope.buttons = [
 			{ label: 'Arial', tooltip: 'Font', icon: 'caret' },
 			{ label: '11', tooltip: 'Font size', icon: 'fa fa-caret-down', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold', action: baddConfigurableService.bold },
+			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold', action: baddContentEditor.bold },
 			{ label: '', tooltip: 'Italic', icon: 'fa fa-italic' },
 			{ label: '', tooltip: 'Underline', icon: 'fa fa-underline', separate: 'btn-separate' },
 			{ label: 'F', tooltip: '', icon: 'Font color' },
 			{ label: '', tooltip: 'Background color', icon: 'fa fa-square', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left', action: baddConfigurableService.alignLeft },
-			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center', action: baddConfigurableService.alignCenter },
-			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right', action: baddConfigurableService.alignRight },
-			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', separate: 'btn-separate', action: baddConfigurableService.justify },
-			{ label: '', tooltip: 'Ordered list', icon: 'fa fa-list-ol', action: baddConfigurableService.orderedList },
-			{ label: '', tooltip: 'Unordered list', icon: 'fa fa-list-ul', action: baddConfigurableService.unorderedList }
+			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left', action: baddContentEditor.alignLeft },
+			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center', action: baddContentEditor.alignCenter },
+			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right', action: baddContentEditor.alignRight },
+			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', separate: 'btn-separate', action: baddContentEditor.justify },
+			{ label: '', tooltip: 'Ordered list', icon: 'fa fa-list-ol', action: baddContentEditor.orderedList },
+			{ label: '', tooltip: 'Unordered list', icon: 'fa fa-list-ul', action: baddContentEditor.unorderedList }
 		];
 
 		$scope.execute = function(action) {
-			baddConfigurableService.executeAction(action);
+			baddContentEditor.executeAction(action);
 		}
 	};
-	editorController.$inject = ['$scope', 'editorService', 'baddConfigurableService'];
+	editorController.$inject = ['$scope', 'editorService', 'baddContentEditor'];
 
 	var editorDirective = function (editorService) {
 		return {
@@ -70,7 +70,7 @@
 	editorModule.directive('baddEditor', editorDirective);
 
 	var editorService = function(baddDragDropService, baddElementHighlighter, baddElementSelector,
-								 baddConfigurableService, $document, $window) {
+								 baddContentEditor, $document, $window) {
 		var service = this;
 
 		service.initializeFrame = function(frame, scope) {
@@ -80,7 +80,7 @@
 
 				baddElementHighlighter.setup($window);
 				baddElementSelector.setup($window, baddElementHighlighter);
-				baddConfigurableService.setup($window, baddElementSelector);
+				baddContentEditor.setup($window, baddElementSelector);
 				baddDragDropService.setup($window, baddElementHighlighter, baddElementSelector);
 
 				// set service properties with raw dom html5 element
@@ -114,6 +114,6 @@
 		}
 	};
 	editorService.$inject = ['baddDragDropService', 'baddElementHighlighter', 'baddElementSelector',
-							 'baddConfigurableService', '$document', '$window'];
+							 'baddContentEditor', '$document', '$window'];
 	editorModule.service('editorService', editorService);
 }());
