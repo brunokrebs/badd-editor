@@ -1,7 +1,7 @@
 (function() {
 	var editorModule = angular.module('baddEditor', []);
 
-	var editorController = function($scope, editorService) {
+	var editorController = function($scope, editorService, baddConfigurableService) {
 		$scope.pageTitleChanged = function() {
 			editorService.changePageTitle($scope.pageTitle);
 		};
@@ -29,24 +29,24 @@
 		$scope.buttons = [
 			{ label: 'Arial', tooltip: 'Font', icon: 'caret' },
 			{ label: '11', tooltip: 'Font size', icon: 'fa fa-caret-down', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold', action: editorService.bold },
+			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold', action: baddConfigurableService.bold },
 			{ label: '', tooltip: 'Italic', icon: 'fa fa-italic' },
 			{ label: '', tooltip: 'Underline', icon: 'fa fa-underline', separate: 'btn-separate' },
 			{ label: 'F', tooltip: '', icon: 'Font color' },
 			{ label: '', tooltip: 'Background color', icon: 'fa fa-square', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left', action: editorService.alignLeft },
-			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center', action: editorService.alignCenter },
-			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right', action: editorService.alignRight },
-			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', separate: 'btn-separate', action: editorService.justify },
-			{ label: '', tooltip: 'Ordered list', icon: 'fa fa-list-ol', action: editorService.orderedList },
-			{ label: '', tooltip: 'Unordered list', icon: 'fa fa-list-ul', action: editorService.unorderedList }
+			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left', action: baddConfigurableService.alignLeft },
+			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center', action: baddConfigurableService.alignCenter },
+			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right', action: baddConfigurableService.alignRight },
+			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', separate: 'btn-separate', action: baddConfigurableService.justify },
+			{ label: '', tooltip: 'Ordered list', icon: 'fa fa-list-ol', action: baddConfigurableService.orderedList },
+			{ label: '', tooltip: 'Unordered list', icon: 'fa fa-list-ul', action: baddConfigurableService.unorderedList }
 		];
 
 		$scope.execute = function(action) {
-			editorService.executeAction(action);
+			baddConfigurableService.executeAction(action);
 		}
 	};
-	editorController.$inject = ['$scope', 'editorService'];
+	editorController.$inject = ['$scope', 'editorService', 'baddConfigurableService'];
 
 	var editorDirective = function (editorService) {
 		return {
@@ -69,16 +69,9 @@
 	editorDirective.$inject = ['editorService'];
 	editorModule.directive('baddEditor', editorDirective);
 
-	var editorService = function(baddDragDropService, baddElementHighlighter, baddElementSelector, $document, $window) {
+	var editorService = function(baddDragDropService, baddElementHighlighter, baddElementSelector,
+								 baddConfigurableService, $document, $window) {
 		var service = this;
-
-		service.executeAction = function(action) {
-			action();
-		};
-
-		service.bold = function() {
-			alert('hi ' + baddElementSelector.lastSelectedElement);
-		};
 
 		service.initializeFrame = function(frame, scope) {
 			return function () {
@@ -86,7 +79,8 @@
 				service.iframe = frame[0];
 
 				baddElementHighlighter.setup($window);
-				baddElementSelector.setup($window);
+				baddElementSelector.setup($window, baddElementHighlighter);
+				baddConfigurableService.setup($window, baddElementSelector);
 				baddDragDropService.setup($window, baddElementHighlighter, baddElementSelector);
 
 				// set service properties with raw dom html5 element
@@ -119,6 +113,7 @@
 			targetDocument.querySelector('head').appendChild(stylesheetElement);
 		}
 	};
-	editorService.$inject = ['baddDragDropService', 'baddElementHighlighter', 'baddElementSelector', '$document', '$window'];
+	editorService.$inject = ['baddDragDropService', 'baddElementHighlighter', 'baddElementSelector',
+							 'baddConfigurableService', '$document', '$window'];
 	editorModule.service('editorService', editorService);
 }());

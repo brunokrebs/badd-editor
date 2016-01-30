@@ -4,10 +4,12 @@
 	var baddElementSelector = function() {
 		var service = this;
 
-		service.setup = function (window) {
+		service.setup = function (window, baddElementHighlighter) {
 			if (service.mainWindow != null) {
 				return;
 			}
+
+			service.baddElementHighlighter = baddElementHighlighter;
 
 			// defining shortcuts to editor's window, document and body
 			service.mainWindow = window;
@@ -107,7 +109,7 @@
 			event.preventDefault();
 
 			// only a few elements are content editable, e.g. divs are not, text should be placed on p elements
-			if (_.contains(service.editableTags, event.target.tagName)
+			if (_.contains(service.baddConfigurableService.editableTags, event.target.tagName)
 				&& ! belongsTo(event.target, service.elementBeingEdited)) {
 
 				service.elementBeingEdited = event.target;
@@ -123,7 +125,7 @@
 				}
 
 				// update highlights
-				service.hideHighlightBorder();
+				service.baddElementHighlighter.hideHighlightBorder();
 				service.showSelectedHighlightBorder(service.elementBeingEdited);
 				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter ' +
 					'badd-avoid-dd badd-edition-mode');
