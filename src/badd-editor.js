@@ -1,7 +1,7 @@
 (function() {
 	var editorModule = angular.module('baddEditor', []);
 
-	var editorController = function($scope, editorService, baddContentEditor) {
+	var editorController = function($scope, editorService) {
 		$scope.pageTitleChanged = function() {
 			editorService.changePageTitle($scope.pageTitle);
 		};
@@ -29,24 +29,24 @@
 		$scope.buttons = [
 			{ label: 'Arial', tooltip: 'Font', icon: 'caret' },
 			{ label: '11', tooltip: 'Font size', icon: 'fa fa-caret-down', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold', action: baddContentEditor.bold },
-			{ label: '', tooltip: 'Italic', icon: 'fa fa-italic' },
-			{ label: '', tooltip: 'Underline', icon: 'fa fa-underline', separate: 'btn-separate' },
+			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold', command: 'bold' },
+			{ label: '', tooltip: 'Italic', icon: 'fa fa-italic', command: 'italic' },
+			{ label: '', tooltip: 'Underline', icon: 'fa fa-underline', command: 'underline', separate: 'btn-separate' },
 			{ label: 'F', tooltip: '', icon: 'Font color' },
 			{ label: '', tooltip: 'Background color', icon: 'fa fa-square', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left', action: baddContentEditor.alignLeft },
-			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center', action: baddContentEditor.alignCenter },
-			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right', action: baddContentEditor.alignRight },
-			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', separate: 'btn-separate', action: baddContentEditor.justify },
-			{ label: '', tooltip: 'Ordered list', icon: 'fa fa-list-ol', action: baddContentEditor.orderedList },
-			{ label: '', tooltip: 'Unordered list', icon: 'fa fa-list-ul', action: baddContentEditor.unorderedList }
+			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left', command: 'justifyLeft' },
+			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center', command: 'justifyCenter' },
+			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right', command: 'justifyRight' },
+			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', command: 'justifyFull', separate: 'btn-separate' },
+			{ label: '', tooltip: 'Ordered list', icon: 'fa fa-list-ol', command: 'insertOrderedList' },
+			{ label: '', tooltip: 'Unordered list', icon: 'fa fa-list-ul', command: 'insertUnorderedList' }
 		];
 
-		$scope.execute = function(action) {
-			baddContentEditor.executeAction(action);
+		$scope.execute = function(command) {
+			editorService.executeCommand(command);
 		}
 	};
-	editorController.$inject = ['$scope', 'editorService', 'baddContentEditor'];
+	editorController.$inject = ['$scope', 'editorService'];
 
 	var editorDirective = function (editorService) {
 		return {
@@ -103,6 +103,10 @@
 
 		service.changePageTitle = function(newTitle) {
 			service.pageTitle.textContent = newTitle;
+		};
+
+		service.executeCommand = function(action) {
+			baddContentEditor.executeCommand(action);
 		};
 
 		function addStylesheet(targetDocument, stylesheet) {

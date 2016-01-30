@@ -23,7 +23,7 @@
 			service.iframeDocument = service.iframeWindow.document;
 		};
 
-		service.executeAction = function(action) {
+		service.executeCommand = function(command) {
 			if (service.baddElementSelector.lastSelectedElement == null
 					&& service.baddElementSelector.elementBeingEdited == null) {
 				return;
@@ -39,7 +39,7 @@
 				selection.addRange(range);
 			}
 
-			action();
+			service.iframeDocument.execCommand(command, false);
 			disableDesignMode();
 		};
 
@@ -60,34 +60,6 @@
 			}
 			return service.ie11;
 		}
-
-		service.alignLeft = function() {
-			service.iframeDocument.execCommand('justifyleft', false);
-		};
-
-		service.alignRight = function() {
-			service.iframeDocument.execCommand('justifyright', false);
-		};
-
-		service.alignCenter = function() {
-			service.iframeDocument.execCommand('justifyCenter', false);
-		};
-
-		service.justify = function() {
-			service.iframeDocument.execCommand('justifyfull', false);
-		};
-
-		service.bold = function() {
-			service.iframeDocument.execCommand('bold', false);
-		};
-
-		service.orderedList = function() {
-			service.iframeDocument.execCommand('insertOrderedList', false);
-		};
-
-		service.unorderedList = function() {
-			service.iframeDocument.execCommand('insertUnorderedList', false);
-		};
 
 		function insertHTML(html) {
 			var sel = service.iframeWindow.getSelection();
