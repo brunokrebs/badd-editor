@@ -154,7 +154,8 @@
 
 		function updateDraggableIcon(event, draggableTagName) {
 			if (event.target.ownerDocument == service.mainDocument) {
-				emitHovering(null, draggableTagName != null);
+				// no target and no draggable since we are hover the main document
+				emitHovering();
 
 				if (service.previewElement && service.previewElement.parentNode
 						&& service.previewElement.ownerDocument == service.iframeDocument) {
