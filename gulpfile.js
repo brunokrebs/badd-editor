@@ -72,13 +72,6 @@ gulp.task('default', ['generate-dist'], function() {
 	gulp.start('clean');
 });
 
-gulp.task('watch', function () {
-	watch('./src/**/*', batch(function (events, done) {
-		development = true;
-		gulp.start('default', done);
-	}));
-});
-
 gulp.task('webserver', function() {
 	gulp.src(['demo', 'dist'])
 		.pipe(webserver());
@@ -89,6 +82,6 @@ gulp.task('set-development-mode', function() {
 });
 
 gulp.task('develop', ['set-development-mode', 'generate-dist'], function () {
-	gulp.watch(['./src/**/*.js', './src/**/*.css', './src/**/*.html'], ['generate-dist']);
+	gulp.watch(['./src/**/*'], ['generate-dist']);
 	gulp.src('./demo').pipe(webserver({host: '0.0.0.0'}));
 });
