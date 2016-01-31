@@ -1,7 +1,7 @@
 (function() {
 	var editorModule = angular.module('baddEditor');
 
-	var baddDragDropService = function() {
+	var baddDragDropService = function(BADD_EVENTS) {
 		var service = this;
 		service.mainWindow = null;
 		service.baddElementHighlighter = null;
@@ -65,7 +65,7 @@
 		};
 
 		function emitHovering(target, dragging) {
-			service.scope.$emit('badd-element–dragger-hovering', { target: target, dragging: dragging });
+			service.scope.$emit(BADD_EVENTS.ELEMENT_HOVERED, { target: target, dragging: dragging });
 		}
 
 		function startDraggingComponent(event) {
@@ -362,5 +362,6 @@
 			}
 		}
 	};
+	baddDragDropService.$inject = ['BADD_EVENTS'];
 	editorModule.service('baddDragDropService', baddDragDropService);
 }());

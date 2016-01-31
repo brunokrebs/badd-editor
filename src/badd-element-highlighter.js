@@ -1,7 +1,7 @@
 (function() {
 	var editorModule = angular.module('baddEditor');
 
-	var baddElementHighlighter = function() {
+	var baddElementHighlighter = function(BADD_EVENTS) {
 		var service = this;
 
 		service.setup = function (window, scope) {
@@ -31,7 +31,7 @@
 			service.iframeDocument.addEventListener("scroll", updateHighlightBorderPosition);
 
 			// listen to events
-			service.scope.$on('badd-element–dragger-hovering', function(event, state) {
+			service.scope.$on(BADD_EVENTS.ELEMENT_HOVERED, function(event, state) {
 				if (!state.target) {
 					return service.hideHighlightBorder();
 				}
@@ -63,5 +63,6 @@
 			}
 		}
 	};
+	baddElementHighlighter.$inject = ['BADD_EVENTS'];
 	editorModule.service('baddElementHighlighter', baddElementHighlighter);
 }());

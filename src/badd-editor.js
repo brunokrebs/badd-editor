@@ -120,4 +120,8 @@
 	editorService.$inject = ['baddDragDropService', 'baddElementHighlighter', 'baddElementSelector',
 							 'baddContentEditor', '$document', '$window'];
 	editorModule.service('editorService', editorService);
+
+	editorModule.constant('BADD_EVENTS', {
+		ELEMENT_HOVERED: 'badd-element–hovered'
+	})
 }());
