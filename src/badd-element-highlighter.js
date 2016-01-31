@@ -37,6 +37,8 @@
 				}
 				service.showHighlightBorder(state.target);
 			});
+
+			service.scope.$on(BADD_EVENTS.ELEMENT_SELECTED, service.hideHighlightBorder);
 		};
 
 		service.showHighlightBorder = function(target) {

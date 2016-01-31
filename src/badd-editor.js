@@ -79,7 +79,7 @@
 				service.iframe = frame[0];
 
 				baddElementHighlighter.setup($window, scope);
-				baddElementSelector.setup($window, baddElementHighlighter, scope);
+				baddElementSelector.setup($window, scope);
 				baddContentEditor.setup($window, baddElementSelector);
 				baddDragDropService.setup($window, scope);
 
@@ -122,6 +122,7 @@
 	editorModule.service('editorService', editorService);
 
 	editorModule.constant('BADD_EVENTS', {
-		ELEMENT_HOVERED: 'badd-element–hovered'
+		ELEMENT_HOVERED: 'badd-element–hovered',
+		ELEMENT_SELECTED: 'badd-element–selected'
 	})
 }());

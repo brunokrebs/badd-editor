@@ -4,12 +4,11 @@
 	var baddElementSelector = function(BADD_EVENTS) {
 		var service = this;
 
-		service.setup = function (window, baddElementHighlighter, scope) {
+		service.setup = function (window, scope) {
 			if (service.mainWindow != null) {
 				return;
 			}
 
-			service.baddElementHighlighter = baddElementHighlighter;
 			service.scope = scope;
 
 			// defining shortcuts to editor's window, document and body
@@ -133,7 +132,7 @@
 				}
 
 				// update highlights
-				service.baddElementHighlighter.hideHighlightBorder();
+				service.scope.$emit(BADD_EVENTS.ELEMENT_SELECTED);
 				service.showSelectedHighlightBorder(service.elementBeingEdited);
 				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter ' +
 					'badd-avoid-dd badd-edition-mode');
