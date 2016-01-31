@@ -1,7 +1,7 @@
 (function() {
 	var editorModule = angular.module('baddEditor');
 
-	var baddElementSelector = function(BADD_EVENTS) {
+	var baddElementSelector = function(BADD_EVENTS, baddUtils) {
 		var service = this;
 
 		service.setup = function (window, scope) {
@@ -31,7 +31,6 @@
 			window.addEventListener("click", service.hideSelectedHighlightBorder);
 
 			service.iframeWindow.addEventListener('click', mouseClick);
-			service.iframeWindow.addEventListener('dblclick', mouseDoubleClick);
 			service.iframeWindow.addEventListener("resize", updateSelectedHighlightBorderPosition);
 
 			service.iframeDocument.addEventListener("scroll", updateSelectedHighlightBorderPosition);
@@ -84,7 +83,9 @@
 				return;
 			}
 
-			if (belongsTo(event.target, service.elementBeingEdited) || service.elementBeingEdited == event.target) {
+			if (baddUtils.belongsTo(event.target, service.elementBeingEdited) ||
+				service.elementBeingEdited == event.target) {
+
 				return;
 			}
 
@@ -105,62 +106,7 @@
 			}
 			service.showSelectedHighlightBorder(event.target);
 		}
-
-		function mouseDoubleClick(event) {
-			event.stopPropagation();
-
-			if (event.target === service.elementBeingEdited || belongsTo(event.target, service.elementBeingEdited)) {
-				return;
-			}
-
-			event.preventDefault();
-
-			// only a few elements are content editable, e.g. divs are not, text should be placed on p elements
-			if (_.contains(service.baddContentEditor.editableTags, event.target.tagName)
-				&& ! belongsTo(event.target, service.elementBeingEdited)) {
-
-				service.elementBeingEdited = event.target;
-
-				// disable dragging during edition
-				service.elementBeingEdited.setAttribute('draggable', 'false');
-				var parent = service.elementBeingEdited.parentNode;
-				while (parent.tagName != 'BODY') {
-					if (parent.getAttribute('badd-draggable') || parent.getAttribute('draggable')) {
-						parent.setAttribute('draggable', 'false');
-					}
-					parent = parent.parentNode;
-				}
-
-				// update highlights
-				service.scope.$emit(BADD_EVENTS.ELEMENT_SELECTED);
-				service.showSelectedHighlightBorder(service.elementBeingEdited);
-				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter ' +
-					'badd-avoid-dd badd-edition-mode');
-
-				// make target editable
-				service.elementBeingEdited.contentEditable = true;
-
-				var selection = service.iframe.contentWindow.getSelection();
-				service.iframe.contentWindow.focus();
-				selection.collapse(service.elementBeingEdited, 0);
-				service.elementBeingEdited.focus();
-			}
-		}
-
-		function belongsTo(child, parent) {
-			if (child == null || parent == null || child === parent) {
-				return false;
-			}
-			var nextParent = child.parentNode;
-			while (nextParent != null) {
-				if (nextParent === parent) {
-					return true;
-				}
-				nextParent = nextParent.parentNode;
-			}
-			return false;
-		}
 	};
-	baddElementSelector.$inject = ['BADD_EVENTS'];
+	baddElementSelector.$inject = ['BADD_EVENTS', 'baddUtils'];
 	editorModule.service('baddElementSelector', baddElementSelector);
 }());
