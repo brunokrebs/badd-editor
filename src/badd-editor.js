@@ -80,7 +80,7 @@
 
 				baddElementHighlighter.setup($window, scope);
 				baddElementSelector.setup($window, scope);
-				baddContentEditor.setup($window, baddElementSelector);
+				baddContentEditor.setup($window, scope);
 				baddDragDropService.setup($window, scope);
 
 				// set service properties with raw dom html5 element
@@ -123,6 +123,8 @@
 
 	editorModule.constant('BADD_EVENTS', {
 		ELEMENT_HOVERED: 'badd-element–hovered',
-		ELEMENT_SELECTED: 'badd-element–selected'
+		ELEMENT_SELECTED: 'badd-element–selected',
+		ELEMENT_DESELECTED: 'badd-element–deselected',
+		ELEMENT_BEING_EDITED: 'badd-element–being-edited'
 	})
 }());

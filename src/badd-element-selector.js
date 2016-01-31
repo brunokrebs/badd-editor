@@ -42,6 +42,12 @@
 					service.hideSelectedHighlightBorder();
 				}
 			});
+
+			service.scope.$on(BADD_EVENTS.ELEMENT_BEING_EDITED, function(event, element) {
+				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter ' +
+					'badd-avoid-dd badd-edition-mode');
+				service.elementBeingEdited = element;
+			})
 		};
 
 		service.showSelectedHighlightBorder = function(target) {
@@ -70,6 +76,11 @@
 		}
 
 		function mouseClick(event) {
+			if (service.elementBeingEdited && (baddUtils.belongsTo(event.target, service.elementBeingEdited) ||
+				service.elementBeingEdited == event.target)) {
+				return;
+			}
+
 			event.preventDefault();
 
 			if (event.target == service.iframeDocument) {
@@ -80,12 +91,7 @@
 			if (event.target === service.lastSelectedElement && service.elementBeingEdited == null) {
 				service.hideSelectedHighlightBorder();
 				event.stopPropagation();
-				return;
-			}
-
-			if (baddUtils.belongsTo(event.target, service.elementBeingEdited) ||
-				service.elementBeingEdited == event.target) {
-
+				service.scope.$emit(BADD_EVENTS.ELEMENT_DESELECTED);
 				return;
 			}
 
