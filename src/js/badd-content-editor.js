@@ -107,6 +107,38 @@
 			}
 
 			enableDesignMode();
+
+			if (elementBeingEdited) {
+				var selection = iframeWindow.getSelection();
+				var range = selection.getRangeAt(0);
+				var selectedElements = [];
+
+				if (!selection.isCollapsed) {
+					var remainingLength = selection.toString().length;
+					var startOffset = range.startOffset;
+					var container, endOffset, nextSibling;
+					var endContainer = range.endContainer.nodeType == 1 ? range.endContainer.childNodes[0] : range.endContainer;
+					while (container != endContainer) {
+						nextSibling = container ? container.nextSibling || container.parentNode.nextSibling : null;
+						container = container ? (nextSibling.childNodes[0] || nextSibling) :
+							(range.startContainer.nodeType == 1 ? range.startContainer.childNodes[0] : range.startContainer);
+						endOffset = Math.min(startOffset + remainingLength, container.textContent.length);
+						if (startOffset == endOffset) {
+							continue;
+						}
+						var element = {
+							node: container,
+							startOffset: startOffset,
+							endOffset: endOffset
+						};
+						remainingLength = remainingLength - (endOffset - startOffset);
+						startOffset = 0;
+						selectedElements.push(element);
+					}
+				}
+			}
+
+			// TODO pass selectedElements
 			var undo = button.command(selectedElement, iframeDocument, iframeWindow);
 			if (undo) {
 				undoHistory.push(undo);
