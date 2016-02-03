@@ -30,7 +30,7 @@
 	<div class="badd-editor-browser-configuration">
 		<button ng-repeat="button in buttons" type="button" title="{{button.tooltip}}"
 				class="btn btn-default" ng-class="button.separate"
-				ng-click="execute(button.command)">
+				ng-click="execute(button)">
 			{{button.label}} <i class="{{button.icon}}"></i>
 		</button>
 	</div>

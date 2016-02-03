@@ -26,24 +26,29 @@
 				'alt="airplane">' }
 		];
 
-		$scope.buttons = [
-			{ label: 'Arial', tooltip: 'Font', icon: 'caret' },
-			{ label: '11', tooltip: 'Font size', icon: 'fa fa-caret-down', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Bold', icon: 'fa fa-bold', command: 'bold' },
-			{ label: '', tooltip: 'Italic', icon: 'fa fa-italic', command: 'italic' },
-			{ label: '', tooltip: 'Underline', icon: 'fa fa-underline', command: 'underline', separate: 'btn-separate' },
-			{ label: 'F', tooltip: '', icon: 'Font color' },
-			{ label: '', tooltip: 'Background color', icon: 'fa fa-square', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Align left', icon: 'fa fa-align-left', command: 'justifyLeft' },
-			{ label: '', tooltip: 'Align center', icon: 'fa fa-align-center', command: 'justifyCenter' },
-			{ label: '', tooltip: 'Align right', icon: 'fa fa-align-right', command: 'justifyRight' },
-			{ label: '', tooltip: 'Justify', icon: 'fa fa-align-justify', command: 'justifyFull', separate: 'btn-separate' },
-			{ label: '', tooltip: 'Ordered list', icon: 'fa fa-list-ol', command: 'insertOrderedList' },
-			{ label: '', tooltip: 'Unordered list', icon: 'fa fa-list-ul', command: 'insertUnorderedList' }
-		];
+		var boldButton = {
+			tooltip: 'Bold',
+			icon: 'fa fa-bold',
+			command: function(target) {
+				var currentFontWeight = target.style.fontWeight;
+				target.style.fontWeight = 'bold';
 
-		$scope.execute = function(command) {
-			editorService.executeCommand(command);
+				return function() {
+					target.style.fontWeight = currentFontWeight;
+				};
+			}
+		};
+
+		var undoButton = {
+			tooltip: 'Undo',
+			icon: 'fa fa-undo',
+			command: editorService.undo
+		};
+
+		$scope.buttons = [ boldButton, undoButton ];
+
+		$scope.execute = function(button) {
+			editorService.executeCommand(button);
 		}
 	};
 	editorController.$inject = ['$scope', 'editorService'];
@@ -108,6 +113,8 @@
 		service.executeCommand = function(action) {
 			baddContentEditor.executeCommand(action);
 		};
+
+		service.undo = baddContentEditor.undo;
 
 		function addStylesheet(targetDocument, stylesheet) {
 			var scriptName = 'badd-editor.min.js';

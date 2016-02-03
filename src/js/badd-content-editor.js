@@ -5,6 +5,7 @@
 		var contentEditorService = this;
 		var currentScope, mainWindow, mainDocument, iframe, iframeWindow, iframeDocument, iframeBody;
 		var selectedElement, elementBeingEdited, ie11;
+		var undoHistory = [];
 
 		var editableTags = [
 			'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7',
@@ -88,23 +89,28 @@
 			}
 		}
 
-		contentEditorService.executeCommand = function(command) {
+		contentEditorService.undo = function() {
+			var undoFunction = undoHistory.length > 0 ? undoHistory.pop() : null;
+			if (undoFunction) {
+				undoFunction();
+			}
+		};
+
+		contentEditorService.executeCommand = function(button) {
+			if (button.command == contentEditorService.undo) {
+				return contentEditorService.undo();
+			}
+
 			if (selectedElement == null
 					&& elementBeingEdited == null) {
 				return;
 			}
+
 			enableDesignMode();
-
-			if (elementBeingEdited == null) {
-				var selection = iframeDocument.defaultView.getSelection();
-				var range = iframeDocument.createRange();
-				range.setStart(selectedElement, 0);
-				range.setEnd(selectedElement, 0);
-				selection.removeAllRanges();
-				selection.addRange(range);
+			var undo = button.command(selectedElement, iframeDocument, iframeWindow);
+			if (undo) {
+				undoHistory.push(undo);
 			}
-
-			iframeDocument.execCommand(command, false);
 			disableDesignMode();
 		};
 
