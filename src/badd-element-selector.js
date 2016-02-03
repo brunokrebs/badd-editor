@@ -2,103 +2,105 @@
 	var editorModule = angular.module('baddEditor');
 
 	var baddElementSelector = function(BADD_EVENTS, baddUtils) {
-		var service = this;
+		var selectorService = this;
+		var currentScope, mainWindow, mainDocument, iframe, iframeWindow, iframeDocument, iframeBody;
+		var selectedHighlightBorder, elementBeingEdited, lastSelectedElement;
 
-		service.setup = function (window, scope) {
-			if (service.mainWindow != null) {
+		selectorService.setup = function (window, scope) {
+			if (mainWindow != null) {
 				return;
 			}
 
-			service.scope = scope;
+			currentScope = scope;
 
 			// defining shortcuts to editor's window, document and body
-			service.mainWindow = window;
-			service.mainDocument = service.mainWindow.document;
+			mainWindow = window;
+			mainDocument = mainWindow.document;
 
-			service.iframe = service.mainDocument.querySelector('iframe.badd-editor-browser');
-			service.iframeWindow = service.iframe.contentWindow;
+			iframe = mainDocument.querySelector('iframe.badd-editor-browser');
+			iframeWindow = iframe.contentWindow;
 
-			service.iframeDocument = service.iframeWindow.document;
-			service.iframeBody = service.iframeDocument.querySelector('body');
+			iframeDocument = iframeWindow.document;
+			iframeBody = iframeDocument.querySelector('body');
 
 			// create selected area highlighter
-			service.selectedHighlightBorder = service.iframeDocument.createElement('svg');
-			service.selectedHighlightBorder.className = 'badd-selected-highlighter badd-avoid-dd';
-			service.iframeBody.appendChild(service.selectedHighlightBorder);
+			selectedHighlightBorder = iframeDocument.createElement('svg');
+			selectedHighlightBorder.className = 'badd-selected-highlighter badd-avoid-dd';
+			iframeBody.appendChild(selectedHighlightBorder);
 
 
 			// adding listeners to update selected highlight border
-			window.addEventListener("click", service.hideSelectedHighlightBorder);
+			window.addEventListener("click", hideSelectedHighlightBorder);
 
-			service.iframeWindow.addEventListener('click', mouseClick);
-			service.iframeWindow.addEventListener("resize", updateSelectedHighlightBorderPosition);
+			iframeWindow.addEventListener('click', mouseClick);
+			iframeWindow.addEventListener("resize", updateSelectedHighlightBorderPosition);
 
-			service.iframeDocument.addEventListener("scroll", updateSelectedHighlightBorderPosition);
-			service.iframeDocument.addEventListener("keyup", updateSelectedHighlightBorderPosition);
+			iframeDocument.addEventListener("scroll", updateSelectedHighlightBorderPosition);
+			iframeDocument.addEventListener("keyup", updateSelectedHighlightBorderPosition);
 
 			// listening to events
-			service.scope.$on(BADD_EVENTS.ELEMENT_HOVERED, function(event, state) {
+			currentScope.$on(BADD_EVENTS.ELEMENT_HOVERED, function(event, state) {
 				if (state.dragging) {
-					service.hideSelectedHighlightBorder();
+					hideSelectedHighlightBorder();
 				}
 			});
 
-			service.scope.$on(BADD_EVENTS.ELEMENT_BEING_EDITED, function(event, element) {
-				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter ' +
+			currentScope.$on(BADD_EVENTS.ELEMENT_BEING_EDITED, function(event, element) {
+				selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter ' +
 					'badd-avoid-dd badd-edition-mode');
-				service.elementBeingEdited = element;
+				elementBeingEdited = element;
 			})
 		};
 
-		service.showSelectedHighlightBorder = function(target) {
-			service.lastSelectedElement = target;
+		function showSelectedHighlightBorder(target) {
+			lastSelectedElement = target;
 			var targetPosition = target.getBoundingClientRect();
-			service.selectedHighlightBorder.style.top = targetPosition.top - 3 + 'px';
-			service.selectedHighlightBorder.style.left = targetPosition.left - 3 + 'px';
-			service.selectedHighlightBorder.style.width = target.offsetWidth + 6 + 'px';
-			service.selectedHighlightBorder.style.height = target.offsetHeight + 6 + 'px';
-			service.selectedHighlightBorder.style.display = 'block';
-		};
+			selectedHighlightBorder.style.top = targetPosition.top - 3 + 'px';
+			selectedHighlightBorder.style.left = targetPosition.left - 3 + 'px';
+			selectedHighlightBorder.style.width = target.offsetWidth + 6 + 'px';
+			selectedHighlightBorder.style.height = target.offsetHeight + 6 + 'px';
+			selectedHighlightBorder.style.display = 'block';
+		}
 
-		service.hideSelectedHighlightBorder = function() {
-			service.lastSelectedElement = null;
-			service.selectedHighlightBorder.style.display = 'none';
-			service.selectedHighlightBorder.style.top = 0;
-			service.selectedHighlightBorder.style.left = 0;
-			service.selectedHighlightBorder.style.width = 0;
-			service.selectedHighlightBorder.style.height = 0;
-		};
+		function hideSelectedHighlightBorder() {
+			lastSelectedElement = null;
+			selectedHighlightBorder.style.display = 'none';
+			selectedHighlightBorder.style.top = 0;
+			selectedHighlightBorder.style.left = 0;
+			selectedHighlightBorder.style.width = 0;
+			selectedHighlightBorder.style.height = 0;
+		}
 
 		function updateSelectedHighlightBorderPosition() {
-			if (service.lastSelectedElement) {
-				service.showSelectedHighlightBorder(service.lastSelectedElement);
+			if (lastSelectedElement) {
+				showSelectedHighlightBorder(lastSelectedElement);
 			}
 		}
 
 		function mouseClick(event) {
-			if (service.elementBeingEdited && (baddUtils.belongsTo(event.target, service.elementBeingEdited) ||
-				service.elementBeingEdited == event.target)) {
+			if (elementBeingEdited && (baddUtils.belongsTo(event.target, elementBeingEdited) ||
+				elementBeingEdited == event.target)) {
 				return;
 			}
 
 			event.preventDefault();
 
-			if (event.target == service.iframeDocument) {
+			if (event.target == iframeDocument) {
 				// firefox work around
 				return;
 			}
 
-			if (event.target === service.lastSelectedElement && service.elementBeingEdited == null) {
-				service.hideSelectedHighlightBorder();
+			if (event.target === lastSelectedElement && elementBeingEdited == null) {
+				hideSelectedHighlightBorder();
 				event.stopPropagation();
-				service.scope.$emit(BADD_EVENTS.ELEMENT_DESELECTED);
+				currentScope.$emit(BADD_EVENTS.ELEMENT_DESELECTED);
 				return;
 			}
 
 			event.stopPropagation();
 
-			if (service.elementBeingEdited && service.elementBeingEdited !== event.target) {
-				var parent = service.elementBeingEdited.parentNode;
+			if (elementBeingEdited && elementBeingEdited !== event.target) {
+				var parent = elementBeingEdited.parentNode;
 				while (parent.tagName != 'BODY') {
 					if (parent.getAttribute('badd-draggable') || parent.getAttribute('draggable')) {
 						parent.setAttribute('draggable', 'true');
@@ -106,11 +108,11 @@
 					parent = parent.parentNode;
 				}
 
-				service.selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter badd-avoid-dd');
-				service.elementBeingEdited.removeAttribute('contentEditable');
-				service.elementBeingEdited = null;
+				selectedHighlightBorder.setAttribute('class', 'badd-selected-highlighter badd-avoid-dd');
+				elementBeingEdited.removeAttribute('contentEditable');
+				elementBeingEdited = null;
 			}
-			service.showSelectedHighlightBorder(event.target);
+			showSelectedHighlightBorder(event.target);
 		}
 	};
 	baddElementSelector.$inject = ['BADD_EVENTS', 'baddUtils'];

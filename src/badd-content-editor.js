@@ -2,29 +2,36 @@
 	var editorModule = angular.module('baddEditor');
 
 	var baddContentEditor = function(baddUtils, BADD_EVENTS) {
-		var service = this;
+		var contentEditorService = this;
+		var currentScope, mainWindow, mainDocument, iframe, iframeWindow, iframeDocument, iframeBody;
+		var selectedElement, elementBeingEdited, ie11;
 
 		var editableTags = [
 			'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7',
 			'P', 'UL', 'OL', 'BUTTON'
 		];
-		var selectedElement = null;
-		var elementBeingEdited = null;
 
-		service.setup = function(window, scope) {
-			service.scope = scope;
+		contentEditorService.setup = function(window, scope) {
+			if (mainWindow != null) {
+				return;
+			}
+
+			currentScope = scope;
 
 			// defining shortcuts to editor's window, document and body
-			service.mainWindow = window;
-			service.mainDocument = service.mainWindow.document;
+			mainWindow = window;
+			mainDocument = mainWindow.document;
 
-			service.iframe = service.mainDocument.querySelector('iframe.badd-editor-browser');
-			service.iframeWindow = service.iframe.contentWindow;
-			service.iframeWindow.addEventListener('dblclick', handleDoubleClick);
+			iframe = mainDocument.querySelector('iframe.badd-editor-browser');
+			iframeWindow = iframe.contentWindow;
 
-			service.iframeDocument = service.iframeWindow.document;
+			iframeDocument = iframeWindow.document;
+			iframeBody = iframeDocument.querySelector('body');
 
-			service.scope.$on(BADD_EVENTS.ELEMENT_SELECTED, function(element) {
+			// listen to events
+			iframeWindow.addEventListener('dblclick', handleDoubleClick);
+
+			currentScope.$on(BADD_EVENTS.ELEMENT_SELECTED, function(element) {
 				if (elementBeingEdited) {
 					elementBeingEdited.removeAttribute('contentEditable');
 					elementBeingEdited = null;
@@ -32,7 +39,7 @@
 				selectedElement = element;
 			});
 
-			service.scope.$on(BADD_EVENTS.ELEMENT_DESELECTED, function() {
+			currentScope.$on(BADD_EVENTS.ELEMENT_DESELECTED, function() {
 				if (elementBeingEdited) {
 					elementBeingEdited.removeAttribute('contentEditable');
 					elementBeingEdited = null;
@@ -69,19 +76,19 @@
 				}
 
 				// update highlights
-				service.scope.$emit(BADD_EVENTS.ELEMENT_BEING_EDITED, elementBeingEdited);
+				currentScope.$emit(BADD_EVENTS.ELEMENT_BEING_EDITED, elementBeingEdited);
 
 				// make target editable
 				elementBeingEdited.contentEditable = true;
 
-				var selection = service.iframe.contentWindow.getSelection();
-				service.iframe.contentWindow.focus();
+				var selection = iframe.contentWindow.getSelection();
+				iframe.contentWindow.focus();
 				selection.collapse(elementBeingEdited, 0);
 				elementBeingEdited.focus();
 			}
 		}
 
-		service.executeCommand = function(command) {
+		baddContentEditor.executeCommand = function(command) {
 			if (selectedElement == null
 					&& elementBeingEdited == null) {
 				return;
@@ -89,42 +96,42 @@
 			enableDesignMode();
 
 			if (elementBeingEdited == null) {
-				var selection = service.iframeDocument.defaultView.getSelection();
-				var range = service.iframeDocument.createRange();
+				var selection = iframeDocument.defaultView.getSelection();
+				var range = iframeDocument.createRange();
 				range.setStart(selectedElement, 0);
 				range.setEnd(selectedElement, 0);
 				selection.removeAllRanges();
 				selection.addRange(range);
 			}
 
-			service.iframeDocument.execCommand(command, false);
+			iframeDocument.execCommand(command, false);
 			disableDesignMode();
 		};
 
 		function enableDesignMode() {
 			if (isIE11()) return;
-			service.iframeDocument.designMode = 'on';
-			service.iframeDocument.execCommand("StyleWithCSS", false, true);
+			iframeDocument.designMode = 'on';
+			iframeDocument.execCommand("StyleWithCSS", false, true);
 		}
 
 		function disableDesignMode() {
 			if (isIE11()) return;
-			service.iframeDocument.designMode = 'off';
+			iframeDocument.designMode = 'off';
 		}
 
 		function isIE11() {
-			if (service.ie11 == null) {
-				service.ie11 = !(service.mainWindow.ActiveXObject) && "ActiveXObject" in service.mainWindow;
+			if (ie11 == null) {
+				ie11 = !(mainWindow.ActiveXObject) && "ActiveXObject" in mainWindow;
 			}
-			return service.ie11;
+			return ie11;
 		}
 
 		function insertHTML(html) {
-			var sel = service.iframeWindow.getSelection();
+			var sel = iframeWindow.getSelection();
 			if (sel.getRangeAt && sel.rangeCount) {
 				var range = sel.getRangeAt(0);
-				var elementHolder = service.iframeDocument.createElement("div");
-				var fragment = service.iframeDocument.createDocumentFragment();
+				var elementHolder = iframeDocument.createElement("div");
+				var fragment = iframeDocument.createDocumentFragment();
 				var node, lastNode;
 
 				range.deleteContents();

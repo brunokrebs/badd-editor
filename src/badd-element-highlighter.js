@@ -2,66 +2,68 @@
 	var editorModule = angular.module('baddEditor');
 
 	var baddElementHighlighter = function(BADD_EVENTS) {
-		var service = this;
+		var highlighterService = this;
+		var currentScope, mainWindow, mainDocument, iframe, iframeWindow, iframeDocument, iframeBody;
+		var highlightBorder, lastHoveredTarget;
 
-		service.setup = function (window, scope) {
-			if (service.mainWindow != null) {
+		highlighterService.setup = function (window, scope) {
+			if (mainWindow != null) {
 				return;
 			}
 
-			service.scope = scope;
+			currentScope = scope;
 
 			// defining shortcuts to editor's window, document and body
-			service.mainWindow = window;
-			service.mainDocument = service.mainWindow.document;
+			mainWindow = window;
+			mainDocument = mainWindow.document;
 
-			service.iframe = service.mainDocument.querySelector('iframe.badd-editor-browser');
-			service.iframeWindow = service.iframe.contentWindow;
+			iframe = mainDocument.querySelector('iframe.badd-editor-browser');
+			iframeWindow = iframe.contentWindow;
 
-			service.iframeDocument = service.iframeWindow.document;
-			service.iframeBody = service.iframeDocument.querySelector('body');
+			iframeDocument = iframeWindow.document;
+			iframeBody = iframeDocument.querySelector('body');
 
 			// create element selector highlighter
-			service.highlightBorder = service.iframeDocument.createElement('svg');
-			service.highlightBorder.className = 'badd-highlighter';
-			service.iframeBody.appendChild(service.highlightBorder);
+			highlightBorder = iframeDocument.createElement('svg');
+			highlightBorder.className = 'badd-highlighter';
+			iframeBody.appendChild(highlightBorder);
 
 			// adding listeners to update highlight border
-			service.iframeWindow.addEventListener("resize", updateHighlightBorderPosition);
-			service.iframeDocument.addEventListener("scroll", updateHighlightBorderPosition);
+			iframeWindow.addEventListener("resize", updateHighlightBorderPosition);
+			iframeDocument.addEventListener("scroll", updateHighlightBorderPosition);
 
 			// listen to events
-			service.scope.$on(BADD_EVENTS.ELEMENT_HOVERED, function(event, state) {
+			currentScope.$on(BADD_EVENTS.ELEMENT_HOVERED, function(event, state) {
 				if (!state.target) {
-					return service.hideHighlightBorder();
+					return hideHighlightBorder();
 				}
-				service.showHighlightBorder(state.target);
+				showHighlightBorder(state.target);
 			});
 
-			service.scope.$on(BADD_EVENTS.ELEMENT_BEING_EDITED, service.hideHighlightBorder);
+			currentScope.$on(BADD_EVENTS.ELEMENT_BEING_EDITED, hideHighlightBorder);
 		};
 
-		service.showHighlightBorder = function(target) {
+		function showHighlightBorder(target) {
 			var targetPosition = target.getBoundingClientRect();
-			service.highlightBorder.style.top = targetPosition.top - 3 + 'px';
-			service.highlightBorder.style.left = targetPosition.left - 3 + 'px';
-			service.highlightBorder.style.width = target.offsetWidth + 6 + 'px';
-			service.highlightBorder.style.height = target.offsetHeight + 6 + 'px';
-			service.highlightBorder.style.display = 'block';
-			service.lastHoveredTarget = target;
-		};
+			highlightBorder.style.top = targetPosition.top - 3 + 'px';
+			highlightBorder.style.left = targetPosition.left - 3 + 'px';
+			highlightBorder.style.width = target.offsetWidth + 6 + 'px';
+			highlightBorder.style.height = target.offsetHeight + 6 + 'px';
+			highlightBorder.style.display = 'block';
+			lastHoveredTarget = target;
+		}
 
-		service.hideHighlightBorder = function() {
-			service.highlightBorder.style.display = 'none';
-			service.highlightBorder.style.top = 0;
-			service.highlightBorder.style.left = 0;
-			service.highlightBorder.style.width = 0;
-			service.highlightBorder.style.height = 0;
-		};
+		function hideHighlightBorder() {
+			highlightBorder.style.display = 'none';
+			highlightBorder.style.top = 0;
+			highlightBorder.style.left = 0;
+			highlightBorder.style.width = 0;
+			highlightBorder.style.height = 0;
+		}
 
 		function updateHighlightBorderPosition() {
-			if (service.highlightBorder.style.display === 'block' && service.lastHoveredTarget) {
-				service.showHighlightBorder(service.lastHoveredTarget);
+			if (highlightBorder.style.display === 'block' && lastHoveredTarget) {
+				showHighlightBorder(lastHoveredTarget);
 			}
 		}
 	};

@@ -2,9 +2,10 @@
 	var editorModule = angular.module('baddEditor');
 
 	var baddDragDropService = function(BADD_EVENTS) {
-		var service = this;
-		service.mainWindow = null;
-		service.baddElementHighlighter = null;
+		var dragDropService = this;
+		var currentScope, mainWindow, mainDocument, mainBody, iframe, iframeWindow, iframeDocument, iframeBody;
+		var iframeLeftOffset, iframeTopOffset, draggableConteiner, transferArea, previewElement,
+			lastHoveredDroppable, lastDraggedElement, draggableIcon;
 
 		var droppableElements = ['DIV', 'BODY', 'P'];
 		var draggableElements = ['DIV', 'IMG', 'P', 'BUTTON', 'A', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
@@ -22,50 +23,50 @@
 			{ tagName: 'H6', icon: 'fa fa-header' }
 		];
 
-		service.setup = function(window, scope) {
-			if (service.mainWindow != null) {
+		dragDropService.setup = function(window, scope) {
+			if (mainWindow != null) {
 				return;
 			}
 
-			service.scope = scope;
+			currentScope = scope;
 
 			// defining shortcuts to editor's window, document and body
-			service.mainWindow = window;
-			service.mainDocument = service.mainWindow.document;
-			service.mainBody = service.mainDocument.querySelector('body');
+			mainWindow = window;
+			mainDocument = mainWindow.document;
+			mainBody = mainDocument.querySelector('body');
 
 			// defining shortcuts to editor's iframe window and document
-			service.iframe = service.mainDocument.querySelector('iframe.badd-editor-browser');
-			service.iframeWindow = service.iframe.contentWindow;
-			service.iframeDocument = service.iframeWindow.document;
-			service.iframeBody = service.iframeDocument.querySelector('body');
-			var boundingRect = service.iframe.getBoundingClientRect();
-			var computedStyle = window.getComputedStyle(service.iframe);
-			service.iframeLeftOffset = boundingRect.left + parseInt(computedStyle['padding-left']);
-			service.iframeTopOffset = boundingRect.top + parseInt(computedStyle['padding-top']);
+			iframe = mainDocument.querySelector('iframe.badd-editor-browser');
+			iframeWindow = iframe.contentWindow;
+			iframeDocument = iframeWindow.document;
+			iframeBody = iframeDocument.querySelector('body');
+			var boundingRect = iframe.getBoundingClientRect();
+			var computedStyle = window.getComputedStyle(iframe);
+			iframeLeftOffset = boundingRect.left + parseInt(computedStyle['padding-left']);
+			iframeTopOffset = boundingRect.top + parseInt(computedStyle['padding-top']);
 
 			// adding mouse event handlers for both windows (main's and iframe's)
-			service.mainWindow.addEventListener('mousedown', startDraggingComponent);
-			service.mainWindow.addEventListener('mouseup', stopDragging);
-			service.mainWindow.addEventListener('mousemove', updateDraggableIcon);
-			service.mainWindow.addEventListener('blur', focusLost);
-			service.iframeWindow.addEventListener('mousedown', startDraggingElement);
-			service.iframeWindow.addEventListener('mouseup', stopDragging);
-			service.iframeWindow.addEventListener('mousemove', updateIframe);
+			mainWindow.addEventListener('mousedown', startDraggingComponent);
+			mainWindow.addEventListener('mouseup', stopDragging);
+			mainWindow.addEventListener('mousemove', updateDraggableIcon);
+			mainWindow.addEventListener('blur', focusLost);
+			iframeWindow.addEventListener('mousedown', startDraggingElement);
+			iframeWindow.addEventListener('mouseup', stopDragging);
+			iframeWindow.addEventListener('mousemove', updateIframe);
 
 			// adding conteiner to hold our pointer icon
-			service.draggableConteiner = service.mainDocument.createElement('svg');
-			service.draggableConteiner.className = 'badd-draggable-conteiner';
-			service.mainBody.appendChild(service.draggableConteiner);
+			draggableConteiner = mainDocument.createElement('svg');
+			draggableConteiner.className = 'badd-draggable-conteiner';
+			mainBody.appendChild(draggableConteiner);
 
 			// creating transfer area to help on showing preview element
-			service.transferArea = service.mainDocument.createElement('div');
-			service.transferArea.className = 'badd-transfer-area';
-			service.mainBody.appendChild(service.transferArea);
+			transferArea = mainDocument.createElement('div');
+			transferArea.className = 'badd-transfer-area';
+			mainBody.appendChild(transferArea);
 		};
 
 		function emitHovering(target, dragging) {
-			service.scope.$emit(BADD_EVENTS.ELEMENT_HOVERED, { target: target, dragging: dragging });
+			currentScope.$emit(BADD_EVENTS.ELEMENT_HOVERED, { target: target, dragging: dragging });
 		}
 
 		function startDraggingComponent(event) {
@@ -85,12 +86,12 @@
 			}
 
 			// adding preview element to our transfer area
-			service.transferArea.innerHTML = draggableElement.getAttribute('data-element');
-			service.previewElement = service.transferArea.childNodes[0];
-			service.previewElement.style.pointerEvents = 'none';
+			transferArea.innerHTML = draggableElement.getAttribute('data-element');
+			previewElement = transferArea.childNodes[0];
+			previewElement.style.pointerEvents = 'none';
 
 			// lets create a nice icon to follow the pointer
-			updateDraggableIcon(event, service.previewElement.tagName);
+			updateDraggableIcon(event, previewElement.tagName);
 		}
 
 		function startDraggingElement(event) {
@@ -108,11 +109,11 @@
 			updateDraggableIcon(event);
 
 			// adding preview element to our transfer area
-			service.transferArea.appendChild(event.target.cloneNode(true));
-			service.previewElement = service.transferArea.childNodes[0];
-			service.previewElement.style.pointerEvents = 'none';
+			transferArea.appendChild(event.target.cloneNode(true));
+			previewElement = transferArea.childNodes[0];
+			previewElement.style.pointerEvents = 'none';
 
-			service.lastDraggedElement = event.target;
+			lastDraggedElement = event.target;
 		}
 
 		function getDraggableIcon(draggableTagName) {
@@ -128,18 +129,17 @@
 		function stopDragging(event) {
 			event.preventDefault();
 
-			if (!service.previewElement) {
+			if (!previewElement) {
 				return;
 			}
 
 			// now that the user released the button we can remove our nice icon
-			service.draggableConteiner.innerHTML = '';
-			service.draggableIcon = null;
-			service.removeElement = null;
+			draggableConteiner.innerHTML = '';
+			draggableIcon = null;
 
-			if (service.lastDraggedElement && event.target != service.iframeDocument) {
-				service.lastDraggedElement.style.removeProperty('pointer-events');
-				service.lastDraggedElement = null;
+			if (lastDraggedElement && event.target != iframeDocument) {
+				lastDraggedElement.style.removeProperty('pointer-events');
+				lastDraggedElement = null;
 			}
 
 			var droppableTarget = event.target;
@@ -153,90 +153,90 @@
 		}
 
 		function updateDraggableIcon(event, draggableTagName) {
-			if (event.target.ownerDocument == service.mainDocument) {
+			if (event.target.ownerDocument == mainDocument) {
 				// no target and no draggable since we are hover the main document
 				emitHovering();
 
-				if (service.previewElement && service.previewElement.parentNode
-						&& service.previewElement.ownerDocument == service.iframeDocument) {
-					service.previewElement.parentNode.removeChild(service.previewElement);
-				} else if (service.lastDraggedElement) {
-					service.lastDraggedElement.parentNode.removeChild(service.lastDraggedElement);
-					service.lastDraggedElement = null;
+				if (previewElement && previewElement.parentNode
+						&& previewElement.ownerDocument == iframeDocument) {
+					previewElement.parentNode.removeChild(previewElement);
+				} else if (lastDraggedElement) {
+					lastDraggedElement.parentNode.removeChild(lastDraggedElement);
+					lastDraggedElement = null;
 				}
 			}
-			if (!service.draggableIcon && !draggableTagName) {
+			if (!draggableIcon && !draggableTagName) {
 				// we are dragging nothing, so stop now
 				return;
 			}
 
-			if (draggableTagName && !service.draggableIcon) {
-				service.draggableConteiner.innerHTML = '<i class="' + getDraggableIcon(draggableTagName) + '"></i>';
-				service.draggableIcon = service.draggableConteiner.childNodes[0];
-				service.draggableIcon.style.display = 'block';
-				service.draggableIcon.style.position = 'fixed';
-				service.draggableIcon.style.fontSize = '30px';
-				service.draggableIcon.style.backgroundColor = '#2385DC';
-				service.draggableIcon.style.border = '1px solid #999';
-				service.draggableIcon.style.color = '#fff';
-				service.draggableIcon.style.padding = '10px';
-				service.draggableIcon.style.zIndex = 16777220;
+			if (draggableTagName && !draggableIcon) {
+				draggableConteiner.innerHTML = '<i class="' + getDraggableIcon(draggableTagName) + '"></i>';
+				draggableIcon = draggableConteiner.childNodes[0];
+				draggableIcon.style.display = 'block';
+				draggableIcon.style.position = 'fixed';
+				draggableIcon.style.fontSize = '30px';
+				draggableIcon.style.backgroundColor = '#2385DC';
+				draggableIcon.style.border = '1px solid #999';
+				draggableIcon.style.color = '#fff';
+				draggableIcon.style.padding = '10px';
+				draggableIcon.style.zIndex = 16777220;
 			}
 
 			// making our nice icon follow the pointer
 			var leftOffset = 0;
 			var topOffset = 0;
 
-			if (event.target.ownerDocument == service.iframeDocument) {
-				leftOffset = service.iframeLeftOffset;
-				topOffset = service.iframeTopOffset;
+			if (event.target.ownerDocument == iframeDocument) {
+				leftOffset = iframeLeftOffset;
+				topOffset = iframeTopOffset;
 			}
 
 			// firefox bug
 			if (event.clientX < 0 || event.clientY < 0) {
-				leftOffset = service.iframeLeftOffset;
-				topOffset = service.iframeTopOffset;
+				leftOffset = iframeLeftOffset;
+				topOffset = iframeTopOffset;
 			}
 
-			service.draggableIcon.style.left = (event.clientX + leftOffset) + 'px';
-			service.draggableIcon.style.top = (event.clientY - 55 + topOffset) + 'px';
+			draggableIcon.style.left = (event.clientX + leftOffset) + 'px';
+			draggableIcon.style.top = (event.clientY - 55 + topOffset) + 'px';
 		}
 
 		function focusLost() {
 			// when main window looses focus, we can remove our nice icon
-			if (service.lastDraggedElement) {
-				service.lastDraggedElement.style.removeProperty('pointer-events');
+			if (lastDraggedElement) {
+				lastDraggedElement.style.removeProperty('pointer-events');
 			}
-			service.draggableConteiner.innerHTML = '';
-			service.draggableIcon = null;
-			if (service.previewElement) {
-				cleanPreviewElement(service.lastHoveredDroppable);
+			draggableConteiner.innerHTML = '';
+			draggableIcon = null;
+			if (previewElement) {
+				cleanPreviewElement(lastHoveredDroppable);
 			}
 		}
 
 		function updateIframe(event) {
-			if (event.target == service.iframeDocument) {
+			if (event.target == iframeDocument) {
 				// firefox work around
-				if (service.lastDraggedElement) {
-					service.lastDraggedElement.parentNode.removeChild(service.lastDraggedElement);
-					service.lastDraggedElement = null;
-				} else if (service.previewElement && service.previewElement.parentNode) {
-					service.previewElement.parentNode.removeChild(service.previewElement);
+				if (lastDraggedElement) {
+					lastDraggedElement.parentNode.removeChild(lastDraggedElement);
+					lastDraggedElement = null;
+				} else if (previewElement && previewElement.parentNode) {
+					previewElement.parentNode.removeChild(previewElement);
 				}
 				updateDraggableIcon(event);
 				return;
 			}
 
-			if (service.previewElement == null) {
+			if (previewElement == null) {
 				emitHovering(event.target, false);
 			} else {
-				if (service.lastDraggedElement && service.lastDraggedElement.style.pointerEvents != 'none') {
-					service.lastDraggedElement.style.pointerEvents = 'none';
+				if (lastDraggedElement && lastDraggedElement.style.pointerEvents != 'none') {
+					lastDraggedElement.style.pointerEvents = 'none';
 					return;
 				}
 
 				emitHovering(null, true);
-				updateDraggableIcon(event, service.previewElement.tagName);
+				updateDraggableIcon(event, previewElement.tagName);
 				updatePreviewElement(event);
 			}
 		}
@@ -248,35 +248,35 @@
 				droppableTarget = droppableTarget.parentNode;
 			}
 
-			if (service.lastDraggedElement) {
+			if (lastDraggedElement) {
 				var nextSibling = getNearestSibling(event, droppableTarget);
-				if (droppableTarget == service.lastDraggedElement.parentNode && (
-						nextSibling == service.lastDraggedElement.nextElementSibling || nextSibling == service.lastDraggedElement)) {
+				if (droppableTarget == lastDraggedElement.parentNode && (
+						nextSibling == lastDraggedElement.nextElementSibling || nextSibling == lastDraggedElement)) {
 					return;
 				} else {
-					service.lastDraggedElement.parentNode.removeChild(service.lastDraggedElement);
-					service.lastDraggedElement = null;
+					lastDraggedElement.parentNode.removeChild(lastDraggedElement);
+					lastDraggedElement = null;
 				}
 			}
 
 			if (shouldIDrop(droppableTarget) == false) {
-				if (service.lastHoveredDroppable && droppableTarget !== service.previewElement
-						&& service.previewElement.parentNode === service.lastHoveredDroppable) {
-					service.lastHoveredDroppable.removeChild(service.previewElement);
+				if (lastHoveredDroppable && droppableTarget !== previewElement
+						&& previewElement.parentNode === lastHoveredDroppable) {
+					lastHoveredDroppable.removeChild(previewElement);
 				}
 				return;
 			}
 
-			service.lastHoveredDroppable = droppableTarget;
+			lastHoveredDroppable = droppableTarget;
 			emitHovering(droppableTarget, true);
 
 			// ok, it is a droppable element, lets see where we put the preview element
 			var nearestSibling = getNearestSibling(event, droppableTarget);
 
 			if (nearestSibling) {
-				droppableTarget.insertBefore(service.previewElement, nearestSibling);
+				droppableTarget.insertBefore(previewElement, nearestSibling);
 			} else {
-				droppableTarget.appendChild(service.previewElement);
+				droppableTarget.appendChild(previewElement);
 			}
 		}
 
@@ -286,7 +286,7 @@
 			var nearestSiblingPosition = null;
 			children.forEach(function(child) {
 
-				if (!child.getBoundingClientRect || child == service.previewElement) {
+				if (!child.getBoundingClientRect || child == previewElement) {
 					// ignore this element
 					return;
 				}
@@ -330,33 +330,33 @@
 		}
 
 		function cleanPreviewElement(target) {
-			if (service.lastHoveredDroppable && shouldIDrop(target) == false && target !== service.previewElement
-					&& service.previewElement.parentNode === service.lastHoveredDroppable) {
-				service.lastHoveredDroppable.removeChild(service.previewElement);
+			if (lastHoveredDroppable && shouldIDrop(target) == false && target !== previewElement
+					&& previewElement.parentNode === lastHoveredDroppable) {
+				lastHoveredDroppable.removeChild(previewElement);
 			}
 
 			if (target == null) {
 				// firefox work around
-				if (service.lastDraggedElement) {
-					service.lastDraggedElement.parentNode.removeChild(service.lastDraggedElement);
-					service.lastDraggedElement = null;
+				if (lastDraggedElement) {
+					lastDraggedElement.parentNode.removeChild(lastDraggedElement);
+					lastDraggedElement = null;
 				}
-				if (service.previewElement && service.previewElement.parentNode) {
-					service.previewElement.parentNode.removeChild(service.previewElement);
+				if (previewElement && previewElement.parentNode) {
+					previewElement.parentNode.removeChild(previewElement);
 				}
 			}
 
-			service.transferArea.innerHTML = '';
-			service.previewElement.style.removeProperty('pointer-events');
-			service.previewElement = null;
-			service.lastHoveredDroppable = null;
+			transferArea.innerHTML = '';
+			previewElement.style.removeProperty('pointer-events');
+			previewElement = null;
+			lastHoveredDroppable = null;
 		}
 
 		function shouldIDrop(target) {
 			if (!target
 				|| !target.getAttribute
-				|| ! service.previewElement
-				|| target === service.previewElement
+				|| ! previewElement
+				|| target === previewElement
 				|| ! _.contains(droppableElements, target.tagName)) {
 				return false;
 			}
