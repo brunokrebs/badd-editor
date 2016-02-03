@@ -1,7 +1,7 @@
 (function() {
 	var editorModule = angular.module('baddEditor');
 
-	var baddDragDropService = function(BADD_EVENTS) {
+	var baddDragDropService = function(BADD_EVENTS, baddUtils) {
 		var dragDropService = this;
 		var currentScope, mainWindow, mainDocument, mainBody, iframe, iframeWindow, iframeDocument, iframeBody;
 		var iframeLeftOffset, iframeTopOffset, draggableConteiner, transferArea, previewElement,
@@ -101,7 +101,7 @@
 
 			event.preventDefault();
 
-			if (!_.contains(draggableElements, event.target.tagName)) {
+			if (!baddUtils.contains(draggableElements, event.target.tagName)) {
 				return;
 			}
 
@@ -118,7 +118,7 @@
 
 		function getDraggableIcon(draggableTagName) {
 			var icon = 'fa fa-question';
-			_.forEach(draggableIcons, function(draggableIcon) {
+			draggableIcons.forEach(function(draggableIcon) {
 				if (draggableIcon.tagName === draggableTagName) {
 					icon = draggableIcon.icon;
 				}
@@ -144,7 +144,7 @@
 
 			var droppableTarget = event.target;
 			// lets try to find a droppable parent
-			while (droppableTarget && ! _.contains(droppableElements, droppableTarget.tagName)) {
+			while (droppableTarget && ! baddUtils.contains(droppableElements, droppableTarget.tagName)) {
 				droppableTarget = droppableTarget.parentNode;
 			}
 
@@ -244,7 +244,7 @@
 		function updatePreviewElement(event) {
 			var droppableTarget = event.target;
 			// lets try to find a droppable parent
-			while (! _.contains(droppableElements, droppableTarget.tagName)) {
+			while (! baddUtils.contains(droppableElements, droppableTarget.tagName)) {
 				droppableTarget = droppableTarget.parentNode;
 			}
 
@@ -281,7 +281,7 @@
 		}
 
 		function getNearestSibling(event, droppableTarget) {
-			var children = _.toArray(droppableTarget.childNodes);
+			var children = baddUtils.toArray(droppableTarget.childNodes);
 			var nearestSibling = null;
 			var nearestSiblingPosition = null;
 			children.forEach(function(child) {
@@ -312,7 +312,7 @@
 
 				if ((event.clientY > belowThreshold && event.clientX > besidesThreshold)
 					|| (event.clientY > childPosition.bottom)){
-					//this does not break. _.each will run the whole array
+					//this does not break. forEach will run the whole array
 					return;
 				}
 
@@ -357,11 +357,11 @@
 				|| !target.getAttribute
 				|| ! previewElement
 				|| target === previewElement
-				|| ! _.contains(droppableElements, target.tagName)) {
+				|| ! baddUtils.contains(droppableElements, target.tagName)) {
 				return false;
 			}
 		}
 	};
-	baddDragDropService.$inject = ['BADD_EVENTS'];
+	baddDragDropService.$inject = ['BADD_EVENTS', 'baddUtils'];
 	editorModule.service('baddDragDropService', baddDragDropService);
 }());

@@ -59,7 +59,7 @@
 			event.preventDefault();
 
 			// only a few elements are content editable, e.g. divs are not, text should be placed on p elements
-			if (_.contains(editableTags, event.target.tagName)
+			if (baddUtils.contains(editableTags, event.target.tagName)
 				&& ! baddUtils.belongsTo(event.target, elementBeingEdited)) {
 
 				elementBeingEdited = event.target;
