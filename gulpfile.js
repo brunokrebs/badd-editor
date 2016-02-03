@@ -44,7 +44,7 @@ gulp.task('minify-css', function() {
 
 function getDestination() {
 	if (development) {
-		return './demo';
+		return './demo/badd-editor';
 	}
 	return './dist';
 }

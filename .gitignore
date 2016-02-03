@@ -3,4 +3,4 @@
 bower_components/*
 node_modules/*
 build/*
-demo/badd-editor*
+demo/badd-editor/*

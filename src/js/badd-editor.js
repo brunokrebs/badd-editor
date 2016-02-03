@@ -110,9 +110,13 @@
 		};
 
 		function addStylesheet(targetDocument, stylesheet) {
+			var scriptName = 'badd-editor.min.js';
+			var scriptTag = service.document.querySelector('script[src*="' + scriptName + '"]');
+			var scriptLocation = scriptTag.getAttribute('src').replace(scriptName, '');
+
 			var stylesheetElement = targetDocument.createElement('link');
 			stylesheetElement.setAttribute('rel', 'stylesheet');
-			stylesheetElement.setAttribute('href', stylesheet);
+			stylesheetElement.setAttribute('href', scriptLocation + stylesheet);
 			stylesheetElement.setAttribute('type', 'text/css');
 			targetDocument.querySelector('head').appendChild(stylesheetElement);
 		}
