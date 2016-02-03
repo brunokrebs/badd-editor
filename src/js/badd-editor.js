@@ -29,13 +29,18 @@
 		var boldButton = {
 			tooltip: 'Bold',
 			icon: 'fa fa-bold',
-			command: function(target) {
-				var currentFontWeight = target.style.fontWeight;
-				target.style.fontWeight = 'bold';
-
-				return function() {
-					target.style.fontWeight = currentFontWeight;
-				};
+			command: function(elements, doc) {
+				var i, element, range, strong, startOffset, endOffset;
+				for (i = 0; i < elements.length; i++) {
+					element = elements[i];
+					strong = doc.createElement('strong');
+					range = doc.createRange();
+					startOffset = element.node.nodeType == 1 ? 0 : element.startOffset;
+					endOffset = element.node.nodeType == 1 ? 1 : element.endOffset;
+					range.setStart(element.node, startOffset);
+					range.setEnd(element.node, endOffset);
+					range.surroundContents(strong);
+				}
 			}
 		};
 

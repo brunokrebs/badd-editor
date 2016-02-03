@@ -108,10 +108,10 @@
 
 			enableDesignMode();
 
+			var selectedElements = [];
 			if (elementBeingEdited) {
 				var selection = iframeWindow.getSelection();
 				var range = selection.getRangeAt(0);
-				var selectedElements = [];
 
 				if (!selection.isCollapsed) {
 					var remainingLength = selection.toString().length;
@@ -136,10 +136,14 @@
 						selectedElements.push(element);
 					}
 				}
+			} else {
+				selectedElements.push({
+					node: selectedElement
+				});
 			}
 
 			// TODO pass selectedElements
-			var undo = button.command(selectedElement, iframeDocument, iframeWindow);
+			var undo = button.command(selectedElements, iframeDocument, iframeWindow);
 			if (undo) {
 				undoHistory.push(undo);
 			}
