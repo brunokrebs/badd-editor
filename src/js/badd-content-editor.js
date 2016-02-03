@@ -31,7 +31,7 @@
 			// listen to events
 			iframeWindow.addEventListener('dblclick', handleDoubleClick);
 
-			currentScope.$on(BADD_EVENTS.ELEMENT_SELECTED, function(element) {
+			currentScope.$on(BADD_EVENTS.ELEMENT_SELECTED, function(event, element) {
 				if (elementBeingEdited) {
 					elementBeingEdited.removeAttribute('contentEditable');
 					elementBeingEdited = null;
@@ -88,7 +88,7 @@
 			}
 		}
 
-		baddContentEditor.executeCommand = function(command) {
+		contentEditorService.executeCommand = function(command) {
 			if (selectedElement == null
 					&& elementBeingEdited == null) {
 				return;

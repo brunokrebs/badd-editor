@@ -63,12 +63,18 @@
 		}
 
 		function hideSelectedHighlightBorder() {
+			var emitDeselectionEvent = lastSelectedElement != null;
 			lastSelectedElement = null;
+
 			selectedHighlightBorder.style.display = 'none';
 			selectedHighlightBorder.style.top = 0;
 			selectedHighlightBorder.style.left = 0;
 			selectedHighlightBorder.style.width = 0;
 			selectedHighlightBorder.style.height = 0;
+
+			if (emitDeselectionEvent) {
+				currentScope.$emit(BADD_EVENTS.ELEMENT_DESELECTED);
+			}
 		}
 
 		function updateSelectedHighlightBorderPosition() {
@@ -90,14 +96,11 @@
 				return;
 			}
 
-			if (event.target === lastSelectedElement && elementBeingEdited == null) {
-				hideSelectedHighlightBorder();
-				event.stopPropagation();
-				currentScope.$emit(BADD_EVENTS.ELEMENT_DESELECTED);
-				return;
-			}
-
 			event.stopPropagation();
+
+			if (event.target === lastSelectedElement && elementBeingEdited == null) {
+				return hideSelectedHighlightBorder();
+			}
 
 			if (elementBeingEdited && elementBeingEdited !== event.target) {
 				var parent = elementBeingEdited.parentNode;
@@ -113,6 +116,7 @@
 				elementBeingEdited = null;
 			}
 			showSelectedHighlightBorder(event.target);
+			currentScope.$emit(BADD_EVENTS.ELEMENT_SELECTED, event.target);
 		}
 	};
 	baddElementSelector.$inject = ['BADD_EVENTS', 'baddUtils'];
