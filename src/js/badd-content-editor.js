@@ -111,30 +111,8 @@
 			var selectedElements = [];
 			if (elementBeingEdited) {
 				var selection = iframeWindow.getSelection();
-				var range = selection.getRangeAt(0);
-
 				if (!selection.isCollapsed) {
-					var remainingLength = selection.toString().length;
-					var startOffset = range.startOffset;
-					var container, endOffset, nextSibling;
-					var endContainer = range.endContainer.nodeType == 1 ? range.endContainer.childNodes[0] : range.endContainer;
-					while (container != endContainer) {
-						nextSibling = container ? container.nextSibling || container.parentNode.nextSibling : null;
-						container = container ? (nextSibling.childNodes[0] || nextSibling) :
-							(range.startContainer.nodeType == 1 ? range.startContainer.childNodes[0] : range.startContainer);
-						endOffset = Math.min(startOffset + remainingLength, container.textContent.length);
-						if (startOffset == endOffset) {
-							continue;
-						}
-						var element = {
-							node: container,
-							startOffset: startOffset,
-							endOffset: endOffset
-						};
-						remainingLength = remainingLength - (endOffset - startOffset);
-						startOffset = 0;
-						selectedElements.push(element);
-					}
+					populateSelectedElements(selection, selectedElements)
 				}
 			} else {
 				selectedElements.push({
@@ -142,13 +120,58 @@
 				});
 			}
 
-			// TODO pass selectedElements
 			var undo = button.command(selectedElements, iframeDocument, iframeWindow);
 			if (undo) {
 				undoHistory.push(undo);
 			}
 			disableDesignMode();
 		};
+
+		function populateSelectedElements(selection, selectedElements) {
+			var range = selection.getRangeAt(0);
+			var remainingLength = selection.toString().length;
+			var startOffset = range.startOffset;
+			var container = null, endOffset, nextSibling;
+			var endContainer = range.endContainer.nodeType == 1 ? range.endContainer.childNodes[0] : range.endContainer;
+			while (container != endContainer) {
+				nextSibling = getNextSibling(container);
+				container = getNextContainer(nextSibling || range.startContainer);
+				endOffset = Math.min(startOffset + remainingLength, container.textContent.length);
+				if (startOffset == endOffset) {
+					continue;
+				}
+				var element = {
+					node: container,
+					startOffset: startOffset,
+					endOffset: endOffset
+				};
+				remainingLength = remainingLength - (endOffset - startOffset);
+				startOffset = 0;
+				selectedElements.push(element);
+			}
+		}
+
+		function getNextContainer(container) {
+			if (!container) {
+				return null;
+			}
+			var nextContainer = container;
+			while (nextContainer.nodeType != 3) {
+				nextContainer = nextContainer.childNodes[0];
+			}
+			return nextContainer;
+		}
+
+		function getNextSibling(container) {
+			if (!container) {
+				return null;
+			}
+			var nextSibling = container.nextSibling || container.parentNode.nextSibling;
+			while (nextSibling.nodeType != 3) {
+				nextSibling = nextSibling.childNodes[0];
+			}
+			return nextSibling;
+		}
 
 		function enableDesignMode() {
 			if (isIE11()) return;
