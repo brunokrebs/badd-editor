@@ -131,11 +131,14 @@
 			var range = selection.getRangeAt(0);
 			var remainingLength = selection.toString().length;
 			var startOffset = range.startOffset;
-			var container = null, endOffset, nextSibling;
+			var container = null, endOffset;
 			var endContainer = range.endContainer.nodeType == 1 ? range.endContainer.childNodes[0] : range.endContainer;
 			while (container != endContainer) {
-				nextSibling = getNextSibling(container);
-				container = getNextContainer(nextSibling || range.startContainer);
+				if (container) {
+					container = getNextContainer(container.nextSibling);
+				} else {
+					container = getNextContainer(range.startContainer);
+				}
 				endOffset = Math.min(startOffset + remainingLength, container.textContent.length);
 				if (startOffset == endOffset) {
 					continue;
@@ -160,17 +163,6 @@
 				nextContainer = nextContainer.childNodes[0];
 			}
 			return nextContainer;
-		}
-
-		function getNextSibling(container) {
-			if (!container) {
-				return null;
-			}
-			var nextSibling = container.nextSibling || container.parentNode.nextSibling;
-			while (nextSibling.nodeType != 3) {
-				nextSibling = nextSibling.childNodes[0];
-			}
-			return nextSibling;
 		}
 
 		function enableDesignMode() {

@@ -1,7 +1,7 @@
 (function() {
 	var editorModule = angular.module('baddEditor', []);
 
-	var editorController = function($scope, editorService, BOLD_BUTTON) {
+	var editorController = function($scope, editorService, boldButton) {
 		$scope.pageTitleChanged = function() {
 			editorService.changePageTitle($scope.pageTitle);
 		};
@@ -32,13 +32,13 @@
 			command: editorService.undo
 		};
 
-		$scope.buttons = [ BOLD_BUTTON, undoButton ];
+		$scope.buttons = [ boldButton.getButton(), undoButton ];
 
 		$scope.execute = function(button) {
 			editorService.executeCommand(button);
 		}
 	};
-	editorController.$inject = ['$scope', 'editorService', 'BOLD_BUTTON'];
+	editorController.$inject = ['$scope', 'editorService', 'boldButton'];
 
 	var editorDirective = function (editorService) {
 		return {

@@ -4,6 +4,24 @@
 	var baddUtils = function() {
 		var utils = this;
 
+		var editableTags = [
+			'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H7',
+			'P', 'UL', 'OL', 'BUTTON'
+		];
+
+		var inlineElements = [
+			'STRONG', 'EM', 'SPAN', 'SMALL', 'SUB', 'SUP'
+		];
+
+		var blockElements = [
+			'BODY', 'DIV', 'P', 'UL', 'OL', 'H1', 'H2',
+			'H3', 'H4', 'H5', 'H6', 'H7', 'BUTTON'
+		];
+
+		utils.isInline = function(element) {
+			return element.nodeType == 3 || utils.contains(inlineElements, element.tagName);
+		};
+
 		utils.belongsTo = function(child, parent) {
 			if (child == null || parent == null || child === parent) {
 				return false;

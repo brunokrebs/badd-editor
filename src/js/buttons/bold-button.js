@@ -1,20 +1,26 @@
 (function() {
 	var editorModule = angular.module('baddEditor');
 
-	editorModule.constant('BOLD_BUTTON', {
-		tooltip: 'Bold',
-		icon: 'fa fa-bold',
-		command: function(elements, doc) {
+	var boldButton = function(baddUtils) {
+		var boldButtonService = this;
+
+		function isStrong(element) {
+			if (!baddUtils.isInline(element)) {
+				return false;
+			} else if (element.tagName == 'STRONG') {
+				return true;
+			} else {
+				return isStrong(element.parentNode);
+			}
+		}
+
+		function command(elements, doc) {
 			var i, element, range, strong, startOffset, endOffset;
 			var surround = false;
 
 			// we only surround the content if there are non strong elements selected
 			for (i = 0; i < elements.length; i++) {
-				element = elements[i];
-				if (element.node.nodeType == 1) {
-					continue;
-				}
-				surround = element.node.parentNode.tagName != 'STRONG';
+				surround = !isStrong(elements[i].node);
 				if (surround) {
 					break;
 				}
@@ -32,5 +38,15 @@
 				range.surroundContents(strong);
 			}
 		}
-	});
+
+		boldButtonService.getButton = function() {
+			return {
+				tooltip: 'Bold',
+				icon: 'fa fa-bold',
+				command: command
+			}
+		}
+	};
+	boldButton.$inject = ['baddUtils'];
+	editorModule.service('boldButton', boldButton);
 }());
