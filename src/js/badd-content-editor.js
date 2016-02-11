@@ -129,16 +129,12 @@
 
 		function populateSelectedElements(selection, selectedElements) {
 			var range = selection.getRangeAt(0);
-			var remainingLength = selection.toString().length;
 			var startOffset = range.startOffset;
-			var container = null, endOffset;
-			var endContainer = range.endContainer.nodeType == 1 ? range.endContainer.childNodes[0] : range.endContainer;
-			while (container != endContainer) {
-				if (container) {
-					container = getNextContainer(container.nextSibling);
-				} else {
-					container = getNextContainer(range.startContainer);
-				}
+			var remainingLength = selection.toString().length;
+			var endOffset;
+			var textElements = getTextElements(range.commonAncestorContainer);
+			var selectedElements = [];
+			while (remainingLength > 0) {
 				endOffset = Math.min(startOffset + remainingLength, container.textContent.length);
 				if (startOffset == endOffset) {
 					continue;
@@ -154,15 +150,18 @@
 			}
 		}
 
-		function getNextContainer(container) {
-			if (!container) {
+		function getTextElements(element) {
+			if (element.nodeType != 1 && element.nodeType != 3) {
 				return null;
 			}
-			var nextContainer = container;
-			while (nextContainer.nodeType != 3) {
-				nextContainer = nextContainer.childNodes[0];
+			if (element.nodeType == 3) {
+				return [element];
 			}
-			return nextContainer;
+			var textElements = [];
+			for (var i = 0; i < element.childNodes.length; i++) {
+				textElements.push(getTextElements(element.childNodes[i]));
+			}
+			return textElements;
 		}
 
 		function enableDesignMode() {
